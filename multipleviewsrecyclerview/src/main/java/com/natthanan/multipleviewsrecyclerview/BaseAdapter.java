@@ -60,28 +60,6 @@ public class BaseAdapter extends RecyclerView.Adapter implements ItemTouchHelper
     }
 
 
-    @Override
-    public void onItemDismiss(int position) {
-        dataSet.remove(position);
-        notifyItemRemoved(position);
-    }
-
-    @Override
-    public boolean onItemMove(int fromPosition, int toPosition) {
-        if (fromPosition < toPosition) {
-            for (int i = fromPosition; i < toPosition; i++) {
-                Collections.swap(dataSet, i, i + 1);
-            }
-        } else {
-            for (int i = fromPosition; i > toPosition; i--) {
-                Collections.swap(dataSet, i, i - 1);
-            }
-        }
-        notifyItemMoved(fromPosition, toPosition);
-        return true;
-    }
-
-
     public View inflateView(int layout) {
         return LayoutInflater.from(recyclerView.getContext()).inflate(layout, recyclerView, false);
     }
@@ -109,5 +87,24 @@ public class BaseAdapter extends RecyclerView.Adapter implements ItemTouchHelper
         }
     }
 
+    @Override
+    public void onItemDismiss(int position) {
+        dataSet.remove(position);
+        notifyItemRemoved(position);
+    }
 
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(dataSet, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(dataSet, i, i - 1);
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition);
+        return true;
+    }
 }

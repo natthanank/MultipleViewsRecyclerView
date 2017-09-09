@@ -15,12 +15,16 @@ public class HeaderViewHolder extends BaseViewHolder {
     @ViewID(R.id.header)
     TextView header;
 
+    @ViewID(R.id.item)
+    TextView item;
+
     public HeaderViewHolder(View itemView) {
         super(itemView);
     }
 
     @Override
     public void bind(Object data) {
-        header.setText((String) data);
+        header.setText("Header");
+        item.setText((String) data);
     }
 }

@@ -15,37 +15,20 @@ import android.view.View;
  * Created by DELL on 29/08/2560.
  */
 
-public class Effect extends ItemTouchHelper.Callback {
-    /**
-     * Creates a Callback for the given drag and swipe allowance. These values serve as
-     * defaults
-     * and if you want to customize behavior per ViewHolder, you can override
-     * {@link #getSwipeDirs(RecyclerView, ViewHolder)}
-     * and / or {@link #getDragDirs(RecyclerView, ViewHolder)}.
-     *
-     * @param dragDirs  Binary OR of direction flags in which the Views can be dragged. Must be
-     *                  composed of {@link #LEFT}, {@link #RIGHT}, {@link #START}, {@link
-     *                  #END},
-     *                  {@link #UP} and {@link #DOWN}.
-     * @param swipeDirs Binary OR of direction flags in which the Views can be swiped. Must be
-     *                  composed of {@link #LEFT}, {@link #RIGHT}, {@link #START}, {@link
-     *                  #END},
-     *                  {@link #UP} and {@link #DOWN}.
-     */
+public abstract class Swipe extends ItemTouchHelper.Callback {
     private final BaseAdapter adapter;
+    private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    private boolean isSwipeEnabled = false;
-    private boolean isDragEnabled = false;
+    private boolean isSwipeEnabled;
     private int swipeFlags;
-    private int dragFlags;
     private ItemTouchHelper itemTouchHelper;
     private Paint paint;
 
-    public Effect(BaseAdapter adapter, RecyclerView recyclerView, boolean isSwipeEnabled, boolean isDragEnabled) {
+    public Swipe(BaseAdapter adapter, RecyclerView recyclerView) {
         this.adapter = adapter;
+        this.recyclerView = recyclerView;
         this.layoutManager = recyclerView.getLayoutManager();
-        this.isSwipeEnabled = isSwipeEnabled;
-        this.isDragEnabled = isDragEnabled;
+        this.isSwipeEnabled = true;
 
         itemTouchHelper = new ItemTouchHelper(this);
         itemTouchHelper.attachToRecyclerView(recyclerView);
@@ -62,19 +45,17 @@ public class Effect extends ItemTouchHelper.Callback {
                 swipeFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
             }
         }
-        dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
-        return makeMovementFlags(dragFlags, swipeFlags);
+        return makeMovementFlags(0, swipeFlags);
     }
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-        adapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
-        return true;
+        return false;
     }
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        adapter.onItemDismiss(viewHolder.getAdapterPosition());
+        updateSwipedItem(viewHolder.getAdapterPosition(), direction);
     }
 
     @Override
@@ -113,10 +94,8 @@ public class Effect extends ItemTouchHelper.Callback {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
     }
 
-    @Override
-    public boolean isLongPressDragEnabled() {
-        return isDragEnabled();
-    }
+    public abstract void updateSwipedItem(int position, int swipeDirection);
+
 
     @Override
     public boolean isItemViewSwipeEnabled() {
@@ -132,15 +111,20 @@ public class Effect extends ItemTouchHelper.Callback {
         isSwipeEnabled = swipeEnabled;
     }
 
-    public boolean isDragEnabled() {
-        return isDragEnabled;
-    }
-
-    public void setDragEnabled(boolean dragEnabled) {
-        isDragEnabled = dragEnabled;
-    }
 
     public ItemTouchHelper getItemTouchHelper() {
         return itemTouchHelper;
+    }
+
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
+    }
+
+    public void setRecyclerView(RecyclerView recyclerView) {
+        this.recyclerView = recyclerView;
+    }
+
+    public BaseAdapter getAdapter() {
+        return adapter;
     }
 }
