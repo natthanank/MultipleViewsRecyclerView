@@ -31,7 +31,7 @@ public class RecyclerViewTest extends AppCompatActivity {
                 viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, Integer.toString(i)));
             } else if (i % 5 == 4) {
                 viewDataModels.add(new ViewDataModel(FooterViewHolder.class, Integer.toString(i)));
-            } else{
+            } else {
                 viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
             }
         }
@@ -42,51 +42,5 @@ public class RecyclerViewTest extends AppCompatActivity {
         baseAdapter.addViewHolder(ItemViewHolder.class);
         baseAdapter.addViewHolder(FooterViewHolder.class);
         baseAdapter.addViewHolder(HeaderViewHolder.class);
-
-        new Swipe(baseAdapter, recyclerView, ItemTouchHelper.RIGHT) {
-            @Override
-            public void onSwipedRight(final RecyclerView.ViewHolder viewHolder) {
-                getItemTouchHelper().attachToRecyclerView(null);
-                AlertDialog.Builder builder = new AlertDialog.Builder(getRecyclerView().getContext());
-                builder.setNegativeButton("cancel swipe", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        getItemTouchHelper().attachToRecyclerView(getRecyclerView());
-                        dialog.dismiss();
-                    }
-                });
-                builder.setPositiveButton("swipe!!!", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        getItemTouchHelper().attachToRecyclerView(getRecyclerView());
-                        getAdapter().onItemDismiss(viewHolder.getAdapterPosition());
-                        dialog.dismiss();
-                    }
-                }).show();
-            }
-
-            @Override
-            public void onSwipedLeft(RecyclerView.ViewHolder viewHolder) {
-
-            }
-
-            @Override
-            public void onSwipeUp(RecyclerView.ViewHolder viewHolder) {
-
-            }
-
-            @Override
-            public void onSwipeDown(RecyclerView.ViewHolder viewHolder) {
-
-            }
-        };
-        new Drag(baseAdapter, recyclerView) {
-            @Override
-            public void updateDraggedItem(int oldPosition, int newPosition) {
-
-                getAdapter().onItemMove(oldPosition, newPosition);
-
-            }
-        };
     }
 }
