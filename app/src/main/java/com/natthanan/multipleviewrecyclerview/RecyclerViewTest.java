@@ -25,22 +25,19 @@ public class RecyclerViewTest extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler_view_test);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        BaseAdapter baseAdapter = new BaseAdapter(viewDataModels);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setAdapter(baseAdapter);
 
         for (int i = 0; i < 100; i++) {
             if (i % 5 == 0) {
-                viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, Integer.toString(i)));
+                viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, Integer.toString(i), recyclerView));
             } else if (i % 5 == 4) {
-                viewDataModels.add(new ViewDataModel(FooterViewHolder.class, Integer.toString(i)));
+                viewDataModels.add(new ViewDataModel(FooterViewHolder.class, Integer.toString(i), recyclerView));
             } else {
-                viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
+                viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i), recyclerView));
             }
         }
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        BaseAdapter baseAdapter = new BaseAdapter(viewDataModels, recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(baseAdapter);
-        baseAdapter.addViewHolder(ItemViewHolder.class);
-        baseAdapter.addViewHolder(FooterViewHolder.class);
-        baseAdapter.addViewHolder(HeaderViewHolder.class);
     }
 }

@@ -3,7 +3,6 @@ package com.natthanan.multipleviewsrecyclerview;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.natthanan.multipleviewsrecyclerview.annotation.LayoutID;
 import com.natthanan.multipleviewsrecyclerview.annotation.ViewID;
 
 import java.lang.reflect.Constructor;
@@ -28,11 +27,11 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder{
 
     public abstract void bind(Object data);
 
-    public BaseViewHolder createViewHolder(BaseAdapter adapter, int layout) {
+    public BaseViewHolder createViewHolder(ViewDataModel viewDataModel, int layout) {
         try {
             Class<?> c = Class.forName(this.getClass().getName());
             Constructor<?> constructor = c.getConstructor(View.class);
-            Object instance = constructor.newInstance(adapter.inflateView(layout));
+            Object instance = constructor.newInstance(viewDataModel.inflateView(layout));
             return (BaseViewHolder) instance;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

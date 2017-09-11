@@ -18,7 +18,7 @@ ext {
     libraryDescription = 'Library that help you create recyclerview with multiple view types'
     siteUrl = 'https://github.com/natthanank/MultipleViewsRecyclerView'
     gitUrl = 'https://github.com/natthanank/MultipleViewsRecyclerView.git'
-    libraryVersion = '0.3'
+    libraryVersion = '0.4'
     developerId = 'Mo0oN'
     developerName = 'Natthanan Kunchokwanit'
     developerEmail = 'natthanank14@gmail.com'

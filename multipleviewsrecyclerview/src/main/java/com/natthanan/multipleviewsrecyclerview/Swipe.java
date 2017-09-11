@@ -23,7 +23,7 @@ public abstract class Swipe extends ItemTouchHelper.Callback {
     private Paint paint;
     private int movementFlags;
 
-    public Swipe(BaseAdapter adapter, RecyclerView recyclerView) {
+    public Swipe(BaseAdapter adapter, RecyclerView recyclerView, int movementFlags) {
         this.adapter = adapter;
         this.recyclerView = recyclerView;
         this.layoutManager = recyclerView.getLayoutManager();
@@ -45,7 +45,7 @@ public abstract class Swipe extends ItemTouchHelper.Callback {
                 swipeFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
             }
         }
-        return makeMovementFlags(0, swipeFlags);
+        return makeMovementFlags(0, movementFlags);
     }
 
     @Override
