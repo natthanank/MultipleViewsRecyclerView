@@ -80,8 +80,6 @@ public class BaseAdapter extends RecyclerView.Adapter implements ItemTouchHelper
     }
 
     private Integer getViewHolderType(Class myClass) {
-        Constructor[] constructors = myClass.getConstructors();
-
         Annotation annotation = myClass.getAnnotation(ViewHolderType.class);
 
         if (annotation instanceof ViewHolderType) {
