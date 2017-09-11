@@ -1,7 +1,5 @@
 package com.natthanan.multipleviewsrecyclerview;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -23,12 +21,14 @@ public abstract class Swipe extends ItemTouchHelper.Callback {
     private int swipeFlags;
     private ItemTouchHelper itemTouchHelper;
     private Paint paint;
+    private int movementFlags;
 
     public Swipe(BaseAdapter adapter, RecyclerView recyclerView) {
         this.adapter = adapter;
         this.recyclerView = recyclerView;
         this.layoutManager = recyclerView.getLayoutManager();
         this.isSwipeEnabled = true;
+        this.movementFlags = movementFlags;
 
         itemTouchHelper = new ItemTouchHelper(this);
         itemTouchHelper.attachToRecyclerView(recyclerView);
@@ -55,7 +55,21 @@ public abstract class Swipe extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        updateSwipedItem(viewHolder.getAdapterPosition(), direction);
+        switch (direction) {
+            case ItemTouchHelper.LEFT:
+                onSwipedLeft(viewHolder);
+                break;
+            case ItemTouchHelper.RIGHT:
+                onSwipedRight(viewHolder);
+                break;
+            case ItemTouchHelper.UP:
+                onSwipeUp(viewHolder);
+                break;
+            case ItemTouchHelper.DOWN:
+                onSwipeDown(viewHolder);
+                break;
+            default:
+        }
     }
 
     @Override
@@ -94,7 +108,10 @@ public abstract class Swipe extends ItemTouchHelper.Callback {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
     }
 
-    public abstract void updateSwipedItem(int position, int swipeDirection);
+    public abstract void onSwipedRight(RecyclerView.ViewHolder viewHolder);
+    public abstract void onSwipedLeft(RecyclerView.ViewHolder viewHolder);
+    public abstract void onSwipeUp(RecyclerView.ViewHolder viewHolder);
+    public abstract void onSwipeDown(RecyclerView.ViewHolder viewHolder);
 
 
     @Override

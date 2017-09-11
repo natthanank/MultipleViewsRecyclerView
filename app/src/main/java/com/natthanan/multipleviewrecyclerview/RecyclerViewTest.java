@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 
 import com.natthanan.multipleviewsrecyclerview.BaseAdapter;
 import com.natthanan.multipleviewsrecyclerview.Drag;
@@ -42,9 +43,9 @@ public class RecyclerViewTest extends AppCompatActivity {
         baseAdapter.addViewHolder(FooterViewHolder.class);
         baseAdapter.addViewHolder(HeaderViewHolder.class);
 
-        new Swipe(baseAdapter, recyclerView) {
+        new Swipe(baseAdapter, recyclerView, ItemTouchHelper.RIGHT) {
             @Override
-            public void updateSwipedItem(final int position, int swipeDirection) {
+            public void onSwipedRight(final RecyclerView.ViewHolder viewHolder) {
                 getItemTouchHelper().attachToRecyclerView(null);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getRecyclerView().getContext());
                 builder.setNegativeButton("cancel swipe", new DialogInterface.OnClickListener() {
@@ -58,10 +59,25 @@ public class RecyclerViewTest extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         getItemTouchHelper().attachToRecyclerView(getRecyclerView());
-                        getAdapter().onItemDismiss(position);
+                        getAdapter().onItemDismiss(viewHolder.getAdapterPosition());
                         dialog.dismiss();
                     }
                 }).show();
+            }
+
+            @Override
+            public void onSwipedLeft(RecyclerView.ViewHolder viewHolder) {
+
+            }
+
+            @Override
+            public void onSwipeUp(RecyclerView.ViewHolder viewHolder) {
+
+            }
+
+            @Override
+            public void onSwipeDown(RecyclerView.ViewHolder viewHolder) {
+
             }
         };
         new Drag(baseAdapter, recyclerView) {
