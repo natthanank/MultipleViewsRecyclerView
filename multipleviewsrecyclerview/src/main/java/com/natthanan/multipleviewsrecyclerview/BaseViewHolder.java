@@ -27,11 +27,11 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder{
 
     public abstract void bind(Object data);
 
-    public BaseViewHolder createViewHolder(ViewDataModel viewDataModel, int layout) {
+    public BaseViewHolder createViewHolder(ViewDataModel viewDataModel, int layout, RecyclerView recyclerView) {
         try {
             Class<?> c = Class.forName(this.getClass().getName());
             Constructor<?> constructor = c.getConstructor(View.class);
-            Object instance = constructor.newInstance(viewDataModel.inflateView(layout));
+            Object instance = constructor.newInstance(viewDataModel.inflateView(layout, recyclerView));
             return (BaseViewHolder) instance;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

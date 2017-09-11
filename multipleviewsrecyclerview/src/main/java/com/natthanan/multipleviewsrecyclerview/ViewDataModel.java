@@ -19,11 +19,10 @@ public class ViewDataModel {
     private int viewTypes;
     private Object model;
     private BaseViewHolder baseViewHolderClass;
-    private RecyclerView recyclerView;
+    private static RecyclerView recyclerView;
 
-    public ViewDataModel(Class<? extends BaseViewHolder> viewHolderClass, Object model, RecyclerView recyclerView) {
-        this.recyclerView = recyclerView;
-        setBaseViewHolderClass(createViewHolder(viewHolderClass));
+    public ViewDataModel(Class<? extends BaseViewHolder> viewHolderClass, Object model) {
+        setBaseViewHolderClass(createViewHolder(viewHolderClass, recyclerView));
         Annotation annotation = viewHolderClass.getAnnotation(ViewHolderType.class);
         if (annotation instanceof ViewHolderType) {
             ViewHolderType viewHolderTypeAnnotation = (ViewHolderType) annotation;
@@ -80,13 +79,13 @@ public class ViewDataModel {
         return null;
     }
 
-    public BaseViewHolder createViewHolder(Class<? extends BaseViewHolder> viewHolderClass) {
+    public BaseViewHolder createViewHolder(Class<? extends BaseViewHolder> viewHolderClass, RecyclerView recyclerView) {
         try {
             Class<?> c = Class.forName(viewHolderClass.getName());
             Constructor<?> constructor = c.getConstructor(View.class);
             int layout = getLayoutId(viewHolderClass);
             int type = getViewHolderType(viewHolderClass);
-            Object instance = constructor.newInstance(inflateView(layout));
+            Object instance = constructor.newInstance(inflateView(layout, recyclerView));
             ((BaseViewHolder) instance).setType(type);
             ((BaseViewHolder) instance).setLayout(layout);
             return  ((BaseViewHolder) instance);
@@ -105,7 +104,15 @@ public class ViewDataModel {
         return null;
     }
 
-    public View inflateView(int layout) {
-        return LayoutInflater.from(this.recyclerView.getContext()).inflate(layout, this.recyclerView, false);
+    public View inflateView(int layout, RecyclerView recyclerView) {
+        return LayoutInflater.from(this.getRecyclerView().getContext()).inflate(layout, this.getRecyclerView(), false);
+    }
+
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
+    }
+
+    public static void setRecyclerView(RecyclerView mRecyclerView) {
+        recyclerView = mRecyclerView;
     }
 }

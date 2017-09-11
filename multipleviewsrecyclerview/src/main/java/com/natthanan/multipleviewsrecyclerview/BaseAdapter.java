@@ -10,16 +10,20 @@ import java.util.List;
 public class BaseAdapter extends RecyclerView.Adapter implements ItemTouchHelperAdapter{
 
     private List<ViewDataModel> dataSet;
+    private RecyclerView recyclerView;
 
-    public BaseAdapter(List<ViewDataModel> dataSet) {
+    public BaseAdapter(List<ViewDataModel> dataSet, RecyclerView recyclerView) {
         this.dataSet = dataSet;
+        this.recyclerView = recyclerView;
+        ViewDataModel.setRecyclerView(recyclerView);
+
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         for (int i = 0; i < dataSet.size(); i++) {
             if (dataSet.get(i).getViewTypes() == viewType) {
-                return dataSet.get(i).getBaseViewHolderClass().createViewHolder(dataSet.get(i), dataSet.get(i).getBaseViewHolderClass().getLayout());
+                return dataSet.get(i).getBaseViewHolderClass().createViewHolder(dataSet.get(i), dataSet.get(i).getBaseViewHolderClass().getLayout(), recyclerView);
             }
         }
         return null;
