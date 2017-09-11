@@ -49,7 +49,7 @@ public class BaseAdapter extends RecyclerView.Adapter implements ItemTouchHelper
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        onBind(holder, dataSet.get(position).object, dataSet.get(position).viewTypes);
+        onBind(holder, dataSet.get(position).getModel(), dataSet.get(position).getViewTypes());
 
     }
 
@@ -60,7 +60,7 @@ public class BaseAdapter extends RecyclerView.Adapter implements ItemTouchHelper
 
     @Override
     public int getItemViewType(int position) {
-        return dataSet.get(position).viewTypes;
+        return dataSet.get(position).getViewTypes();
     }
 
 

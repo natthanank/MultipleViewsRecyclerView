@@ -13,12 +13,12 @@ ext {
     bintrayRepo = 'Maven' // your repo name
     bintrayName = 'multipleviewsrecyclerview' // has to be same as your library module name
     publishedGroupId = 'com.mo0on' // your module package name
-    libraryName = 'multipleviewrecyclerview'
-    artifact = 'multipleviewrecyclerview' // has to be same as your library module name
+    libraryName = 'multipleviewsrecyclerview'
+    artifact = 'multipleviewsrecyclerview' // has to be same as your library module name
     libraryDescription = 'Library that help you create recyclerview with multiple view types'
     siteUrl = 'https://github.com/natthanank/MultipleViewsRecyclerView'
     gitUrl = 'https://github.com/natthanank/MultipleViewsRecyclerView.git'
-    libraryVersion = '0.2'
+    libraryVersion = '0.3'
     developerId = 'Mo0oN'
     developerName = 'Natthanan Kunchokwanit'
     developerEmail = 'natthanank14@gmail.com'

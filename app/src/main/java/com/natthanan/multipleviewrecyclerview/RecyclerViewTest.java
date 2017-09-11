@@ -27,11 +27,11 @@ public class RecyclerViewTest extends AppCompatActivity {
 
         for (int i = 0; i < 100; i++) {
             if (i % 5 == 0) {
-                viewDataModels.add(new ViewDataModel(2, Integer.toString(i)));
+                viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, Integer.toString(i)));
             } else if (i % 5 == 4) {
-                viewDataModels.add(new ViewDataModel(1, Integer.toString(i)));
+                viewDataModels.add(new ViewDataModel(FooterViewHolder.class, Integer.toString(i)));
             } else{
-                viewDataModels.add(new ViewDataModel(0, Integer.toString(i)));
+                viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
             }
         }
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);

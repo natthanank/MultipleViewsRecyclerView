@@ -3,6 +3,7 @@ package com.natthanan.multipleviewsrecyclerview;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.natthanan.multipleviewsrecyclerview.annotation.LayoutID;
 import com.natthanan.multipleviewsrecyclerview.annotation.ViewID;
 
 import java.lang.reflect.Constructor;
