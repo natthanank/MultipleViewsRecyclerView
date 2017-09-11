@@ -38,9 +38,9 @@ public class RecyclerViewTest extends AppCompatActivity {
         BaseAdapter baseAdapter = new BaseAdapter(viewDataModels, recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(baseAdapter);
-        baseAdapter.addViewHolder(ItemViewHolder.class, 0);
-        baseAdapter.addViewHolder(FooterViewHolder.class, 1);
-        baseAdapter.addViewHolder(HeaderViewHolder.class, 2);
+        baseAdapter.addViewHolder(ItemViewHolder.class);
+        baseAdapter.addViewHolder(FooterViewHolder.class);
+        baseAdapter.addViewHolder(HeaderViewHolder.class);
 
         new Swipe(baseAdapter, recyclerView) {
             @Override

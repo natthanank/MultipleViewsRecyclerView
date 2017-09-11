@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.natthanan.multipleviewsrecyclerview.annotation.LayoutID;
+import com.natthanan.multipleviewsrecyclerview.annotation.ViewHolderType;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -77,11 +78,25 @@ public class BaseAdapter extends RecyclerView.Adapter implements ItemTouchHelper
 
         return null;
     }
-    public void addViewHolder(Class<? extends BaseViewHolder> viewHolderClass, int type) {
+
+    private Integer getViewHolderType(Class myClass) {
+        Constructor[] constructors = myClass.getConstructors();
+
+        Annotation annotation = myClass.getAnnotation(ViewHolderType.class);
+
+        if (annotation instanceof ViewHolderType) {
+            ViewHolderType viewHolderTypeAnnotation = (ViewHolderType) annotation;
+            return viewHolderTypeAnnotation.value();
+        }
+
+        return null;
+    }
+    public void addViewHolder(Class<? extends BaseViewHolder> viewHolderClass) {
         try {
             Class<?> c = Class.forName(viewHolderClass.getName());
             Constructor<?> constructor = c.getConstructor(View.class);
             int layout = getLayoutId(viewHolderClass);
+            int type = getViewHolderType(viewHolderClass);
             Object instance = constructor.newInstance(inflateView(layout));
             ((BaseViewHolder) instance).setType(type);
             ((BaseViewHolder) instance).setLayout(layout);
