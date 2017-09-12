@@ -24,7 +24,6 @@ public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouc
     private int movementFlags;
     private ViewDataModel viewDataModel, viewDataModelTmp;
     private int lastIndex = -1;
-    private boolean isConvert = false;
 
     public Swipe(RecyclerView recyclerView, int movementFlags) {
         this.recyclerView = recyclerView;
@@ -74,7 +73,6 @@ public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouc
         if (direction == ItemTouchHelper.START | direction == ItemTouchHelper.END) {
             try {
                 viewDataModelTmp = (ViewDataModel) viewDataModel.clone();
-                System.out.println(viewDataModelTmp.getViewTypes());
             } catch (CloneNotSupportedException e) {
                 e.printStackTrace();
             }
@@ -115,7 +113,6 @@ public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouc
 
     public void undoUpdate() {
         if (lastIndex==-1) return;
-        System.out.println(lastIndex);
         getAdapter().getViewDataModels().set(lastIndex, viewDataModelTmp);
         getAdapter().notifyItemChanged(lastIndex);
         lastIndex=-1;
