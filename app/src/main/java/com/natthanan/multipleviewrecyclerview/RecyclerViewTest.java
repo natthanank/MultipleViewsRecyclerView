@@ -42,8 +42,6 @@ public class RecyclerViewTest extends AppCompatActivity {
         new Swipe(recyclerView, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
             @Override
             public void onSwipedRight(int position, ViewDataModel viewDataModel) {
-                getItemTouchHelper().attachToRecyclerView(null);
-                getItemTouchHelper().attachToRecyclerView(recyclerView);
                 viewDataModel.setModel("qwewr");
                 getAdapter().getViewDataModels().set(position, viewDataModel);
                 getAdapter().notifyItemChanged(position);
@@ -51,8 +49,6 @@ public class RecyclerViewTest extends AppCompatActivity {
 
             @Override
             public void onSwipedLeft(int position, ViewDataModel viewDataModel) {
-                getItemTouchHelper().attachToRecyclerView(null);
-                getItemTouchHelper().attachToRecyclerView(recyclerView);
                 getAdapter().getViewDataModels().remove(viewDataModel);
                 getAdapter().notifyItemRemoved(position);
             }
@@ -70,18 +66,9 @@ public class RecyclerViewTest extends AppCompatActivity {
 
         new Drag(recyclerView) {
             @Override
-            public boolean onItemMove(int fromPosition, int toPosition, ViewDataModel fromViewDataModel, ViewDataModel toViewDataModel) {
-                if (fromPosition < toPosition) {
-                    for (int i = fromPosition; i < toPosition; i++) {
-                        Collections.swap(baseAdapter.getViewDataModels(), i, i + 1);
-                    }
-                } else {
-                    for (int i = fromPosition; i > toPosition; i--) {
-                        Collections.swap(baseAdapter.getViewDataModels(), i, i - 1);
-                    }
-                }
-                baseAdapter.notifyItemMoved(fromPosition, toPosition);
-                return true;
+            public void onItemMove(int fromPosition, int toPosition, ViewDataModel fromViewDataModel, ViewDataModel toViewDataModel) {
+
+
             }
         };
     }

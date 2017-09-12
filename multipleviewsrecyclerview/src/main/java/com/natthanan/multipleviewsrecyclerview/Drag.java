@@ -41,6 +41,16 @@ public abstract class Drag extends ItemTouchHelper.Callback implements ItemTouch
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
         int fromPosition = viewHolder.getAdapterPosition();
         int toPosition = target.getAdapterPosition();
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(((BaseAdapter)recyclerView.getAdapter()).getViewDataModels(), i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(((BaseAdapter)recyclerView.getAdapter()).getViewDataModels(), i, i - 1);
+            }
+        }
+        (recyclerView.getAdapter()).notifyItemMoved(fromPosition, toPosition);
         onItemMove(fromPosition, toPosition, (ViewDataModel) viewDataModels.get(fromPosition), (ViewDataModel) viewDataModels.get(toPosition));
         return true;
     }

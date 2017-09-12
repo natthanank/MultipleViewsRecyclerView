@@ -6,7 +6,7 @@ package com.natthanan.multipleviewsrecyclerview;
 
 public interface ItemTouchHelperAdapter {
 
-    boolean onItemMove(int fromPosition, int toPosition, ViewDataModel fromViewDataModel, ViewDataModel toViewDataModel);
+    void onItemMove(int fromPosition, int toPosition, ViewDataModel fromViewDataModel, ViewDataModel toViewDataModel);
 
     void onSwipedRight(int position, ViewDataModel viewDataModel);
     void onSwipedLeft(int position, ViewDataModel viewDataModel);

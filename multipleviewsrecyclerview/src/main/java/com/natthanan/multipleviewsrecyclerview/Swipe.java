@@ -1,6 +1,8 @@
 package com.natthanan.multipleviewsrecyclerview;
 
 import android.graphics.Paint;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -50,6 +52,11 @@ public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouc
     }
 
     @Override
+    public int convertToAbsoluteDirection(int flags, int layoutDirection) {
+        return super.convertToAbsoluteDirection(flags, layoutDirection);
+    }
+
+    @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         BaseAdapter baseAdapter = (BaseAdapter) recyclerView.getAdapter();
         ViewDataModel viewDataModel = (ViewDataModel) baseAdapter.getViewDataModels().get(viewHolder.getAdapterPosition());
@@ -72,8 +79,7 @@ public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouc
     }
 
     @Override
-    public boolean onItemMove(int fromPosition, int toPosition, ViewDataModel fromViewDataModel, ViewDataModel toViewDataModel) {
-        return false;
+    public void onItemMove(int fromPosition, int toPosition, ViewDataModel fromViewDataModel, ViewDataModel toViewDataModel) {
     }
 
     //    @Override
