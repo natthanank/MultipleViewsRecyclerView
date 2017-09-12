@@ -8,10 +8,12 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.widget.Toast;
 
 import com.natthanan.multipleviewsrecyclerview.BaseAdapter;
+import com.natthanan.multipleviewsrecyclerview.Drag;
 import com.natthanan.multipleviewsrecyclerview.Swipe;
 import com.natthanan.multipleviewsrecyclerview.ViewDataModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class RecyclerViewTest extends AppCompatActivity {
@@ -23,7 +25,7 @@ public class RecyclerViewTest extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler_view_test);
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        BaseAdapter baseAdapter = new BaseAdapter(viewDataModels, recyclerView);
+        final BaseAdapter baseAdapter = new BaseAdapter(viewDataModels, recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(baseAdapter);
 
@@ -42,7 +44,8 @@ public class RecyclerViewTest extends AppCompatActivity {
             public void onSwipedRight(int position, ViewDataModel viewDataModel) {
                 getItemTouchHelper().attachToRecyclerView(null);
                 getItemTouchHelper().attachToRecyclerView(recyclerView);
-                getAdapter().getViewDataModels().set(position, new ViewDataModel(viewDataModel.getBaseViewHolderClass().getClass(), "Sam Changed"));
+                viewDataModel.setModel("qwewr");
+                getAdapter().getViewDataModels().set(position, viewDataModel);
                 getAdapter().notifyItemChanged(position);
             }
 
@@ -62,6 +65,23 @@ public class RecyclerViewTest extends AppCompatActivity {
             @Override
             public void onSwipeDown(int position, ViewDataModel viewDataModel) {
 
+            }
+        };
+
+        new Drag(recyclerView) {
+            @Override
+            public boolean onItemMove(int fromPosition, int toPosition, ViewDataModel fromViewDataModel, ViewDataModel toViewDataModel) {
+                if (fromPosition < toPosition) {
+                    for (int i = fromPosition; i < toPosition; i++) {
+                        Collections.swap(baseAdapter.getViewDataModels(), i, i + 1);
+                    }
+                } else {
+                    for (int i = fromPosition; i > toPosition; i--) {
+                        Collections.swap(baseAdapter.getViewDataModels(), i, i - 1);
+                    }
+                }
+                baseAdapter.notifyItemMoved(fromPosition, toPosition);
+                return true;
             }
         };
     }

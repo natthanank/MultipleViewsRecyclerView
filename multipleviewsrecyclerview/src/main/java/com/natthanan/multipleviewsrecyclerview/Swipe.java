@@ -23,7 +23,7 @@ public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouc
         this.recyclerView = recyclerView;
         adapter = (BaseAdapter) recyclerView.getAdapter();
         layoutManager = recyclerView.getLayoutManager();
-        this.isSwipeEnabled = true;
+        isSwipeEnabled = true;
         this.movementFlags = movementFlags;
 
         itemTouchHelper = new ItemTouchHelper(this);
@@ -72,11 +72,11 @@ public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouc
     }
 
     @Override
-    public boolean onItemMove(int fromPosition, int toPosition) {
+    public boolean onItemMove(int fromPosition, int toPosition, ViewDataModel fromViewDataModel, ViewDataModel toViewDataModel) {
         return false;
     }
 
-//    @Override
+    //    @Override
 //    public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
 //        if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
 //            View itemView = viewHolder.itemView;

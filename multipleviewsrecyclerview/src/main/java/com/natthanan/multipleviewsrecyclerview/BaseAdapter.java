@@ -15,7 +15,6 @@ public class BaseAdapter extends RecyclerView.Adapter{
         this.viewDataModels = viewDataModels;
         this.recyclerView = recyclerView;
         ViewDataModel.setRecyclerView(recyclerView);
-
     }
 
     @Override
@@ -58,24 +57,4 @@ public class BaseAdapter extends RecyclerView.Adapter{
         return viewDataModels;
     }
 
-//    @Override
-//    public void onItemDismiss(int position) {
-//        viewDataModels.remove(position);
-//        notifyItemRemoved(position);
-//    }
-//
-//    @Override
-//    public boolean onItemMove(int fromPosition, int toPosition) {
-//        if (fromPosition < toPosition) {
-//            for (int i = fromPosition; i < toPosition; i++) {
-//                Collections.swap(viewDataModels, i, i + 1);
-//            }
-//        } else {
-//            for (int i = fromPosition; i > toPosition; i--) {
-//                Collections.swap(viewDataModels, i, i - 1);
-//            }
-//        }
-//        notifyItemMoved(fromPosition, toPosition);
-//        return true;
-//    }
 }

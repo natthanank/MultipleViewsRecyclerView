@@ -3,23 +3,28 @@ package com.natthanan.multipleviewsrecyclerview;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Created by DELL on 09/09/2560.
  */
 
-public abstract class Drag extends ItemTouchHelper.Callback {
+public abstract class Drag extends ItemTouchHelper.Callback implements ItemTouchHelperAdapter {
     private final BaseAdapter adapter;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private boolean isDragEnabled;
     private int dragFlags;
     private ItemTouchHelper itemTouchHelper;
+    List viewDataModels;
 
-    public Drag(BaseAdapter adapter, RecyclerView recyclerView) {
-        this.adapter = adapter;
+    public Drag(RecyclerView recyclerView) {
         this.recyclerView = recyclerView;
-        this.layoutManager = recyclerView.getLayoutManager();
-        this.isDragEnabled = true;
+        layoutManager = recyclerView.getLayoutManager();
+        adapter = (BaseAdapter) recyclerView.getAdapter();
+        isDragEnabled = true;
+        viewDataModels = getAdapter().getViewDataModels();
 
         itemTouchHelper = new ItemTouchHelper(this);
         itemTouchHelper.attachToRecyclerView(recyclerView);
@@ -34,8 +39,9 @@ public abstract class Drag extends ItemTouchHelper.Callback {
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-        updateDraggedItem(viewHolder.getAdapterPosition(), target.getAdapterPosition());
-//        getAdapter().onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+        int fromPosition = viewHolder.getAdapterPosition();
+        int toPosition = target.getAdapterPosition();
+        onItemMove(fromPosition, toPosition, (ViewDataModel) viewDataModels.get(fromPosition), (ViewDataModel) viewDataModels.get(toPosition));
         return true;
     }
 
@@ -48,8 +54,6 @@ public abstract class Drag extends ItemTouchHelper.Callback {
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
 
     }
-
-    public abstract void updateDraggedItem(int oldPosition, int newPosition);
 
     public boolean isDragEnabled() {
         return isDragEnabled;
@@ -65,5 +69,25 @@ public abstract class Drag extends ItemTouchHelper.Callback {
 
     public BaseAdapter getAdapter() {
         return adapter;
+    }
+
+    @Override
+    public void onSwipedLeft(int position, ViewDataModel viewDataModel) {
+
+    }
+
+    @Override
+    public void onSwipeDown(int position, ViewDataModel viewDataModel) {
+
+    }
+
+    @Override
+    public void onSwipeUp(int position, ViewDataModel viewDataModel) {
+
+    }
+
+    @Override
+    public void onSwipedRight(int position, ViewDataModel viewDataModel) {
+
     }
 }
