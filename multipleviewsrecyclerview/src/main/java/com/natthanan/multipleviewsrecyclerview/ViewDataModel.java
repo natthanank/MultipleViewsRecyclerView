@@ -21,7 +21,7 @@ public class ViewDataModel {
     private BaseViewHolder baseViewHolderClass;
     private static RecyclerView recyclerView;
 
-    public ViewDataModel(Class<? extends BaseViewHolder> viewHolderClass, Object model) {
+    public ViewDataModel(Class viewHolderClass, Object model) {
         setBaseViewHolderClass(createViewHolder(viewHolderClass, recyclerView));
         Annotation annotation = viewHolderClass.getAnnotation(ViewHolderType.class);
         if (annotation instanceof ViewHolderType) {
@@ -82,6 +82,7 @@ public class ViewDataModel {
     public BaseViewHolder createViewHolder(Class<? extends BaseViewHolder> viewHolderClass, RecyclerView recyclerView) {
         try {
             Class<?> c = Class.forName(viewHolderClass.getName());
+            System.out.println(c);
             Constructor<?> constructor = c.getConstructor(View.class);
             int layout = getLayoutId(viewHolderClass);
             int type = getViewHolderType(viewHolderClass);

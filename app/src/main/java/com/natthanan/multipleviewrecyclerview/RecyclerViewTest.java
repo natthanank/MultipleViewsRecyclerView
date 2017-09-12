@@ -1,20 +1,17 @@
 package com.natthanan.multipleviewrecyclerview;
 
-import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.widget.Toast;
 
 import com.natthanan.multipleviewsrecyclerview.BaseAdapter;
-import com.natthanan.multipleviewsrecyclerview.Drag;
 import com.natthanan.multipleviewsrecyclerview.Swipe;
 import com.natthanan.multipleviewsrecyclerview.ViewDataModel;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 
 public class RecyclerViewTest extends AppCompatActivity {
@@ -25,7 +22,7 @@ public class RecyclerViewTest extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler_view_test);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         BaseAdapter baseAdapter = new BaseAdapter(viewDataModels, recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(baseAdapter);
@@ -39,5 +36,33 @@ public class RecyclerViewTest extends AppCompatActivity {
                 viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
             }
         }
+
+        new Swipe(recyclerView, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
+            @Override
+            public void onSwipedRight(int position, ViewDataModel viewDataModel) {
+                getItemTouchHelper().attachToRecyclerView(null);
+                getItemTouchHelper().attachToRecyclerView(recyclerView);
+                getAdapter().getViewDataModels().set(position, new ViewDataModel(viewDataModel.getBaseViewHolderClass().getClass(), "Sam Changed"));
+                getAdapter().notifyItemChanged(position);
+            }
+
+            @Override
+            public void onSwipedLeft(int position, ViewDataModel viewDataModel) {
+                getItemTouchHelper().attachToRecyclerView(null);
+                getItemTouchHelper().attachToRecyclerView(recyclerView);
+                getAdapter().getViewDataModels().remove(viewDataModel);
+                getAdapter().notifyItemRemoved(position);
+            }
+
+            @Override
+            public void onSwipeUp(int position, ViewDataModel viewDataModel) {
+
+            }
+
+            @Override
+            public void onSwipeDown(int position, ViewDataModel viewDataModel) {
+
+            }
+        };
     }
 }

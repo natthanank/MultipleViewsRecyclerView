@@ -3,17 +3,16 @@ package com.natthanan.multipleviewsrecyclerview;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import java.util.Collections;
 import java.util.List;
 
 
-public class BaseAdapter extends RecyclerView.Adapter implements ItemTouchHelperAdapter{
+public class BaseAdapter extends RecyclerView.Adapter{
 
-    private List<ViewDataModel> dataSet;
+    private List<ViewDataModel> viewDataModels;
     private RecyclerView recyclerView;
 
-    public BaseAdapter(List<ViewDataModel> dataSet, RecyclerView recyclerView) {
-        this.dataSet = dataSet;
+    public BaseAdapter(List<ViewDataModel> viewDataModels, RecyclerView recyclerView) {
+        this.viewDataModels = viewDataModels;
         this.recyclerView = recyclerView;
         ViewDataModel.setRecyclerView(recyclerView);
 
@@ -21,18 +20,18 @@ public class BaseAdapter extends RecyclerView.Adapter implements ItemTouchHelper
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        for (int i = 0; i < dataSet.size(); i++) {
-            if (dataSet.get(i).getViewTypes() == viewType) {
-                return dataSet.get(i).getBaseViewHolderClass().createViewHolder(dataSet.get(i), dataSet.get(i).getBaseViewHolderClass().getLayout(), recyclerView);
+        for (int i = 0; i < viewDataModels.size(); i++) {
+            if (viewDataModels.get(i).getViewTypes() == viewType) {
+                return viewDataModels.get(i).getBaseViewHolderClass().createViewHolder(viewDataModels.get(i), viewDataModels.get(i).getBaseViewHolderClass().getLayout(), recyclerView);
             }
         }
         return null;
     }
 
     protected void onBind(RecyclerView.ViewHolder holder, Object data, int viewType) {
-        for (int i = 0; i < dataSet.size(); i++) {
-            if (dataSet.get(i).getViewTypes() == viewType) {
-                dataSet.get(i).getBaseViewHolderClass().getClass().cast(holder).bind(data);
+        for (int i = 0; i < viewDataModels.size(); i++) {
+            if (viewDataModels.get(i).getViewTypes() == viewType) {
+                viewDataModels.get(i).getBaseViewHolderClass().getClass().cast(holder).bind(data);
                 break;
             }
         }
@@ -41,38 +40,42 @@ public class BaseAdapter extends RecyclerView.Adapter implements ItemTouchHelper
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        onBind(holder, dataSet.get(position).getModel(), dataSet.get(position).getViewTypes());
+        onBind(holder, viewDataModels.get(position).getModel(), viewDataModels.get(position).getViewTypes());
 
     }
 
     @Override
     public int getItemCount() {
-        return dataSet.size();
+        return viewDataModels.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        return dataSet.get(position).getViewTypes();
+        return viewDataModels.get(position).getViewTypes();
     }
 
-    @Override
-    public void onItemDismiss(int position) {
-        dataSet.remove(position);
-        notifyItemRemoved(position);
+    public List getViewDataModels() {
+        return viewDataModels;
     }
 
-    @Override
-    public boolean onItemMove(int fromPosition, int toPosition) {
-        if (fromPosition < toPosition) {
-            for (int i = fromPosition; i < toPosition; i++) {
-                Collections.swap(dataSet, i, i + 1);
-            }
-        } else {
-            for (int i = fromPosition; i > toPosition; i--) {
-                Collections.swap(dataSet, i, i - 1);
-            }
-        }
-        notifyItemMoved(fromPosition, toPosition);
-        return true;
-    }
+//    @Override
+//    public void onItemDismiss(int position) {
+//        viewDataModels.remove(position);
+//        notifyItemRemoved(position);
+//    }
+//
+//    @Override
+//    public boolean onItemMove(int fromPosition, int toPosition) {
+//        if (fromPosition < toPosition) {
+//            for (int i = fromPosition; i < toPosition; i++) {
+//                Collections.swap(viewDataModels, i, i + 1);
+//            }
+//        } else {
+//            for (int i = fromPosition; i > toPosition; i--) {
+//                Collections.swap(viewDataModels, i, i - 1);
+//            }
+//        }
+//        notifyItemMoved(fromPosition, toPosition);
+//        return true;
+//    }
 }
