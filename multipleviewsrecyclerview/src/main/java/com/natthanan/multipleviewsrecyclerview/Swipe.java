@@ -3,9 +3,11 @@ package com.natthanan.multipleviewsrecyclerview;
 import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.View;
 
 /**
  * Created by DELL on 29/08/2560.
@@ -20,6 +22,9 @@ public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouc
     private ItemTouchHelper itemTouchHelper;
     private Paint paint;
     private int movementFlags;
+    private ViewDataModel viewDataModel, viewDataModelTmp;
+    private int lastIndex = -1;
+    private boolean isConvert = false;
 
     public Swipe(RecyclerView recyclerView, int movementFlags) {
         this.recyclerView = recyclerView;
@@ -33,6 +38,7 @@ public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouc
 
         paint = new Paint();
     }
+
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
@@ -57,10 +63,23 @@ public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouc
     }
 
     @Override
-    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        BaseAdapter baseAdapter = (BaseAdapter) recyclerView.getAdapter();
-        ViewDataModel viewDataModel = (ViewDataModel) baseAdapter.getViewDataModels().get(viewHolder.getAdapterPosition());
-
+    public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
+        final BaseAdapter baseAdapter = (BaseAdapter) recyclerView.getAdapter();
+        viewDataModel = (ViewDataModel) baseAdapter.getViewDataModels().get(viewHolder.getAdapterPosition());
+        try {
+            viewDataModelTmp = (ViewDataModel) viewDataModel.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        if (direction == ItemTouchHelper.START | direction == ItemTouchHelper.END) {
+            try {
+                viewDataModelTmp = (ViewDataModel) viewDataModel.clone();
+                System.out.println(viewDataModelTmp.getViewTypes());
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+        }
+        lastIndex = viewHolder.getAdapterPosition();
         switch (direction) {
             case ItemTouchHelper.LEFT:
                 onSwipedLeft(viewHolder.getAdapterPosition(), viewDataModel);
@@ -76,6 +95,31 @@ public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouc
                 break;
             default:
         }
+
+
+        Snackbar.make(viewHolder.itemView, "Swipe", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                undoUpdate();
+            }
+        }).show();
+    }
+
+    public void undoRemove() {
+        if (lastIndex==-1) return;
+        getAdapter().getViewDataModels().add(lastIndex, viewDataModelTmp);
+        getAdapter().notifyItemInserted(lastIndex);
+        lastIndex=-1;
+        viewDataModel=null;
+    }
+
+    public void undoUpdate() {
+        if (lastIndex==-1) return;
+        System.out.println(lastIndex);
+        getAdapter().getViewDataModels().set(lastIndex, viewDataModelTmp);
+        getAdapter().notifyItemChanged(lastIndex);
+        lastIndex=-1;
+        viewDataModel=null;
     }
 
     @Override

@@ -15,7 +15,7 @@ import java.lang.reflect.InvocationTargetException;
  * Created by DELL on 28/08/2560.
  */
 
-public class ViewDataModel {
+public class ViewDataModel implements Cloneable {
     private int viewTypes;
     private Object model;
     private BaseViewHolder baseViewHolderClass;
@@ -82,7 +82,6 @@ public class ViewDataModel {
     public BaseViewHolder createViewHolder(Class<? extends BaseViewHolder> viewHolderClass, RecyclerView recyclerView) {
         try {
             Class<?> c = Class.forName(viewHolderClass.getName());
-            System.out.println(c);
             Constructor<?> constructor = c.getConstructor(View.class);
             int layout = getLayoutId(viewHolderClass);
             int type = getViewHolderType(viewHolderClass);
@@ -115,5 +114,10 @@ public class ViewDataModel {
 
     public static void setRecyclerView(RecyclerView mRecyclerView) {
         recyclerView = mRecyclerView;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

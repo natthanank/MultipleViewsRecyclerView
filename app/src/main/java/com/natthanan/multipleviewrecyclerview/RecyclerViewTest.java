@@ -38,7 +38,6 @@ public class RecyclerViewTest extends AppCompatActivity {
                 viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
             }
         }
-
         new Swipe(recyclerView, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
             @Override
             public void onSwipedRight(int position, ViewDataModel viewDataModel) {
