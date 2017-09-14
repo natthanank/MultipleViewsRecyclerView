@@ -67,13 +67,7 @@ public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouc
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
-        if (direction == ItemTouchHelper.START | direction == ItemTouchHelper.END) {
-            try {
-                setOldViewDataModel((ViewDataModel) viewDataModel.clone());
-            } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
-            }
-        }
+
         lastIndex = viewHolder.getAdapterPosition();
         switch (direction) {
             case ItemTouchHelper.LEFT:
