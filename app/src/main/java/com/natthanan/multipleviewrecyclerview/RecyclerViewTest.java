@@ -1,11 +1,12 @@
 package com.natthanan.multipleviewrecyclerview;
 
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.widget.Toast;
+import android.view.View;
 
 import com.natthanan.multipleviewsrecyclerview.BaseAdapter;
 import com.natthanan.multipleviewsrecyclerview.Drag;
@@ -13,7 +14,6 @@ import com.natthanan.multipleviewsrecyclerview.Swipe;
 import com.natthanan.multipleviewsrecyclerview.ViewDataModel;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 
 public class RecyclerViewTest extends AppCompatActivity {
@@ -40,16 +40,28 @@ public class RecyclerViewTest extends AppCompatActivity {
         }
         new Swipe(recyclerView, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
             @Override
-            public void onSwipedRight(int position, ViewDataModel viewDataModel) {
-                viewDataModel.setModel("qwewr");
+            public void onSwipedRight(final int position, ViewDataModel viewDataModel) {
+                viewDataModel.setModel("Changed!!!");
                 getAdapter().getViewDataModels().set(position, viewDataModel);
                 getAdapter().notifyItemChanged(position);
+                Snackbar.make(recyclerView, "Change!!!", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        undoUpdate(position, getOldViewDataModel());
+                    }
+                }).show();
             }
 
             @Override
-            public void onSwipedLeft(int position, ViewDataModel viewDataModel) {
+            public void onSwipedLeft(final int position, ViewDataModel viewDataModel) {
                 getAdapter().getViewDataModels().remove(viewDataModel);
                 getAdapter().notifyItemRemoved(position);
+                Snackbar.make(recyclerView, "Remove!!!", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        undoRemove(position, getOldViewDataModel());
+                    }
+                }).show();
             }
 
             @Override
