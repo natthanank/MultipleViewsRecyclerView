@@ -1,15 +1,21 @@
 package com.natthanan.multipleviewsrecyclerview;
 
 import android.graphics.Paint;
+import android.os.CountDownTimer;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.View;
 
 /**
  * Created by DELL on 29/08/2560.
  */
 
 public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouchHelperAdapter{
+    public static int ACTION_REMOVE = 0;
+    public static int ACTION_UPDATE = 1;
+
     private final BaseAdapter adapter;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
@@ -20,7 +26,8 @@ public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouc
     private int movementFlags;
     private ViewDataModel viewDataModel;
     private ViewDataModel oldViewDataModel;
-    private int lastIndex = -1;
+    private boolean isUndo = false;
+    private int action;
 
     public Swipe(RecyclerView recyclerView, int movementFlags) {
         this.recyclerView = recyclerView;
@@ -59,7 +66,9 @@ public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouc
     }
 
     @Override
-    public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
+    public void onSwiped(final RecyclerView.ViewHolder viewHolder, final int direction) {
+        isUndo = false;
+        final int position = viewHolder.getAdapterPosition();
         final BaseAdapter baseAdapter = (BaseAdapter) recyclerView.getAdapter();
         viewDataModel = (ViewDataModel) baseAdapter.getViewDataModels().get(viewHolder.getAdapterPosition());
         try {
@@ -67,39 +76,63 @@ public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouc
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
-
-        lastIndex = viewHolder.getAdapterPosition();
         switch (direction) {
             case ItemTouchHelper.LEFT:
-                onSwipedLeft(viewHolder.getAdapterPosition(), viewDataModel);
+                onSwipedLeft(position, viewDataModel);
                 break;
             case ItemTouchHelper.RIGHT:
-                onSwipedRight(viewHolder.getAdapterPosition(), viewDataModel);
+                onSwipedRight(position, viewDataModel);
                 break;
             case ItemTouchHelper.UP:
-                onSwipeUp(viewHolder.getAdapterPosition(), viewDataModel);
+                onSwipeUp(position, viewDataModel);
                 break;
             case ItemTouchHelper.DOWN:
-                onSwipeDown(viewHolder.getAdapterPosition(), viewDataModel);
+                onSwipeDown(position, viewDataModel);
                 break;
             default:
         }
+        new CountDownTimer(3500, 3500) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                if (isUndo == false) {
+                    onUpdateSwiped(position, viewDataModel, action);
+                }
+            }
+        }.start();
+
     }
 
+
     public void undoRemove(int position, ViewDataModel oldViewDataModel) {
-        if (lastIndex==-1) return;
-        getAdapter().getViewDataModels().add(lastIndex, getOldViewDataModel());
-        getAdapter().notifyItemInserted(lastIndex);
-        lastIndex=-1;
+        getAdapter().getViewDataModels().add(position, oldViewDataModel);
+        System.out.println(((ViewDataModel)getAdapter().getViewDataModels().get(position)).getModel());
+        getAdapter().notifyItemInserted(position);
         viewDataModel=null;
+        isUndo = true;
     }
 
     public void undoUpdate(int position, ViewDataModel oldViewDataModel) {
-        if (lastIndex==-1) return;
-        getAdapter().getViewDataModels().set(lastIndex, oldViewDataModel);
-        getAdapter().notifyItemChanged(lastIndex);
-        lastIndex=-1;
+        getAdapter().getViewDataModels().set(position, oldViewDataModel);
+        getAdapter().notifyItemChanged(position);
         viewDataModel=null;
+        isUndo = true;
+    }
+
+    public void removeItem(int position, ViewDataModel viewDataModel) {
+        action = 0;
+        getAdapter().getViewDataModels().remove(viewDataModel);
+        getAdapter().notifyItemRemoved(position);
+    }
+
+    public void updateItem(int position, ViewDataModel viewDataModel) {
+        action = 1;
+        getAdapter().getViewDataModels().set(position, viewDataModel);
+        getAdapter().notifyItemChanged(position);
     }
 
     @Override

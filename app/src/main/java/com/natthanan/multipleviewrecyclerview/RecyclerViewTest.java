@@ -40,10 +40,14 @@ public class RecyclerViewTest extends AppCompatActivity {
         }
         new Swipe(recyclerView, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
             @Override
+            public void onUpdateSwiped(int position, ViewDataModel viewDataModel, int action) {
+
+            }
+
+            @Override
             public void onSwipedRight(final int position, ViewDataModel viewDataModel) {
                 viewDataModel.setModel("Changed!!!");
-                getAdapter().getViewDataModels().set(position, viewDataModel);
-                getAdapter().notifyItemChanged(position);
+                updateItem(position, viewDataModel);
                 Snackbar.make(recyclerView, "Change!!!", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -54,8 +58,8 @@ public class RecyclerViewTest extends AppCompatActivity {
 
             @Override
             public void onSwipedLeft(final int position, ViewDataModel viewDataModel) {
-                getAdapter().getViewDataModels().remove(viewDataModel);
-                getAdapter().notifyItemRemoved(position);
+                removeItem(position, viewDataModel);
+                System.out.println(position);
                 Snackbar.make(recyclerView, "Remove!!!", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -73,14 +77,16 @@ public class RecyclerViewTest extends AppCompatActivity {
             public void onSwipeDown(int position, ViewDataModel viewDataModel) {
 
             }
+
+
         };
 
-        new Drag(recyclerView) {
-            @Override
-            public void onItemMove(int fromPosition, int toPosition, ViewDataModel fromViewDataModel, ViewDataModel toViewDataModel) {
-
-
-            }
-        };
+//        new Drag(recyclerView) {
+//            @Override
+//            public void onItemMove(int fromPosition, int toPosition, ViewDataModel fromViewDataModel, ViewDataModel toViewDataModel) {
+//
+//
+//            }
+//        };
     }
 }

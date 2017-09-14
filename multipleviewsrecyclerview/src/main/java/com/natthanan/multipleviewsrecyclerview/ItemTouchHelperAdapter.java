@@ -12,4 +12,5 @@ public interface ItemTouchHelperAdapter {
     void onSwipedLeft(int position, ViewDataModel viewDataModel);
     void onSwipeUp(int position, ViewDataModel viewDataModel);
     void onSwipeDown(int position, ViewDataModel viewDataModel);
+    void onUpdateSwiped(int position, ViewDataModel viewDataModel, int action);
 }
