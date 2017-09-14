@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.natthanan.multipleviewsrecyclerview.annotation.LayoutID;
-import com.natthanan.multipleviewsrecyclerview.annotation.ViewHolderType;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -25,14 +24,7 @@ public class ViewDataModel implements Cloneable {
 
     public ViewDataModel(Class viewHolderClass, Object model) {
         setBaseViewHolderClass(createViewHolder(viewHolderClass, recyclerView));
-        Annotation annotation = viewHolderClass.getAnnotation(ViewHolderType.class);
-//        if (annotation instanceof ViewHolderType) {
-//            ViewHolderType viewHolderTypeAnnotation = (ViewHolderType) annotation;
-//            setViewTypes(viewHolderTypeAnnotation.value());
-//        }
         setModel(model);
-
-
     }
 
     public int getViewTypes() {
@@ -70,17 +62,6 @@ public class ViewDataModel implements Cloneable {
         return null;
     }
 
-    private Integer getViewHolderType(Class myClass) {
-        Annotation annotation = myClass.getAnnotation(ViewHolderType.class);
-
-        if (annotation instanceof ViewHolderType) {
-            ViewHolderType viewHolderTypeAnnotation = (ViewHolderType) annotation;
-            return viewHolderTypeAnnotation.value();
-        }
-
-        return null;
-    }
-
     public BaseViewHolder createViewHolder(Class<? extends BaseViewHolder> viewHolderClass, RecyclerView recyclerView) {
         try {
             Class<?> c = Class.forName(viewHolderClass.getName());
@@ -98,6 +79,7 @@ public class ViewDataModel implements Cloneable {
             ((BaseViewHolder) instance).setType(type);
             ((BaseViewHolder) instance).setLayout(layout);
             setViewTypes(type);
+
             return  ((BaseViewHolder) instance);
 
         } catch (ClassNotFoundException e) {
