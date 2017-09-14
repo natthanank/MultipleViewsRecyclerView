@@ -21,6 +21,7 @@ public class BaseAdapter extends RecyclerView.Adapter{
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         for (int i = 0; i < viewDataModels.size(); i++) {
             if (viewDataModels.get(i).getViewTypes() == viewType) {
+                System.out.println("In Adapter : " + viewDataModels.get(i).getViewTypes());
                 return viewDataModels.get(i).getBaseViewHolderClass().createViewHolder(viewDataModels.get(i), viewDataModels.get(i).getBaseViewHolderClass().getLayout(), recyclerView);
             }
         }

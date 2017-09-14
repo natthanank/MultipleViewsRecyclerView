@@ -1,6 +1,7 @@
 package com.natthanan.multipleviewsrecyclerview;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -20,14 +21,15 @@ public class ViewDataModel implements Cloneable {
     private Object model;
     private BaseViewHolder baseViewHolderClass;
     private static RecyclerView recyclerView;
+    private static SparseArray<Class<? extends BaseViewHolder>> baseViewHolderSparseArray = new SparseArray<>();
 
     public ViewDataModel(Class viewHolderClass, Object model) {
         setBaseViewHolderClass(createViewHolder(viewHolderClass, recyclerView));
         Annotation annotation = viewHolderClass.getAnnotation(ViewHolderType.class);
-        if (annotation instanceof ViewHolderType) {
-            ViewHolderType viewHolderTypeAnnotation = (ViewHolderType) annotation;
-            setViewTypes(viewHolderTypeAnnotation.value());
-        }
+//        if (annotation instanceof ViewHolderType) {
+//            ViewHolderType viewHolderTypeAnnotation = (ViewHolderType) annotation;
+//            setViewTypes(viewHolderTypeAnnotation.value());
+//        }
         setModel(model);
 
 
@@ -83,11 +85,19 @@ public class ViewDataModel implements Cloneable {
         try {
             Class<?> c = Class.forName(viewHolderClass.getName());
             Constructor<?> constructor = c.getConstructor(View.class);
+
+            if (baseViewHolderSparseArray.get(baseViewHolderSparseArray.size()) == null) {
+                baseViewHolderSparseArray.put(baseViewHolderSparseArray.size(), viewHolderClass);
+            }
+
             int layout = getLayoutId(viewHolderClass);
-            int type = getViewHolderType(viewHolderClass);
+            int type = baseViewHolderSparseArray.indexOfValue(viewHolderClass);
+
             Object instance = constructor.newInstance(inflateView(layout, recyclerView));
+
             ((BaseViewHolder) instance).setType(type);
             ((BaseViewHolder) instance).setLayout(layout);
+            setViewTypes(type);
             return  ((BaseViewHolder) instance);
 
         } catch (ClassNotFoundException e) {

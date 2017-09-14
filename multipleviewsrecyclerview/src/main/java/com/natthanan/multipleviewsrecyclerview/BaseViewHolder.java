@@ -13,7 +13,7 @@ import java.lang.reflect.InvocationTargetException;
  * Created by DELL on 28/08/2560.
  */
 
-public abstract class BaseViewHolder extends RecyclerView.ViewHolder{
+public abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder{
 
     private int type;
     private int layout;
@@ -25,7 +25,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder{
         setViewFields(this, itemView);
     }
 
-    public abstract void bind(Object data);
+    public abstract void bind(T data);
 
     public BaseViewHolder createViewHolder(ViewDataModel viewDataModel, int layout, RecyclerView recyclerView) {
         try {

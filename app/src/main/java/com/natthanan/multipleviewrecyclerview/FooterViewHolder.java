@@ -15,7 +15,6 @@ import com.natthanan.multipleviewsrecyclerview.annotation.ViewID;
 
 
 @LayoutID(R.layout.footer)
-@ViewHolderType(1)
 public class FooterViewHolder extends BaseViewHolder {
 
     @ViewID(R.id.item)

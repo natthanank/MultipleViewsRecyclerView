@@ -7,9 +7,8 @@ import com.natthanan.multipleviewsrecyclerview.BaseViewHolder;
 import com.natthanan.multipleviewsrecyclerview.annotation.LayoutID;
 import com.natthanan.multipleviewsrecyclerview.annotation.ViewHolderType;
 import com.natthanan.multipleviewsrecyclerview.annotation.ViewID;
-@ViewHolderType(2)
 @LayoutID(R.layout.header)
-public class HeaderViewHolder extends BaseViewHolder {
+public class HeaderViewHolder extends BaseViewHolder<String> {
 
     @ViewID(R.id.header)
     TextView header;
@@ -23,8 +22,8 @@ public class HeaderViewHolder extends BaseViewHolder {
     }
 
     @Override
-    public void bind(Object data) {
+    public void bind(String data) {
         header.setText("Header");
-        item.setText((String) data);
+        item.setText(data);
     }
 }

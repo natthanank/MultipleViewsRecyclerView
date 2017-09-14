@@ -9,6 +9,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import com.natthanan.multipleviewsrecyclerview.BaseAdapter;
+import com.natthanan.multipleviewsrecyclerview.BaseViewHolder;
 import com.natthanan.multipleviewsrecyclerview.Drag;
 import com.natthanan.multipleviewsrecyclerview.Swipe;
 import com.natthanan.multipleviewsrecyclerview.ViewDataModel;
@@ -59,7 +60,6 @@ public class RecyclerViewTest extends AppCompatActivity {
             @Override
             public void onSwipedLeft(final int position, ViewDataModel viewDataModel) {
                 removeItem(position, viewDataModel);
-                System.out.println(position);
                 Snackbar.make(recyclerView, "Remove!!!", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
