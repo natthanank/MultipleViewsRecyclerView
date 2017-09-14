@@ -110,8 +110,8 @@ public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouc
 
     public void undoRemove(int position, ViewDataModel oldViewDataModel) {
         getAdapter().getViewDataModels().add(position, oldViewDataModel);
-        System.out.println(((ViewDataModel)getAdapter().getViewDataModels().get(position)).getModel());
         getAdapter().notifyItemInserted(position);
+        getRecyclerView().scrollToPosition(position);
         viewDataModel=null;
         isUndo = true;
     }
@@ -119,6 +119,7 @@ public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouc
     public void undoUpdate(int position, ViewDataModel oldViewDataModel) {
         getAdapter().getViewDataModels().set(position, oldViewDataModel);
         getAdapter().notifyItemChanged(position);
+        getRecyclerView().scrollToPosition(position);
         viewDataModel=null;
         isUndo = true;
     }
