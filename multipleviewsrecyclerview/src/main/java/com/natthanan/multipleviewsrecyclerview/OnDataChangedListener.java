@@ -8,5 +8,5 @@ import android.view.View;
 
 public interface OnDataChangedListener {
 
-    String onDataChanged(View view, String oldData, String newData);
+    Message onDataChanged(View view, String oldData, String newData);
 }

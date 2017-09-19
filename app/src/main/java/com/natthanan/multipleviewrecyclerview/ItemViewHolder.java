@@ -46,15 +46,15 @@ public class ItemViewHolder extends BaseViewHolder {
 
             @Override
             public void afterTextChanged(Editable s) {
-                Toast.makeText(itemView.getContext(), onDataChanged(item, oldText, s.toString()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(itemView.getContext(), onDataChanged(item, oldText, s.toString()).toString(), Toast.LENGTH_SHORT).show();
             }
         });
         aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    Snackbar.make(itemView.getRootView(), onDataChanged(buttonView, "dont check", "check"), Snackbar.LENGTH_LONG).show();
-                } else Snackbar.make(itemView.getRootView(), onDataChanged(buttonView, "dont check", "check"), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(itemView.getRootView(), onDataChanged(buttonView, "dont check", "check").toString(), Snackbar.LENGTH_LONG).show();
+                } else Snackbar.make(itemView.getRootView(), onDataChanged(buttonView, "dont check", "check").toString(), Snackbar.LENGTH_LONG).show();
 
             }
         });

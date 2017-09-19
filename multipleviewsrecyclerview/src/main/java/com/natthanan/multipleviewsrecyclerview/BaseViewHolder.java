@@ -82,8 +82,12 @@ public abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder implemen
     }
 
     @Override
-    public String onDataChanged(View view, String oldData, String newData) {
-        String message = view.getClass().getSimpleName() + " at position " + getAdapterPosition() + " has changed from " + oldData + " to " + newData;
+    public Message onDataChanged(View view, String oldData, String newData) {
+        Message message = new Message();
+        message.setView(view);
+        message.setPosition(getAdapterPosition());
+        message.setOldData(oldData);
+        message.setNewData(newData);
         return message;
     }
 }
