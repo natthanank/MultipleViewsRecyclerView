@@ -32,4 +32,5 @@ public class FooterViewHolder extends BaseViewHolder {
         footer.setText("Footer");
 
     }
+
 }

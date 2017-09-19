@@ -25,4 +25,5 @@ public class HeaderViewHolder extends BaseViewHolder<String> {
         header.setText("Header");
         item.setText(data);
     }
+
 }

@@ -11,6 +11,7 @@ import android.view.View;
 import com.natthanan.multipleviewsrecyclerview.BaseAdapter;
 import com.natthanan.multipleviewsrecyclerview.BaseViewHolder;
 import com.natthanan.multipleviewsrecyclerview.Drag;
+import com.natthanan.multipleviewsrecyclerview.OnDataChangedListener;
 import com.natthanan.multipleviewsrecyclerview.Swipe;
 import com.natthanan.multipleviewsrecyclerview.ViewDataModel;
 
@@ -32,9 +33,11 @@ public class RecyclerViewTest extends AppCompatActivity {
 
         for (int i = 0; i < 100; i++) {
             if (i % 5 == 0) {
-                viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, Integer.toString(i)));
+                viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER"));
+                viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
             } else if (i % 5 == 4) {
-                viewDataModels.add(new ViewDataModel(FooterViewHolder.class, Integer.toString(i)));
+                viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
+                viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER"));
             } else {
                 viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
             }
