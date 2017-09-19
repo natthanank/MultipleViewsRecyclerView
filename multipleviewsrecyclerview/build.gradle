@@ -18,7 +18,7 @@ ext {
     libraryDescription = 'Library that help you create recyclerview with multiple view types'
     siteUrl = 'https://github.com/natthanank/MultipleViewsRecyclerView'
     gitUrl = 'https://github.com/natthanank/MultipleViewsRecyclerView.git'
-    libraryVersion = '0.7.10'
+    libraryVersion = '0.8'
     developerId = 'Mo0oN'
     developerName = 'Natthanan Kunchokwanit'
     developerEmail = 'natthanank14@gmail.com'
@@ -61,5 +61,5 @@ dependencies {
 }
 
 
-//apply from: 'https://raw.githubusercontent.com/numetriclabz/jcenter/master/installv.gradle'
-//apply from: 'https://raw.githubusercontent.com/numetriclabz/jcenter/master/bintrayv.gradle'
+apply from: 'https://raw.githubusercontent.com/numetriclabz/jcenter/master/installv.gradle'
+apply from: 'https://raw.githubusercontent.com/numetriclabz/jcenter/master/bintrayv.gradle'
