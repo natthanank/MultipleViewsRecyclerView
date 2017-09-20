@@ -83,12 +83,17 @@ public class RecyclerViewTest extends AppCompatActivity {
 
         };
 
-//        new Drag(recyclerView) {
-//            @Override
-//            public void onItemMove(int fromPosition, int toPosition, ViewDataModel fromViewDataModel, ViewDataModel toViewDataModel) {
-//
-//
-//            }
-//        };
+        Drag drag = new Drag(recyclerView) {
+            @Override
+            public void onItemMove(int fromPosition, int toPosition, ViewDataModel fromViewDataModel, ViewDataModel toViewDataModel) {
+
+
+            }
+        };
+
+        drag.addGroup(FooterViewHolder.class);
+        drag.addGroup(HeaderViewHolder.class);
+        drag.addGroup(ItemViewHolder.class);
+
     }
 }

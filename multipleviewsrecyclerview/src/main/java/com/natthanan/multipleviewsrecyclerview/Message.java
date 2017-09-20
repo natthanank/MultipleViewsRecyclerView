@@ -13,8 +13,8 @@ public class Message {
     private String newData;
     private int position;
 
-    public String toString() {
-        String message = view.getClass().getSimpleName() + " at position " + position + " has changed from " + oldData + " to " + newData;
+    public String getMessage() {
+        String message = getView().getClass().getSimpleName() + " at position " + getPosition()  + " has changed  to " + getNewData();
         return message;
     }
 
