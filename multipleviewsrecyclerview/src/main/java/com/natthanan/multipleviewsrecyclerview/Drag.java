@@ -1,12 +1,14 @@
 package com.natthanan.multipleviewsrecyclerview;
 
+import android.graphics.Canvas;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+
+import com.natthanan.multipleviewsrecyclerview.intf.ItemTouchHelperAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by DELL on 09/09/2560.
@@ -26,12 +28,15 @@ public abstract class Drag extends ItemTouchHelper.Callback implements ItemTouch
         this.recyclerView = recyclerView;
         layoutManager = recyclerView.getLayoutManager();
         adapter = (BaseAdapter) recyclerView.getAdapter();
+        adapter.setDrag(true);
         isDragEnabled = true;
         viewDataModels = getAdapter().getViewDataModels();
         viewHolderClasses = new ArrayList();
 
         itemTouchHelper = new ItemTouchHelper(this);
         itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        adapter.setItemTouchHelper(itemTouchHelper);
 
     }
 
@@ -112,7 +117,7 @@ public abstract class Drag extends ItemTouchHelper.Callback implements ItemTouch
             (recyclerView.getAdapter()).notifyItemMoved(fromPosition, toPosition);
             onItemMove(fromPosition, toPosition, (ViewDataModel) viewDataModels.get(fromPosition), (ViewDataModel) viewDataModels.get(toPosition));
             return true;
-        } catch (Exception e) {
+        } catch (IndexOutOfBoundsException e) {
             // case toPosition=0 (swap with first item)
             if (toPosition == 0) {
                 for (int i = fromPosition; i > 0; i--) {
@@ -146,6 +151,24 @@ public abstract class Drag extends ItemTouchHelper.Callback implements ItemTouch
     @Override
     public boolean isLongPressDragEnabled() {
         return isDragEnabled();
+    }
+
+    @Override
+    public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        if (isCurrentlyActive) {
+            if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+                // make shadown
+
+//                isRotated = true;
+            }
+        } else {
+        // view is going back to orig
+//        if (isRotated) {
+//
+//            // undo shadow
+//        }
+    }
     }
 
     @Override

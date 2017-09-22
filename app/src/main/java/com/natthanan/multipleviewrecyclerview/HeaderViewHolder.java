@@ -9,8 +9,6 @@ import com.natthanan.multipleviewsrecyclerview.annotation.ViewID;
 @LayoutID(R.layout.header)
 public class HeaderViewHolder extends BaseViewHolder<String> {
 
-    @ViewID(R.id.header)
-    TextView header;
 
     @ViewID(R.id.item)
     TextView item;
@@ -21,8 +19,7 @@ public class HeaderViewHolder extends BaseViewHolder<String> {
     }
 
     @Override
-    public void bind(String data) {
-        header.setText("Header");
+    public void bind(String data, String tag) {
         item.setText(data);
     }
 

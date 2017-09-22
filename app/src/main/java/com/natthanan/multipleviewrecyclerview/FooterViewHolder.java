@@ -17,8 +17,6 @@ public class FooterViewHolder extends BaseViewHolder {
 
     @ViewID(R.id.item)
     TextView item;
-    @ViewID(R.id.footer)
-    TextView footer;
 
 
     public FooterViewHolder(View itemView) {
@@ -26,10 +24,9 @@ public class FooterViewHolder extends BaseViewHolder {
     }
 
     @Override
-    public void bind(Object data) {
+    public void bind(Object data, String tag) {
 
         item.setText((String) data);
-        footer.setText("Footer");
 
     }
 

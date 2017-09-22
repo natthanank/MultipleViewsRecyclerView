@@ -13,34 +13,37 @@ import com.natthanan.multipleviewsrecyclerview.BaseViewHolder;
 import com.natthanan.multipleviewsrecyclerview.Drag;
 import com.natthanan.multipleviewsrecyclerview.Swipe;
 import com.natthanan.multipleviewsrecyclerview.ViewDataModel;
+import com.natthanan.multipleviewsrecyclerview.intf.iCallback;
 
 import java.util.ArrayList;
 
 
-public class RecyclerViewTest extends AppCompatActivity {
+public class RecyclerViewTest extends AppCompatActivity implements iCallback {
 
     ArrayList<ViewDataModel> viewDataModels = new ArrayList<>();
+
+    DataModel model = new DataModel();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler_view_test);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        BaseAdapter baseAdapter = new BaseAdapter(viewDataModels);
+        BaseAdapter baseAdapter = new BaseAdapter(viewDataModels, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(baseAdapter);
 
         for (int i = 0; i < 100; i++) {
             if (i % 5 == 0) {
-                viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER"));
-                viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER"));
-                viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
+                viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "Header"));
+                viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "Header"));
+                viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i), "Header"));
             } else if (i % 5 == 4) {
-                viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
-                viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER"));
-                viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER"));
+                viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i), "Footer"));
+                viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "Footer"));
+                viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "Footer"));
             } else {
-                viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
+                viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i), "Item"));
             }
         }
         new Swipe(recyclerView, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
@@ -97,5 +100,10 @@ public class RecyclerViewTest extends AppCompatActivity {
         drag.addGroup(HeaderViewHolder.class);
         drag.addGroup(ItemViewHolder.class);
 
+    }
+
+    @Override
+    public void onDatachange(String tag, RecyclerView.ViewHolder viewHolder, View view, Object data) {
+        System.out.println(tag + " " + view.getClass().getSimpleName() + " " + (String) data);
     }
 }

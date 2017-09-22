@@ -1,17 +1,26 @@
 package com.natthanan.multipleviewsrecyclerview;
 
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.View;
 import android.view.ViewGroup;
+
+import com.natthanan.multipleviewsrecyclerview.intf.iCallback;
 
 import java.util.List;
 
 
 public class BaseAdapter extends RecyclerView.Adapter{
 
+    private iCallback callback;
+
     private List<ViewDataModel> viewDataModels;
     private RecyclerView recyclerView;
+    private boolean isDrag=false;
+    private ItemTouchHelper itemTouchHelper;
 
-    public BaseAdapter(List<ViewDataModel> viewDataModels) {
+    public BaseAdapter(List<ViewDataModel> viewDataModels, iCallback callBack) {
         this.viewDataModels = viewDataModels;
     }
 
@@ -31,10 +40,19 @@ public class BaseAdapter extends RecyclerView.Adapter{
         return null;
     }
 
-    protected void onBind(RecyclerView.ViewHolder holder, Object data, int viewType) {
+    protected void onBind(final RecyclerView.ViewHolder holder, Object data, int viewType, String tag) {
         for (int i = 0; i < viewDataModels.size(); i++) {
             if (viewDataModels.get(i).getViewTypes() == viewType) {
-                viewDataModels.get(i).getBaseViewHolderClass().getClass().cast(holder).bind(data);
+                if (isDrag()) {
+                    holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            itemTouchHelper.startDrag(holder);
+                            return true;
+                        }
+                    });
+                }
+                viewDataModels.get(i).getBaseViewHolderClass().getClass().cast(holder).bind(data, tag);
                 break;
             }
         }
@@ -43,7 +61,7 @@ public class BaseAdapter extends RecyclerView.Adapter{
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        onBind(holder, viewDataModels.get(position).getModel(), viewDataModels.get(position).getViewTypes());
+        onBind(holder, viewDataModels.get(position).getModel(), viewDataModels.get(position).getViewTypes(), viewDataModels.get(position).getTag());
 
     }
 
@@ -61,4 +79,19 @@ public class BaseAdapter extends RecyclerView.Adapter{
         return viewDataModels;
     }
 
+    public boolean isDrag() {
+        return isDrag;
+    }
+
+    public void setDrag(boolean drag) {
+        isDrag = drag;
+    }
+
+    public ItemTouchHelper getItemTouchHelper() {
+        return itemTouchHelper;
+    }
+
+    public void setItemTouchHelper(ItemTouchHelper itemTouchHelper) {
+        this.itemTouchHelper = itemTouchHelper;
+    }
 }

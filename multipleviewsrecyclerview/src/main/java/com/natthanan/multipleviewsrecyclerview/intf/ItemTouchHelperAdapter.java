@@ -1,4 +1,6 @@
-package com.natthanan.multipleviewsrecyclerview;
+package com.natthanan.multipleviewsrecyclerview.intf;
+
+import com.natthanan.multipleviewsrecyclerview.ViewDataModel;
 
 /**
  * Created by DELL on 29/08/2560.

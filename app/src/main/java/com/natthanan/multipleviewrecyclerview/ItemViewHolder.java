@@ -28,7 +28,7 @@ public class ItemViewHolder extends BaseViewHolder {
     }
 
     @Override
-    public void bind(Object data) {
+    public void bind(Object data, final String tag) {
         item.setText((String) data);
         item.addTextChangedListener(new TextWatcher() {
             String oldText;
@@ -45,16 +45,15 @@ public class ItemViewHolder extends BaseViewHolder {
             @Override
             public void afterTextChanged(Editable s) {
 //                Toast.makeText(itemView.getContext(), onDataChanged(item, oldText, s.toString()).getMessage(), Toast.LENGTH_SHORT).show();
-                System.out.println(onDataChanged(item, oldText, s.toString()).getMessage());
+                ((RecyclerViewTest)itemView.getContext()).onDatachange(tag, getRecyclerView().getChildViewHolder(getRecyclerView().getChildAt(getAdapterPosition())),item, s.toString());
             }
         });
         aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    Snackbar.make(getRecyclerView(), onDataChanged(buttonView, "dont check", "check").getMessage(), Snackbar.LENGTH_LONG).show();
-                } else Snackbar.make(getRecyclerView(), onDataChanged(buttonView, "check", "don't check").getMessage(), Snackbar.LENGTH_LONG).show();
-
+                    ((RecyclerViewTest)itemView.getContext()).onDatachange(tag, getRecyclerView().getChildViewHolder(getRecyclerView().getChildAt(getAdapterPosition())), aSwitch, "check");
+                } else ((RecyclerViewTest)itemView.getContext()).onDatachange(tag, getRecyclerView().getChildViewHolder(getRecyclerView().getChildAt(getAdapterPosition())), aSwitch, "dont check");
             }
         });
     }

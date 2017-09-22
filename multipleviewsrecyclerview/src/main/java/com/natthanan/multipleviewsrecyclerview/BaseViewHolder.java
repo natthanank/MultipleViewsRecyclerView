@@ -13,7 +13,7 @@ import java.lang.reflect.InvocationTargetException;
  * Created by DELL on 28/08/2560.
  */
 
-public abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder implements OnDataChangedListener{
+public abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder{
 
     private int type;
     private int layout;
@@ -26,7 +26,7 @@ public abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder implemen
         setViewFields(this, itemView);
     }
 
-    public abstract void bind(T data);
+    public abstract void bind(T data, String tag);
 
     public BaseViewHolder createViewHolder(ViewDataModel viewDataModel, int layout, RecyclerView recyclerView) {
         try {
@@ -83,15 +83,7 @@ public abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder implemen
         }
     }
 
-    @Override
-    public Message onDataChanged(View view, String oldData, String newData) {
-        Message message = new Message();
-        message.setView(view);
-        message.setPosition(getAdapterPosition());
-        message.setOldData(oldData);
-        message.setNewData(newData);
-        return message;
-    }
+
 
     public RecyclerView getRecyclerView() {
         return recyclerView;

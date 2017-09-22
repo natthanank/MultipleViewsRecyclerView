@@ -18,13 +18,19 @@ import java.lang.reflect.InvocationTargetException;
 public class ViewDataModel implements Cloneable {
     private int viewTypes;
     private Object model;
+    private String tag;
     private BaseViewHolder baseViewHolderClass;
     private static RecyclerView recyclerView;
     private static SparseArray<Class<? extends BaseViewHolder>> baseViewHolderSparseArray = new SparseArray<>();
 
-    public ViewDataModel(Class viewHolderClass, Object model) {
+//    public ViewDataModel(Class viewHolderClass, Object model) {
+//        new ViewDataModel(viewHolderClass, model, null);
+//    }
+
+    public ViewDataModel(Class viewHolderClass, Object model, String tag) {
         setBaseViewHolderClass(createViewHolder(viewHolderClass, recyclerView));
         setModel(model);
+        setTag(tag);
     }
 
     public int getViewTypes() {
@@ -111,5 +117,13 @@ public class ViewDataModel implements Cloneable {
     @Override
     protected Object clone() throws CloneNotSupportedException {
         return super.clone();
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 }

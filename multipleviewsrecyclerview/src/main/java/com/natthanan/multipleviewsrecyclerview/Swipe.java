@@ -2,17 +2,17 @@ package com.natthanan.multipleviewsrecyclerview;
 
 import android.graphics.Paint;
 import android.os.CountDownTimer;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.View;
+
+import com.natthanan.multipleviewsrecyclerview.intf.ItemTouchHelperAdapter;
 
 /**
  * Created by DELL on 29/08/2560.
  */
 
-public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouchHelperAdapter{
+public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouchHelperAdapter {
     public static int ACTION_REMOVE = 0;
     public static int ACTION_UPDATE = 1;
 
