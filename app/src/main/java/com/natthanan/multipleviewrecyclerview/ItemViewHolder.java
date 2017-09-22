@@ -52,8 +52,8 @@ public class ItemViewHolder extends BaseViewHolder {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    Snackbar.make(itemView.getRootView(), onDataChanged(buttonView, "dont check", "check").getMessage(), Snackbar.LENGTH_LONG).show();
-                } else Snackbar.make(itemView.getRootView(), onDataChanged(buttonView, "dont check", "check").getMessage(), Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(getRecyclerView(), onDataChanged(buttonView, "dont check", "check").getMessage(), Snackbar.LENGTH_LONG).show();
+                } else Snackbar.make(getRecyclerView(), onDataChanged(buttonView, "check", "don't check").getMessage(), Snackbar.LENGTH_LONG).show();
 
             }
         });

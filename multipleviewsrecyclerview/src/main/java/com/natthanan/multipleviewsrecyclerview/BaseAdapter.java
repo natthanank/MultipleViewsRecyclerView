@@ -11,10 +11,14 @@ public class BaseAdapter extends RecyclerView.Adapter{
     private List<ViewDataModel> viewDataModels;
     private RecyclerView recyclerView;
 
-    public BaseAdapter(List<ViewDataModel> viewDataModels, RecyclerView recyclerView) {
+    public BaseAdapter(List<ViewDataModel> viewDataModels) {
         this.viewDataModels = viewDataModels;
-        this.recyclerView = recyclerView;
-        ViewDataModel.setRecyclerView(recyclerView);
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        this.recyclerView = recyclerView;ViewDataModel.setRecyclerView(recyclerView);
     }
 
     @Override

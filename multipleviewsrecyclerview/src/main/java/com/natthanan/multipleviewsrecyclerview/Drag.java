@@ -46,7 +46,7 @@ public abstract class Drag extends ItemTouchHelper.Callback implements ItemTouch
         return makeMovementFlags(dragFlags, 0);
     }
 
-    public boolean isGrouped(Class<? extends BaseViewHolder> viewHolderClass) {
+    private boolean isGrouped(Class<? extends BaseViewHolder> viewHolderClass) {
         for (Class<? extends BaseViewHolder> viewHolder: viewHolderClasses){
             if (viewHolder == viewHolderClass) {
                 return true;
@@ -55,13 +55,18 @@ public abstract class Drag extends ItemTouchHelper.Callback implements ItemTouch
         return false;
     }
 
-    public boolean nextTargetIsSameType(RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target){
+    private boolean nextTargetIsSameType(RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target){
         return ((BaseViewHolder)viewHolder).getClass() != ((ViewDataModel)adapter.getViewDataModels().get(target.getAdapterPosition() + 1)).getBaseViewHolderClass().getClass();
     }
 
-    public boolean prevTargetIsSameType(RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target){
+    private boolean prevTargetIsSameType(RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target){
         return ((BaseViewHolder)viewHolder).getClass() != ((ViewDataModel)adapter.getViewDataModels().get(target.getAdapterPosition() - 1)).getBaseViewHolderClass().getClass();
     }
+
+    private void swap() {
+
+    }
+
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -73,6 +78,14 @@ public abstract class Drag extends ItemTouchHelper.Callback implements ItemTouch
                 if ((isGrouped(((BaseViewHolder) target).getClass()))
                         && (target.getClass() != viewHolder.getClass())
                         && (nextTargetIsSameType(viewHolder, target))) {
+                    if (isCurrentTargetTypeMatchNextTarget(target)) {
+                        for (int i = fromPosition; i < toPosition; i++) {
+                            Collections.swap(((BaseAdapter) recyclerView.getAdapter()).getViewDataModels(), i, i + 1);
+                        }
+                        (recyclerView.getAdapter()).notifyItemMoved(fromPosition, toPosition);
+                        onItemMove(fromPosition, toPosition, (ViewDataModel) viewDataModels.get(fromPosition), (ViewDataModel) viewDataModels.get(toPosition));
+                        return true;
+                    }
                     return false;
                 }
                 for (int i = fromPosition; i < toPosition; i++) {
@@ -82,6 +95,14 @@ public abstract class Drag extends ItemTouchHelper.Callback implements ItemTouch
                 if ((isGrouped(((BaseViewHolder) target).getClass()))
                         && (target.getClass() != viewHolder.getClass())
                         && (prevTargetIsSameType(viewHolder, target))) {
+                    if (isCurrentTargetTypeMatchPrevTarget(target)) {
+                        for (int i = fromPosition; i > toPosition; i--) {
+                            Collections.swap(((BaseAdapter) recyclerView.getAdapter()).getViewDataModels(), i, i - 1);
+                        }
+                        (recyclerView.getAdapter()).notifyItemMoved(fromPosition, toPosition);
+                        onItemMove(fromPosition, toPosition, (ViewDataModel) viewDataModels.get(fromPosition), (ViewDataModel) viewDataModels.get(toPosition));
+                        return true;
+                    }
                     return false;
                 }
                 for (int i = fromPosition; i > toPosition; i--) {
@@ -110,6 +131,16 @@ public abstract class Drag extends ItemTouchHelper.Callback implements ItemTouch
             onItemMove(fromPosition, toPosition, (ViewDataModel) viewDataModels.get(fromPosition), (ViewDataModel) viewDataModels.get(toPosition));
             return true;
         }
+    }
+
+    private boolean isCurrentTargetTypeMatchNextTarget(RecyclerView.ViewHolder target) {
+        return ((ViewDataModel)adapter.getViewDataModels().get(target.getAdapterPosition())).getViewTypes() !=
+                ((ViewDataModel)adapter.getViewDataModels().get(target.getAdapterPosition() + 1)).getViewTypes();
+    }
+
+    private boolean isCurrentTargetTypeMatchPrevTarget(RecyclerView.ViewHolder target) {
+        return ((ViewDataModel)adapter.getViewDataModels().get(target.getAdapterPosition())).getViewTypes() !=
+                ((ViewDataModel)adapter.getViewDataModels().get(target.getAdapterPosition() - 1)).getViewTypes();
     }
 
     @Override

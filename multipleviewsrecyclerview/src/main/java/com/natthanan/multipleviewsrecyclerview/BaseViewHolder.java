@@ -17,6 +17,7 @@ public abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder implemen
 
     private int type;
     private int layout;
+    private RecyclerView recyclerView;
     protected View itemView;
 
     public BaseViewHolder(View itemView) {
@@ -32,6 +33,7 @@ public abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder implemen
             Class<?> c = Class.forName(this.getClass().getName());
             Constructor<?> constructor = c.getConstructor(View.class);
             Object instance = constructor.newInstance(viewDataModel.inflateView(layout, recyclerView));
+            ((BaseViewHolder) instance).setRecyclerView(recyclerView);
             return (BaseViewHolder) instance;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -89,5 +91,13 @@ public abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder implemen
         message.setOldData(oldData);
         message.setNewData(newData);
         return message;
+    }
+
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
+    }
+
+    public void setRecyclerView(RecyclerView recyclerView) {
+        this.recyclerView = recyclerView;
     }
 }

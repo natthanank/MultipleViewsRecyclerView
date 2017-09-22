@@ -25,17 +25,19 @@ public class RecyclerViewTest extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler_view_test);
-        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        final BaseAdapter baseAdapter = new BaseAdapter(viewDataModels, recyclerView);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        BaseAdapter baseAdapter = new BaseAdapter(viewDataModels);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(baseAdapter);
 
         for (int i = 0; i < 100; i++) {
             if (i % 5 == 0) {
                 viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER"));
+                viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER"));
                 viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
             } else if (i % 5 == 4) {
                 viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
+                viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER"));
                 viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER"));
             } else {
                 viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
@@ -51,7 +53,7 @@ public class RecyclerViewTest extends AppCompatActivity {
             public void onSwipedRight(final int position, ViewDataModel viewDataModel) {
                 viewDataModel.setModel("Changed!!!");
                 updateItem(position, viewDataModel);
-                Snackbar.make(recyclerView, "Change!!!", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
+                Snackbar.make(getRecyclerView(), "Change!!!", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         undoUpdate(position, getOldViewDataModel());
@@ -62,7 +64,7 @@ public class RecyclerViewTest extends AppCompatActivity {
             @Override
             public void onSwipedLeft(final int position, ViewDataModel viewDataModel) {
                 removeItem(position, viewDataModel);
-                Snackbar.make(recyclerView, "Remove!!!", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
+                Snackbar.make(getRecyclerView(), "Remove!!!", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         undoRemove(position, getOldViewDataModel());
