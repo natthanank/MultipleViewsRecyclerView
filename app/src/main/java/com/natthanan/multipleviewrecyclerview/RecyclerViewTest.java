@@ -37,9 +37,9 @@ public class RecyclerViewTest extends AppCompatActivity implements iCallback {
             if (i % 5 == 0) {
                 viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "Header"));
                 viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "Header"));
-                viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i), "Header"));
+                viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
             } else if (i % 5 == 4) {
-                viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i), "Footer"));
+                viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
                 viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "Footer"));
                 viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "Footer"));
             } else {

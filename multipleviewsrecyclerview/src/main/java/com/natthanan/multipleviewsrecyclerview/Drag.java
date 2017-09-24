@@ -158,16 +158,13 @@ public abstract class Drag extends ItemTouchHelper.Callback implements ItemTouch
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         if (isCurrentlyActive) {
             if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
-                // make shadown
-
-//                isRotated = true;
+                float alpha = 0.5f - Math.abs(dX) / (float) viewHolder.itemView.getWidth();
+                viewHolder.itemView.setAlpha(alpha);
+                viewHolder.itemView.setTranslationX(dX);
             }
         } else {
-        // view is going back to orig
-//        if (isRotated) {
-//
-//            // undo shadow
-//        }
+            viewHolder.itemView.setAlpha(1);
+            viewHolder.itemView.setTranslationX(dX);
     }
     }
 
