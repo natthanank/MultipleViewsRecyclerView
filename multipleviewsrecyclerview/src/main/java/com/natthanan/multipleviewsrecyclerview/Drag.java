@@ -153,7 +153,6 @@ public abstract class Drag extends ItemTouchHelper.Callback implements ItemTouch
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-        System.out.println("draw");
         if (isCurrentlyActive) {
             if (isDrag) {
                 float alpha = 0.5f - Math.abs(dX) / (float) viewHolder.itemView.getWidth();

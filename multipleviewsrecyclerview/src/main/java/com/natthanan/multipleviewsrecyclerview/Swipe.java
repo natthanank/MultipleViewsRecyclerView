@@ -68,7 +68,6 @@ public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouc
 
     @Override
     public void onSwiped(final RecyclerView.ViewHolder viewHolder, final int direction) {
-        System.out.println("swipe");
         Drag.isDrag = false;
         isUndo = false;
         final int position = viewHolder.getAdapterPosition();

@@ -13,12 +13,12 @@ import com.natthanan.multipleviewsrecyclerview.BaseViewHolder;
 import com.natthanan.multipleviewsrecyclerview.Drag;
 import com.natthanan.multipleviewsrecyclerview.Swipe;
 import com.natthanan.multipleviewsrecyclerview.ViewDataModel;
-import com.natthanan.multipleviewsrecyclerview.intf.iCallback;
+import com.natthanan.multipleviewsrecyclerview.intf.DataChangedCallback;
 
 import java.util.ArrayList;
 
 
-public class RecyclerViewTest extends AppCompatActivity implements iCallback{
+public class RecyclerViewTest extends AppCompatActivity implements DataChangedCallback {
 
     ArrayList<ViewDataModel> viewDataModels = new ArrayList<>();
 

@@ -1,12 +1,9 @@
 package com.natthanan.multipleviewsrecyclerview;
 
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.natthanan.multipleviewsrecyclerview.intf.iCallback;
 
 import java.util.List;
 
