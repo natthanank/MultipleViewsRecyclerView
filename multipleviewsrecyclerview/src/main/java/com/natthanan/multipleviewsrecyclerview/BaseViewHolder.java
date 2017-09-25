@@ -18,11 +18,13 @@ public abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder{
     private int type;
     private int layout;
     private RecyclerView recyclerView;
+    private BaseViewHolder viewHolder;
     protected View itemView;
 
     public BaseViewHolder(View itemView) {
         super(itemView);
         this.itemView = itemView;
+        setViewHolder(this);
         setViewFields(this, itemView);
     }
 
@@ -91,5 +93,13 @@ public abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder{
 
     public void setRecyclerView(RecyclerView recyclerView) {
         this.recyclerView = recyclerView;
+    }
+
+    public BaseViewHolder getViewHolder() {
+        return viewHolder;
+    }
+
+    public void setViewHolder(BaseViewHolder viewHolder) {
+        this.viewHolder = viewHolder;
     }
 }

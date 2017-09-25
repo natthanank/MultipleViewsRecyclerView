@@ -29,9 +29,29 @@ public class RecyclerViewTest extends AppCompatActivity implements iCallback{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler_view_test);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        BaseAdapter baseAdapter = new BaseAdapter(viewDataModels);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        final BaseAdapter baseAdapter = new BaseAdapter(viewDataModels);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(baseAdapter);
+        recyclerView.addOnScrollListener(new LoadMoreListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                for (int i = 0; i < 100; i++) {
+                    if (i % 5 == 0) {
+                        viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "Header"));
+                        viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "Header"));
+                        viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
+                    } else if (i % 5 == 4) {
+                        viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
+                        viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "Footer"));
+                        viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "Footer"));
+                    } else {
+                        viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i), "Item"));
+                    }
+                    baseAdapter.notifyItemInserted(baseAdapter.getItemCount());
+                }
+            }
+        });
 
         for (int i = 0; i < 100; i++) {
             if (i % 5 == 0) {
@@ -103,7 +123,7 @@ public class RecyclerViewTest extends AppCompatActivity implements iCallback{
     }
 
     @Override
-    public void onDatachange(String tag, int position, View view, Object data) {
-        System.out.println(tag + " " + view.getClass().getSimpleName() + " at " + position + " position has changed to " + (String) data);
+    public void onDatachange(String tag, BaseViewHolder baseViewHolder, View view, Object data) {
+        System.out.println(tag + " " + view.getClass().getSimpleName() + " at " + baseViewHolder.getAdapterPosition() + " position has changed to " + (String) data);
     }
 }

@@ -1,6 +1,7 @@
 package com.natthanan.multipleviewrecyclerview;
 
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -48,12 +49,13 @@ public class ItemViewHolder extends BaseViewHolder {
 //                ((RecyclerViewTest)itemView.getContext()).onDatachange(tag, getRecyclerView().getChildViewHolder(getRecyclerView().getChildAt(getAdapterPosition())),item, s.toString());
             }
         });
+        System.out.println(getViewHolder().getAdapterPosition());
         aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    ((RecyclerViewTest)itemView.getContext()).onDatachange(tag, getAdapterPosition(), aSwitch, "check");
-                } else ((RecyclerViewTest)itemView.getContext()).onDatachange(tag, getAdapterPosition(), aSwitch, "dont check");
+                    ((RecyclerViewTest)itemView.getContext()).onDatachange(tag, getViewHolder(), aSwitch, "check");
+                } else ((RecyclerViewTest)itemView.getContext()).onDatachange(tag, getViewHolder(), aSwitch, "dont check");
             }
         });
     }
