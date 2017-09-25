@@ -3,14 +3,17 @@ package com.natthanan.multipleviewrecyclerview;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import com.natthanan.multipleviewsrecyclerview.BaseAdapter;
 import com.natthanan.multipleviewsrecyclerview.BaseViewHolder;
 import com.natthanan.multipleviewsrecyclerview.Drag;
+import com.natthanan.multipleviewsrecyclerview.LoadMoreListener;
 import com.natthanan.multipleviewsrecyclerview.Swipe;
 import com.natthanan.multipleviewsrecyclerview.ViewDataModel;
 import com.natthanan.multipleviewsrecyclerview.intf.DataChangedCallback;
@@ -31,27 +34,29 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         final BaseAdapter baseAdapter = new BaseAdapter(viewDataModels);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(baseAdapter);
-        recyclerView.addOnScrollListener(new LoadMoreListener(linearLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount) {
-                for (int i = 0; i < 100; i++) {
-                    if (i % 5 == 0) {
-                        viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "Header"));
-                        viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "Header"));
-                        viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
-                    } else if (i % 5 == 4) {
-                        viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
-                        viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "Footer"));
-                        viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "Footer"));
-                    } else {
-                        viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i), "Item"));
-                    }
-                    baseAdapter.notifyItemInserted(baseAdapter.getItemCount());
-                }
-            }
-        });
+//        recyclerView.addOnScrollListener(new LoadMoreListener(linearLayoutManager) {
+//            @Override
+//            public void onLoadMore(int page, int totalItemsCount) {
+//                for (int i = 0; i < 100; i++) {
+//                    if (i % 5 == 0) {
+//                        viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "Header"));
+//                        viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "Header"));
+//                        viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
+//                    } else if (i % 5 == 4) {
+//                        viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
+//                        viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "Footer"));
+//                        viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "Footer"));
+//                    } else {
+//                        viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i), "Item"));
+//                    }
+//                    baseAdapter.notifyItemInserted(baseAdapter.getItemCount());
+//                }
+//            }
+//        });
 
         for (int i = 0; i < 100; i++) {
             if (i % 5 == 0) {

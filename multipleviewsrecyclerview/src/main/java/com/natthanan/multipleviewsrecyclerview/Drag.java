@@ -1,7 +1,10 @@
 package com.natthanan.multipleviewsrecyclerview;
 
 import android.graphics.Canvas;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
 import com.natthanan.multipleviewsrecyclerview.intf.ItemTouchHelperAdapter;
@@ -48,7 +51,21 @@ public abstract class Drag extends ItemTouchHelper.Callback implements ItemTouch
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
 
-        dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+        if (layoutManager instanceof LinearLayoutManager) {
+            if (((LinearLayoutManager) layoutManager).getOrientation() == LinearLayoutManager.HORIZONTAL) {
+                dragFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+            } else {
+                dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+            }
+        }
+
+        if (layoutManager instanceof GridLayoutManager) {
+            dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT;
+        }
+
+        if (layoutManager instanceof StaggeredGridLayoutManager) {
+            dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT;
+        }
         return makeMovementFlags(dragFlags, 0);
     }
 
