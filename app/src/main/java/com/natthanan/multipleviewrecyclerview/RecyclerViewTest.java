@@ -38,25 +38,25 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(baseAdapter);
-//        recyclerView.addOnScrollListener(new LoadMoreListener(linearLayoutManager) {
-//            @Override
-//            public void onLoadMore(int page, int totalItemsCount) {
-//                for (int i = 0; i < 100; i++) {
-//                    if (i % 5 == 0) {
-//                        viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "Header"));
-//                        viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "Header"));
-//                        viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
-//                    } else if (i % 5 == 4) {
-//                        viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
-//                        viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "Footer"));
-//                        viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "Footer"));
-//                    } else {
-//                        viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i), "Item"));
-//                    }
-//                    baseAdapter.notifyItemInserted(baseAdapter.getItemCount());
-//                }
-//            }
-//        });
+        recyclerView.addOnScrollListener(new LoadMoreListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                for (int i = 0; i < 100; i++) {
+                    if (i % 5 == 0) {
+                        viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "Header"));
+                        viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "Header"));
+                        viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
+                    } else if (i % 5 == 4) {
+                        viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
+                        viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "Footer"));
+                        viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "Footer"));
+                    } else {
+                        viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i), "Item"));
+                    }
+                    baseAdapter.notifyItemInserted(baseAdapter.getItemCount());
+                }
+            }
+        });
 
         for (int i = 0; i < 100; i++) {
             if (i % 5 == 0) {
@@ -116,7 +116,6 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
         Drag drag = new Drag(recyclerView) {
             @Override
             public void onItemMove(int fromPosition, int toPosition, ViewDataModel fromViewDataModel, ViewDataModel toViewDataModel) {
-
 
             }
         };

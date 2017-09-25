@@ -7,13 +7,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
-import com.natthanan.multipleviewsrecyclerview.intf.ItemTouchHelperAdapter;
-
 /**
  * Created by DELL on 29/08/2560.
  */
 
-public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouchHelperAdapter {
+public abstract class Swipe extends ItemTouchHelper.Callback{
     public static int ACTION_REMOVE = 0;
     public static int ACTION_UPDATE = 1;
 
@@ -23,12 +21,12 @@ public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouc
     private boolean isSwipeEnabled;
     private int swipeFlags;
     private ItemTouchHelper itemTouchHelper;
-    private Paint paint;
     private int movementFlags;
     private ViewDataModel viewDataModel;
     private ViewDataModel oldViewDataModel;
     private boolean isUndo = false;
     private int action;
+    private int duration = 3500;
 
     public Swipe(RecyclerView recyclerView, int movementFlags) {
         this.recyclerView = recyclerView;
@@ -40,7 +38,6 @@ public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouc
         itemTouchHelper = new ItemTouchHelper(this);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
-        paint = new Paint();
     }
 
 
@@ -93,7 +90,7 @@ public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouc
                 break;
             default:
         }
-        new CountDownTimer(3500, 3500) {
+        new CountDownTimer(getDuration(), getDuration()) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -146,9 +143,11 @@ public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouc
         getAdapter().notifyItemChanged(position);
     }
 
-    @Override
-    public void onItemMove(int fromPosition, int toPosition, ViewDataModel fromViewDataModel, ViewDataModel toViewDataModel) {
-    }
+    public abstract void onSwipedRight(int position, ViewDataModel viewDataModel);
+    public abstract void onSwipedLeft(int position, ViewDataModel viewDataModel);
+    public abstract void onSwipeUp(int position, ViewDataModel viewDataModel);
+    public abstract void onSwipeDown(int position, ViewDataModel viewDataModel);
+    public abstract void onUpdateSwiped(int position, ViewDataModel viewDataModel, int action);
 
     @Override
     public boolean isItemViewSwipeEnabled() {
@@ -187,5 +186,13 @@ public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouc
 
     public void setOldViewDataModel(ViewDataModel oldViewDataModel) {
         this.oldViewDataModel = oldViewDataModel;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
     }
 }
