@@ -1,5 +1,6 @@
 package com.natthanan.multipleviewsrecyclerview;
 
+import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.CountDownTimer;
 import android.support.v7.widget.LinearLayoutManager;
@@ -67,6 +68,8 @@ public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouc
 
     @Override
     public void onSwiped(final RecyclerView.ViewHolder viewHolder, final int direction) {
+        System.out.println("swipe");
+        Drag.isDrag = false;
         isUndo = false;
         final int position = viewHolder.getAdapterPosition();
         final BaseAdapter baseAdapter = (BaseAdapter) recyclerView.getAdapter();
@@ -107,6 +110,14 @@ public abstract class Swipe extends ItemTouchHelper.Callback implements ItemTouc
 
     }
 
+    @Override
+    public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        if (isCurrentlyActive) {
+            viewHolder.itemView.setAlpha(1);
+            viewHolder.itemView.setTranslationX(dX);
+        }
+    }
 
     public void undoRemove(int position, ViewDataModel oldViewDataModel) {
         getAdapter().getViewDataModels().add(position, oldViewDataModel);

@@ -13,14 +13,12 @@ import java.util.List;
 
 public class BaseAdapter extends RecyclerView.Adapter{
 
-    private iCallback callback;
-
     private List<ViewDataModel> viewDataModels;
     private RecyclerView recyclerView;
     private boolean isDrag=false;
     private ItemTouchHelper itemTouchHelper;
 
-    public BaseAdapter(List<ViewDataModel> viewDataModels, iCallback callBack) {
+    public BaseAdapter(List<ViewDataModel> viewDataModels) {
         this.viewDataModels = viewDataModels;
     }
 
@@ -47,7 +45,7 @@ public class BaseAdapter extends RecyclerView.Adapter{
                     holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View v) {
-                            itemTouchHelper.startDrag(holder);
+                            Drag.isDrag = true;
                             return true;
                         }
                     });

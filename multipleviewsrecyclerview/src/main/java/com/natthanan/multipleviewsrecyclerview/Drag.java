@@ -23,6 +23,7 @@ public abstract class Drag extends ItemTouchHelper.Callback implements ItemTouch
     private ItemTouchHelper itemTouchHelper;
     List viewDataModels;
     List<Class<? extends BaseViewHolder>> viewHolderClasses;
+    public static boolean isDrag = true;
 
     public Drag(final RecyclerView recyclerView) {
         this.recyclerView = recyclerView;
@@ -68,15 +69,11 @@ public abstract class Drag extends ItemTouchHelper.Callback implements ItemTouch
         return ((BaseViewHolder)viewHolder).getClass() != ((ViewDataModel)adapter.getViewDataModels().get(target.getAdapterPosition() - 1)).getBaseViewHolderClass().getClass();
     }
 
-    private void swap() {
-
-    }
-
-
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
         int fromPosition = viewHolder.getAdapterPosition();
         int toPosition = target.getAdapterPosition();
+        isDrag = true;
         try {
             // normal case
             if (fromPosition < toPosition) {
@@ -156,8 +153,9 @@ public abstract class Drag extends ItemTouchHelper.Callback implements ItemTouch
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        System.out.println("draw");
         if (isCurrentlyActive) {
-            if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+            if (isDrag) {
                 float alpha = 0.5f - Math.abs(dX) / (float) viewHolder.itemView.getWidth();
                 viewHolder.itemView.setAlpha(alpha);
                 viewHolder.itemView.setTranslationX(dX);
@@ -165,12 +163,11 @@ public abstract class Drag extends ItemTouchHelper.Callback implements ItemTouch
         } else {
             viewHolder.itemView.setAlpha(1);
             viewHolder.itemView.setTranslationX(dX);
-    }
+        }
     }
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-
     }
 
 

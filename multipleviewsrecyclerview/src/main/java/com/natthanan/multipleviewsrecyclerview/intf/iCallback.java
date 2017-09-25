@@ -8,5 +8,5 @@ import android.view.View;
  */
 
 public interface iCallback {
-    void onDatachange(String tag, RecyclerView.ViewHolder viewHolder, View view, Object data);
+    void onDatachange(String tag, int position, View view, Object data);
 }

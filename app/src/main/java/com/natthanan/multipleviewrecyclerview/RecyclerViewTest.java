@@ -18,7 +18,7 @@ import com.natthanan.multipleviewsrecyclerview.intf.iCallback;
 import java.util.ArrayList;
 
 
-public class RecyclerViewTest extends AppCompatActivity implements iCallback {
+public class RecyclerViewTest extends AppCompatActivity implements iCallback{
 
     ArrayList<ViewDataModel> viewDataModels = new ArrayList<>();
 
@@ -29,7 +29,7 @@ public class RecyclerViewTest extends AppCompatActivity implements iCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler_view_test);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        BaseAdapter baseAdapter = new BaseAdapter(viewDataModels, this);
+        BaseAdapter baseAdapter = new BaseAdapter(viewDataModels);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(baseAdapter);
 
@@ -103,7 +103,7 @@ public class RecyclerViewTest extends AppCompatActivity implements iCallback {
     }
 
     @Override
-    public void onDatachange(String tag, RecyclerView.ViewHolder viewHolder, View view, Object data) {
-        System.out.println(tag + " " + view.getClass().getSimpleName() + " " + (String) data);
+    public void onDatachange(String tag, int position, View view, Object data) {
+        System.out.println(tag + " " + view.getClass().getSimpleName() + " at " + position + " position has changed to " + (String) data);
     }
 }
