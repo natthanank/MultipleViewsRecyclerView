@@ -87,11 +87,7 @@ public abstract class Drag extends ItemTouchHelper.Callback {
                 // check viewholder class match the group
                 if ((isGrouped(((BaseViewHolder) target).getClass()))
                         // check viewholder class match the target class
-                        && (target.getClass() != viewHolder.getClass())
-
-                        // check viewholder class match the next target class
-//                        && (nextTargetIsSameType(viewHolder, target))
-                        ) {
+                        && (target.getClass() != viewHolder.getClass())) {
                     // check current target match the next target
                     if (isCurrentTargetTypeMatchNextTarget(target)) {
                         for (int i = fromPosition; i < toPosition; i++) {

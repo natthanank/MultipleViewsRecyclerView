@@ -35,10 +35,8 @@ public class BaseAdapter extends RecyclerView.Adapter{
         return null;
     }
 
-    protected void onBind(final RecyclerView.ViewHolder holder, Object data, int viewType, String tag) {
-        for (int i = 0; i < viewDataModels.size(); i++) {
-            if (viewDataModels.get(i).getViewTypes() == viewType) {
-                if (isDrag()) {
+    protected void onBind(final RecyclerView.ViewHolder holder, int position, Object data, String tag) {
+        if (isDrag()) {
                     holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View v) {
@@ -47,16 +45,14 @@ public class BaseAdapter extends RecyclerView.Adapter{
                         }
                     });
                 }
-                viewDataModels.get(i).getBaseViewHolderClass().getClass().cast(holder).bind(data, tag);
-                break;
-            }
-        }
+        System.out.println(viewDataModels.get(position).getGroupName());
+        viewDataModels.get(position).getBaseViewHolderClass().getClass().cast(holder).bind(data, tag);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        onBind(holder, viewDataModels.get(position).getModel(), viewDataModels.get(position).getViewTypes(), viewDataModels.get(position).getTag());
+        onBind(holder, position, viewDataModels.get(position).getModel(), viewDataModels.get(position).getTag());
 
     }
 

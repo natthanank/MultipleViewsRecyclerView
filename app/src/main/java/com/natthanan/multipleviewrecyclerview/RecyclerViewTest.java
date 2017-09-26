@@ -41,36 +41,21 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
         recyclerView.addOnScrollListener(new LoadMoreListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-                for (int i = 0; i < 100; i++) {
-                    if (i % 5 == 0) {
-                        viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "Header"));
-                        viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "Header"));
-                        viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
-                    } else if (i % 5 == 4) {
-                        viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
-                        viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "Footer"));
-                        viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "Footer"));
-                    } else {
-                        viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i), "Item"));
-                    }
-                    baseAdapter.notifyItemInserted(baseAdapter.getItemCount());
+                viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "HEADER", true, true, "Group2"));
+                for (int i = 30; i > 0; i--) {
+                    viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i), "ITEM", true, false, "Group2"));
                 }
+                viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "FOOTER", true, false, "Group2"));
+                baseAdapter.notifyDataSetChanged();
             }
         });
 
-        for (int i = 0; i < 100; i++) {
-            if (i % 5 == 0) {
-                viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "Header"));
-                viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "Header"));
-                viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
-            } else if (i % 5 == 4) {
-                viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i)));
-                viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "Footer"));
-                viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "Footer"));
-            } else {
-                viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i), "Item"));
-            }
+        viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "HEADER", true, true, "Group1"));
+        for (int i = 0; i < 30; i++) {
+            viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i), "ITEM", true, false, "Group1"));
         }
+        viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "FOOTER", true, false, "Group1"));
+
         new Swipe(recyclerView, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
             @Override
             public void onUpdateSwiped(int position, ViewDataModel viewDataModel, int action) {

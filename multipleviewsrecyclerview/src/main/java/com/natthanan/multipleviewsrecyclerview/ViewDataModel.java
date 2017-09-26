@@ -19,6 +19,9 @@ public class ViewDataModel implements Cloneable {
     private int viewTypes;
     private Object model;
     private String tag;
+    private boolean isGroup;
+    private boolean isParent;
+    private String groupName;
     private BaseViewHolder baseViewHolderClass;
     private static RecyclerView recyclerView;
     private static SparseArray<Class<? extends BaseViewHolder>> baseViewHolderSparseArray = new SparseArray<>();
@@ -28,10 +31,21 @@ public class ViewDataModel implements Cloneable {
         setModel(model);
     }
 
+    // add tag when notify
     public ViewDataModel(Class viewHolderClass, Object model, String tag) {
         setBaseViewHolderClass(createViewHolder(viewHolderClass, recyclerView));
         setModel(model);
         setTag(tag);
+    }
+
+    public ViewDataModel(Class viewHolderClass, Object model, String tag, boolean isGroup, boolean isParent, String groupName) {
+        setBaseViewHolderClass(createViewHolder(viewHolderClass, recyclerView));
+        setModel(model);
+        setTag(tag);
+        setGroup(isGroup);
+        setParent(isParent);
+        setGroupName(groupName);
+
     }
 
     public int getViewTypes() {
@@ -126,5 +140,29 @@ public class ViewDataModel implements Cloneable {
 
     public void setTag(String tag) {
         this.tag = tag;
+    }
+
+    public boolean isGroup() {
+        return isGroup;
+    }
+
+    public void setGroup(boolean group) {
+        isGroup = group;
+    }
+
+    public boolean isParent() {
+        return isParent;
+    }
+
+    public void setParent(boolean parent) {
+        isParent = parent;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 }
