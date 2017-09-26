@@ -89,7 +89,7 @@ public class ViewDataModel implements Cloneable {
             Class<?> c = Class.forName(viewHolderClass.getName());
             Constructor<?> constructor = c.getConstructor(View.class);
 
-            if (baseViewHolderSparseArray.get(baseViewHolderSparseArray.size()) == null) {
+            if (baseViewHolderSparseArray.indexOfValue(viewHolderClass) == -1) {
                 baseViewHolderSparseArray.put(baseViewHolderSparseArray.size(), viewHolderClass);
             }
 
