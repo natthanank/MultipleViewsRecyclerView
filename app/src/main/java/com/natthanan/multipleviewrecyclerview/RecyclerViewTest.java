@@ -1,6 +1,8 @@
 package com.natthanan.multipleviewrecyclerview;
 
+import android.content.DialogInterface;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -9,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+import android.widget.Toast;
 
 import com.natthanan.multipleviewsrecyclerview.BaseAdapter;
 import com.natthanan.multipleviewsrecyclerview.BaseViewHolder;
@@ -25,7 +28,6 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
 
     ArrayList<ViewDataModel> viewDataModels = new ArrayList<>();
 
-    DataModel model = new DataModel();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +52,13 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
             }
         });
 
-        viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "HEADER", true, true, "Group1"));
-        for (int i = 0; i < 30; i++) {
-            viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i), "ITEM", true, false, "Group1"));
+        for (int j = 0; j < 20; j++) {
+            viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "HEADER", true, true, "Group"+j));
+            for (int i = 0; i < 3; i++) {
+                viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i), "ITEM", true, false, "Group"+j));
+            }
+            viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "FOOTER", true, false, "Group"+j));
         }
-        viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "FOOTER", true, false, "Group1"));
 
         new Swipe(recyclerView, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
             @Override
@@ -63,15 +67,30 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
             }
 
             @Override
-            public void onSwipedRight(final int position, ViewDataModel viewDataModel) {
-                viewDataModel.setModel("Changed!!!");
-                updateItem(position, viewDataModel);
-                Snackbar.make(getRecyclerView(), "Change!!!", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        undoUpdate(position, getOldViewDataModel());
+            public void onSwipedRight(final int position, final ViewDataModel viewDataModel) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(RecyclerViewTest.this);
+                builder.setMessage("รับขนมจีบซาลาเปาเพิ่มมั้ยครับ?");
+                builder.setPositiveButton("รับ", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        viewDataModel.setModel("รับขนมจีบซาลาเปา");
+                        updateItem(position, viewDataModel);
+                        Snackbar.make(getRecyclerView(), "คุณได้รับขนมจีบซาลาเปา", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                undoUpdate(position, getOldViewDataModel());
+                            }
+                        }).show();
                     }
-                }).show();
+                });
+                builder.setNegativeButton("ไม่รับ", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //dialog.dismiss();
+                    }
+                });
+                builder.show();
+
+
             }
 
             @Override
@@ -104,10 +123,6 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
 
             }
         };
-
-        drag.addGroup(FooterViewHolder.class);
-        drag.addGroup(HeaderViewHolder.class);
-        drag.addGroup(ItemViewHolder.class);
 
     }
 

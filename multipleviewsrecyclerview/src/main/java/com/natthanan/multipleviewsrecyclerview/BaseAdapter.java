@@ -5,6 +5,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -45,7 +46,6 @@ public class BaseAdapter extends RecyclerView.Adapter{
                         }
                     });
                 }
-        System.out.println(viewDataModels.get(position).getGroupName());
         viewDataModels.get(position).getBaseViewHolderClass().getClass().cast(holder).bind(data, tag);
     }
 
@@ -53,7 +53,6 @@ public class BaseAdapter extends RecyclerView.Adapter{
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         onBind(holder, position, viewDataModels.get(position).getModel(), viewDataModels.get(position).getTag());
-
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.natthanan.multipleviewsrecyclerview;
 
+import android.support.design.internal.NavigationMenuPresenter;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -95,7 +96,7 @@ public class ViewDataModel implements Cloneable {
             int layout = getLayoutId(viewHolderClass);
             int type = baseViewHolderSparseArray.indexOfValue(viewHolderClass);
 
-            Object instance = constructor.newInstance(inflateView(layout, recyclerView));
+            Object instance = constructor.newInstance(inflateView(layout));
 
             ((BaseViewHolder) instance).setType(type);
             ((BaseViewHolder) instance).setLayout(layout);
@@ -117,7 +118,7 @@ public class ViewDataModel implements Cloneable {
         return null;
     }
 
-    public View inflateView(int layout, RecyclerView recyclerView) {
+    public View inflateView(int layout) {
         return LayoutInflater.from(this.getRecyclerView().getContext()).inflate(layout, this.getRecyclerView(), false);
     }
 
