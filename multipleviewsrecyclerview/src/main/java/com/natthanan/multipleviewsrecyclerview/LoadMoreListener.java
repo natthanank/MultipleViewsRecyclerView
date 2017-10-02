@@ -23,20 +23,17 @@ public abstract class LoadMoreListener extends RecyclerView.OnScrollListener {
     // Sets the starting page index
     private int startingPageIndex = 0;
 
+    RecyclerView recyclerView;
     RecyclerView.LayoutManager mLayoutManager;
 
-    public LoadMoreListener(LinearLayoutManager layoutManager) {
-        this.mLayoutManager = layoutManager;
-    }
-
-    public LoadMoreListener(GridLayoutManager layoutManager) {
-        this.mLayoutManager = layoutManager;
-        visibleThreshold = visibleThreshold * layoutManager.getSpanCount();
-    }
-
-    public LoadMoreListener(StaggeredGridLayoutManager layoutManager) {
-        this.mLayoutManager = layoutManager;
-        visibleThreshold = visibleThreshold * layoutManager.getSpanCount();
+    public LoadMoreListener(RecyclerView recyclerView) {
+        this.recyclerView = recyclerView;
+        this.mLayoutManager = recyclerView.getLayoutManager();
+        if (mLayoutManager instanceof GridLayoutManager) {
+            visibleThreshold = visibleThreshold * ((GridLayoutManager) mLayoutManager).getSpanCount();
+        } else if (mLayoutManager instanceof StaggeredGridLayoutManager) {
+            visibleThreshold = visibleThreshold * ((StaggeredGridLayoutManager) mLayoutManager).getSpanCount();
+        }
     }
 
     public int getLastVisibleItem(int[] lastVisibleItemPositions) {
@@ -58,7 +55,7 @@ public abstract class LoadMoreListener extends RecyclerView.OnScrollListener {
     @Override
     public void onScrolled(RecyclerView view, int dx, int dy) {
         int lastVisibleItemPosition = 0;
-        int totalItemCount = mLayoutManager.getItemCount();
+        final int totalItemCount = mLayoutManager.getItemCount();
 
         if (mLayoutManager instanceof StaggeredGridLayoutManager) {
             int[] lastVisibleItemPositions = ((StaggeredGridLayoutManager) mLayoutManager).findLastVisibleItemPositions(null);
@@ -92,10 +89,15 @@ public abstract class LoadMoreListener extends RecyclerView.OnScrollListener {
         // If we do need to reload some more data, we execute onLoadMore to fetch the data.
         // threshold should reflect how many total columns there are too
         if (!loading && (lastVisibleItemPosition + visibleThreshold) > totalItemCount) {
+            recyclerView.post(new Runnable() {
+                @Override
+                public void run() {
+                    currentPage++;
+                    onLoadMore(currentPage, totalItemCount);
+                    loading = true;
+                }
+            });
 
-            currentPage++;
-            onLoadMore(currentPage, totalItemCount);
-            loading = true;
         }
     }
 

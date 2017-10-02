@@ -38,21 +38,15 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(baseAdapter);
-        recyclerView.addOnScrollListener(new LoadMoreListener(linearLayoutManager) {
+        recyclerView.addOnScrollListener(new LoadMoreListener(recyclerView) {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-                recyclerView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        new ViewDataModel(HeaderViewHolder.class, "HEADER", "HEADER", true, true, null);
-                        for (int i = 30; i > 0; i--) {
-                            new ViewDataModel(ItemViewHolder.class, Integer.toString(i), "ITEM", true, false, null);
-                        }
-                        new ViewDataModel(FooterViewHolder.class, "FOOTER", "FOOTER", true, false, null);
-                        baseAdapter.notifyDataSetChanged();
-                    }
-                });
-
+                new ViewDataModel(HeaderViewHolder.class, "HEADER", "HEADER", true, true, null);
+                for (int i = 30; i > 0; i--) {
+                    new ViewDataModel(ItemViewHolder.class, Integer.toString(i), "ITEM", true, false, null);
+                }
+                new ViewDataModel(FooterViewHolder.class, "FOOTER", "FOOTER", true, false, null);
+                baseAdapter.notifyDataSetChanged();
             }
         });
 
