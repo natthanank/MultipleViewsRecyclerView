@@ -12,8 +12,8 @@ import android.support.v7.widget.helper.ItemTouchHelper;
  */
 
 public abstract class Swipe extends ItemTouchHelper.Callback{
-    public static int ACTION_REMOVE = 0;
-    public static int ACTION_UPDATE = 1;
+    public static final int ACTION_REMOVE = 0;
+    public static final int ACTION_UPDATE = 1;
 
     private final BaseAdapter adapter;
     private RecyclerView recyclerView;

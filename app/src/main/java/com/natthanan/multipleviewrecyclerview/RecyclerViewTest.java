@@ -40,25 +40,26 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(baseAdapter);
-        recyclerView.addOnScrollListener(new LoadMoreListener(linearLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount) {
-                viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "HEADER", true, true, "Group2"));
-                for (int i = 30; i > 0; i--) {
-                    viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i), "ITEM", true, false, "Group2"));
-                }
-                viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "FOOTER", true, false, "Group2"));
-                baseAdapter.notifyDataSetChanged();
-            }
-        });
+//        recyclerView.addOnScrollListener(new LoadMoreListener(linearLayoutManager) {
+//            @Override
+//            public void onLoadMore(int page, int totalItemsCount) {
+//                viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "HEADER", true, true, "Group2"));
+//                for (int i = 30; i > 0; i--) {
+//                    viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i), "ITEM", true, false, "Group2"));
+//                }
+//                viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "FOOTER", true, false, "Group2"));
+//                baseAdapter.notifyDataSetChanged();
+//            }
+//        });
 
         for (int j = 0; j < 20; j++) {
-            viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "HEADER", true, true, "Group"+j));
+            viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "Group"+j+" HEADER", "HEADER", true, true, "Group"+j));
             for (int i = 0; i < 3; i++) {
-                viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i), "ITEM", true, false, "Group"+j));
+                viewDataModels.add(new ViewDataModel(ItemViewHolder.class, "Group"+j+" number " + i, "ITEM", true, false, "Group"+j));
             }
-            viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "FOOTER", true, false, "Group"+j));
+            viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "Group"+j+" FOOTER", "FOOTER", true, false, "Group"+j));
         }
+        viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "Group"+0+" FOOTER", "FOOTER", true, false, "Group"+0));
 
         new Swipe(recyclerView, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
             @Override

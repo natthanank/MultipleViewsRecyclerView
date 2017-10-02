@@ -11,6 +11,8 @@ import com.natthanan.multipleviewsrecyclerview.annotation.LayoutID;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by DELL on 28/08/2560.
@@ -46,7 +48,31 @@ public class ViewDataModel implements Cloneable {
         setGroup(isGroup);
         setParent(isParent);
         setGroupName(groupName);
+        List<ArrayList<ViewDataModel>> groupList = BaseAdapter.getGroupList();
+        addGroup(groupList);
+    }
 
+    public void addGroup(List<ArrayList<ViewDataModel>> groupList) {
+        boolean hasGroup = false;
+        for (int i = 0; i < groupList.size(); i++) {
+            if (groupName.equals(groupList.get(i).get(0).getGroupName())) {
+                groupList.get(i).add(this);
+                hasGroup = true;
+                break;
+            }
+        }
+        if (!hasGroup) {
+            ArrayList<ViewDataModel> newGroup = new ArrayList<>();
+            newGroup.add(this);
+            groupList.add(newGroup);
+        }
+
+        List<ViewDataModel> list = new ArrayList<>();
+        for (ArrayList<ViewDataModel> array : groupList) {
+            list.addAll(array);
+        }
+        ((BaseAdapter) recyclerView.getAdapter()).setViewDataModels(list);
+        recyclerView.getAdapter().notifyDataSetChanged();
     }
 
     public int getViewTypes() {
@@ -166,4 +192,10 @@ public class ViewDataModel implements Cloneable {
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
+
+    public int getStableID() {
+        return this.hashCode();
+    }
+
+
 }

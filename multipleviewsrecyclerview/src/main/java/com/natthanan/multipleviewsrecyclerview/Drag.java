@@ -1,6 +1,8 @@
 package com.natthanan.multipleviewsrecyclerview;
 
+import android.app.Activity;
 import android.graphics.Canvas;
+import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +10,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,13 +19,13 @@ import java.util.List;
  */
 
 public abstract class Drag extends ItemTouchHelper.Callback {
-    private final BaseAdapter adapter;
+    private BaseAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private boolean isDragEnabled;
     private int dragFlags;
     private ItemTouchHelper itemTouchHelper;
-    List viewDataModels;
-    List<Class<? extends BaseViewHolder>> viewHolderClasses;
+    private int dragFrom = -1;
+    private int dragTo = -1;
     public static boolean isDrag = true;
 
     public Drag(RecyclerView recyclerView) {
@@ -30,8 +33,6 @@ public abstract class Drag extends ItemTouchHelper.Callback {
         adapter = (BaseAdapter) recyclerView.getAdapter();
         adapter.setDrag(true);
         isDragEnabled = true;
-        viewDataModels = getAdapter().getViewDataModels();
-        viewHolderClasses = new ArrayList();
 
         itemTouchHelper = new ItemTouchHelper(this);
         itemTouchHelper.attachToRecyclerView(recyclerView);
@@ -60,20 +61,90 @@ public abstract class Drag extends ItemTouchHelper.Callback {
         int fromPosition = viewHolder.getAdapterPosition();
         int toPosition = target.getAdapterPosition();
         isDrag = true;
+        if(dragFrom == -1) {
+            dragFrom =  fromPosition;
+        }
+        dragTo = toPosition;
 
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
-                Collections.swap(viewDataModels, i, i + 1);
+                Collections.swap(adapter.getViewDataModels(), i, i + 1);
             }
         } else {
             for (int i = fromPosition; i > toPosition; i--) {
-                Collections.swap(viewDataModels, i, i - 1);
+                Collections.swap(adapter.getViewDataModels(), i, i - 1);
             }
         }
         adapter.notifyItemMoved(fromPosition, toPosition);
-
-
         return true;
+    }
+
+    private boolean isGropSwapped(int fromPosition, int toPosition) {
+        int groupFromPosition = -1;
+        int groupToPosition = -1;
+        boolean isGroupSwap = false;
+        for (int i = 0; i < BaseAdapter.getGroupList().size(); i++) {
+            if (isGroupSwap) {
+                break;
+            }
+            ArrayList<ViewDataModel> group = BaseAdapter.getGroupList().get(i);
+            if (fromPosition < group.size()) {
+                if (group.get(0).getGroupName().equals(group.get(fromPosition).getGroupName())) {
+                    for (int j = 0; j < group.size(); j++) {
+                        if (group.get(j).isParent()) {
+                            groupFromPosition = i;
+                            isGroupSwap = true;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                fromPosition -= group.size();
+            }
+        }
+        for (int i = 0; i < BaseAdapter.getGroupList().size(); i++) {
+            ArrayList<ViewDataModel> group = BaseAdapter.getGroupList().get(i);
+            if (toPosition >= group.size()) {
+                toPosition -= group.size();
+            } else {
+                groupToPosition = i;
+                break;
+            }
+        }
+        if (groupFromPosition < groupToPosition) {
+            for (int i = groupFromPosition; i < groupToPosition; i++) {
+                Collections.swap(BaseAdapter.getGroupList(), i, i + 1);
+            }
+        } else {
+            for (int i = groupFromPosition; i > groupToPosition; i--) {
+                Collections.swap(BaseAdapter.getGroupList(), i, i - 1);
+            }
+        }
+
+        return isGroupSwap;
+    }
+
+    private void reallyMoved(int fromPosition, int toPosition) {
+
+        if (isGropSwapped(fromPosition, toPosition)) {
+
+            List<ViewDataModel> list = new ArrayList<>();
+            for (ArrayList<ViewDataModel> array : BaseAdapter.getGroupList()) {
+                list.addAll(array);
+            }
+            adapter.setViewDataModels(list);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+        super.clearView(recyclerView, viewHolder);
+        if(dragFrom != -1 && dragTo != -1 && dragFrom != dragTo) {
+            reallyMoved(dragFrom, dragTo);
+        }
+
+        dragFrom = dragTo = -1;
     }
 
     @Override
