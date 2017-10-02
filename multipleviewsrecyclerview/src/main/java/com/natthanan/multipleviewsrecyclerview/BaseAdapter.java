@@ -12,14 +12,14 @@ import java.util.List;
 
 public class BaseAdapter extends RecyclerView.Adapter{
 
-    private List<ViewDataModel> viewDataModels;
+    private static List<ViewDataModel> viewDataModels;
     private RecyclerView recyclerView;
     private boolean isDrag=false;
     private ItemTouchHelper itemTouchHelper;
     private static List<ArrayList<ViewDataModel>> groupList;
 
-    public BaseAdapter(List<ViewDataModel> viewDataModels) {
-        this.viewDataModels = viewDataModels;
+    public BaseAdapter() {
+
     }
 
     @Override
@@ -84,11 +84,11 @@ public class BaseAdapter extends RecyclerView.Adapter{
 //        return super.getItemViewType(position);
     }
 
-    public void setViewDataModels(List viewDataModels) {
-        this.viewDataModels = viewDataModels;
+    public static void setViewDataModels(List mViewDataModels) {
+        viewDataModels = mViewDataModels;
 
     }
-    public List getViewDataModels() {
+    public static List getViewDataModels() {
         return viewDataModels;
     }
 

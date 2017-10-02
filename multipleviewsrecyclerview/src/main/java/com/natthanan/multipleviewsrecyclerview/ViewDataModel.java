@@ -86,7 +86,7 @@ public class ViewDataModel implements Cloneable {
         for (ArrayList<ViewDataModel> array : groupList) {
             list.addAll(array);
         }
-        ((BaseAdapter) recyclerView.getAdapter()).setViewDataModels(list);
+        BaseAdapter.setViewDataModels(list);
         recyclerView.getAdapter().notifyDataSetChanged();
     }
 
