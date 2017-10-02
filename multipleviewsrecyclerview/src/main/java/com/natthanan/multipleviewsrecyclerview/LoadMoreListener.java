@@ -92,6 +92,7 @@ public abstract class LoadMoreListener extends RecyclerView.OnScrollListener {
         // If we do need to reload some more data, we execute onLoadMore to fetch the data.
         // threshold should reflect how many total columns there are too
         if (!loading && (lastVisibleItemPosition + visibleThreshold) > totalItemCount) {
+
             currentPage++;
             onLoadMore(currentPage, totalItemCount);
             loading = true;

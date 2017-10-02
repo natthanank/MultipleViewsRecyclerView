@@ -54,19 +54,34 @@ public class ViewDataModel implements Cloneable {
 
     public void addGroup(List<ArrayList<ViewDataModel>> groupList) {
         boolean hasGroup = false;
-        for (int i = 0; i < groupList.size(); i++) {
-            if (groupName.equals(groupList.get(i).get(0).getGroupName())) {
-                groupList.get(i).add(this);
-                hasGroup = true;
-                break;
+        if (groupName == null) {
+            for (int i = 0; i < groupList.size(); i++) {
+                if (groupList.get(i).get(0).getGroupName() == null) {
+                    groupList.get(i).add(this);
+                    hasGroup = true;
+                    break;
+                }
+            }
+            if (!hasGroup) {
+                ArrayList<ViewDataModel> newGroup = new ArrayList<>();
+                newGroup.add(this);
+                groupList.add(newGroup);
+            }
+
+        } else {
+            for (int i = 0; i < groupList.size(); i++) {
+                if (groupName.equals(groupList.get(i).get(0).getGroupName())) {
+                    groupList.get(i).add(this);
+                    hasGroup = true;
+                    break;
+                }
+            }
+            if (!hasGroup) {
+                ArrayList<ViewDataModel> newGroup = new ArrayList<>();
+                newGroup.add(this);
+                groupList.add(newGroup);
             }
         }
-        if (!hasGroup) {
-            ArrayList<ViewDataModel> newGroup = new ArrayList<>();
-            newGroup.add(this);
-            groupList.add(newGroup);
-        }
-
         List<ViewDataModel> list = new ArrayList<>();
         for (ArrayList<ViewDataModel> array : groupList) {
             list.addAll(array);

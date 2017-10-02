@@ -22,6 +22,7 @@ import com.natthanan.multipleviewsrecyclerview.ViewDataModel;
 import com.natthanan.multipleviewsrecyclerview.intf.DataChangedCallback;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class RecyclerViewTest extends AppCompatActivity implements DataChangedCallback {
@@ -33,24 +34,30 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler_view_test);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         final BaseAdapter baseAdapter = new BaseAdapter(viewDataModels);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(baseAdapter);
-//        recyclerView.addOnScrollListener(new LoadMoreListener(linearLayoutManager) {
-//            @Override
-//            public void onLoadMore(int page, int totalItemsCount) {
-//                viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "HEADER", true, true, "Group2"));
-//                for (int i = 30; i > 0; i--) {
-//                    viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i), "ITEM", true, false, "Group2"));
-//                }
-//                viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "FOOTER", true, false, "Group2"));
-//                baseAdapter.notifyDataSetChanged();
-//            }
-//        });
+        recyclerView.addOnScrollListener(new LoadMoreListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                recyclerView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "HEADER", "HEADER", true, true, null));
+                        for (int i = 30; i > 0; i--) {
+                            viewDataModels.add(new ViewDataModel(ItemViewHolder.class, Integer.toString(i), "ITEM", true, false, null));
+                        }
+                        viewDataModels.add(new ViewDataModel(FooterViewHolder.class, "FOOTER", "FOOTER", true, false, null));
+                        baseAdapter.notifyDataSetChanged();
+                    }
+                });
+
+            }
+        });
 
         for (int j = 0; j < 20; j++) {
             viewDataModels.add(new ViewDataModel(HeaderViewHolder.class, "Group"+j+" HEADER", "HEADER", true, true, "Group"+j));
@@ -118,10 +125,10 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
 
         };
 
-        Drag drag = new Drag(recyclerView) {
+        new Drag(recyclerView) {
             @Override
-            public void onItemMove(int fromPosition, int toPosition, ViewDataModel fromViewDataModel, ViewDataModel toViewDataModel) {
-
+            public void onItemDropped(List<ViewDataModel> dataModels) {
+                System.out.println(dataModels.get(0).getGroupName());
             }
         };
 
