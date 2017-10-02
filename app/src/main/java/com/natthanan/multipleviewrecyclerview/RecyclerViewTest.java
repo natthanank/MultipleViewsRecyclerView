@@ -47,6 +47,11 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
                 }
                 new ViewDataModel(FooterViewHolder.class, "FOOTER", "FOOTER", true, false, null);
                 baseAdapter.notifyDataSetChanged();
+
+                if (page == 4) {
+                    stopLoading();
+                }
+
             }
         });
 

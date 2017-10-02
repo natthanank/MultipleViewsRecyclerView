@@ -22,9 +22,12 @@ public abstract class LoadMoreListener extends RecyclerView.OnScrollListener {
     private boolean loading = true;
     // Sets the starting page index
     private int startingPageIndex = 0;
+    // Use to check if user want to download more
+    private boolean loadMore = true;
 
     RecyclerView recyclerView;
     RecyclerView.LayoutManager mLayoutManager;
+
 
     public LoadMoreListener(RecyclerView recyclerView) {
         this.recyclerView = recyclerView;
@@ -88,7 +91,7 @@ public abstract class LoadMoreListener extends RecyclerView.OnScrollListener {
         // the visibleThreshold and need to reload more data.
         // If we do need to reload some more data, we execute onLoadMore to fetch the data.
         // threshold should reflect how many total columns there are too
-        if (!loading && (lastVisibleItemPosition + visibleThreshold) > totalItemCount) {
+        if (!loading && (lastVisibleItemPosition + visibleThreshold) > totalItemCount && loadMore) {
             recyclerView.post(new Runnable() {
                 @Override
                 public void run() {
@@ -104,4 +107,7 @@ public abstract class LoadMoreListener extends RecyclerView.OnScrollListener {
     // Defines the process for actually loading more data based on page
     public abstract void onLoadMore(int page, int totalItemsCount);
 
+    public void stopLoading() {
+        loadMore = false;
+    }
 }
