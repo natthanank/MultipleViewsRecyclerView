@@ -1,17 +1,13 @@
 package com.natthanan.multipleviewsrecyclerview;
 
-import android.app.Activity;
 import android.graphics.Canvas;
-import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.View;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -63,7 +59,6 @@ public abstract class Drag extends ItemTouchHelper.Callback {
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
         int fromPosition = viewHolder.getAdapterPosition();
         int toPosition = target.getAdapterPosition();
-        String groupName = null;
         isDrag = true;
         if(dragFrom == -1) {
             dragFrom =  fromPosition;
@@ -79,20 +74,11 @@ public abstract class Drag extends ItemTouchHelper.Callback {
                 Collections.swap(adapter.getViewDataModels(), i, i - 1);
             }
         }
-//        for (int i = 0; i < BaseAdapter.getGroupList().size(); i++) {
-//            List<ViewDataModel> group = BaseAdapter.getGroupList().get(i);
-//            if (toPosition < group.size()) {
-//                groupName = group.get(0).getGroupName();
-//            } else  {
-//                toPosition -= group.size();
-//            }
-//        }
-//        ((ViewDataModel) adapter.getViewDataModels().get(toPosition)).setGroupName(groupName);
         adapter.notifyItemMoved(fromPosition, toPosition);
         return true;
     }
 
-    private boolean isGropSwapped(int fromPosition, int toPosition) {
+    private boolean isGroupSwapped(int fromPosition) {
         groupFromPosition = -1;
         groupToPosition = -1;
         boolean isGroupSwap = false;
@@ -123,7 +109,7 @@ public abstract class Drag extends ItemTouchHelper.Callback {
         } else isFromPositionGreaterThanToPosition = false;
 
 
-        if (isGropSwapped(fromPosition, toPosition)) {
+        if (isGroupSwapped(fromPosition)) {
 
             // check togroup position
             for (int i = 0; i < BaseAdapter.getGroupList().size(); i++) {
