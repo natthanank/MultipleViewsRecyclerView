@@ -25,7 +25,8 @@ public class BaseAdapter extends RecyclerView.Adapter{
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
-        this.recyclerView = recyclerView;ViewDataModel.setRecyclerView(recyclerView);
+        this.recyclerView = recyclerView;
+        ViewDataModel.setRecyclerView(recyclerView);
     }
 
     @Override
@@ -57,14 +58,18 @@ public class BaseAdapter extends RecyclerView.Adapter{
 //            }
 //            position -= group.size();
 //        }
-        try {
-            viewDataModels.get(position).getBaseViewHolderClass().getClass().cast(holder).bind(viewDataModels.get(position).getModel(), viewDataModels.get(position).getTag());
-        } catch (Exception e) {
-            holder = viewDataModels.get(position).getBaseViewHolderClass().getViewHolder();
-            System.out.println("new holder class = " + holder.getClass().getSimpleName());
-            viewDataModels.get(position).getBaseViewHolderClass().getClass().cast(holder).bind(viewDataModels.get(position).getModel(), viewDataModels.get(position).getTag());
-
+        if (isDrag()) {
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Drag.isDrag = true;
+                    Swipe.isSwiped = false;
+                    return true;
+                }
+            });
         }
+        viewDataModels.get(position).getBaseViewHolderClass().getClass().cast(holder).bind(viewDataModels.get(position).getModel(), viewDataModels.get(position).getTag());
+
     }
 
     @Override

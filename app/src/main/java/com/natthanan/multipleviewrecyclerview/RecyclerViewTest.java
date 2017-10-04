@@ -41,12 +41,10 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
         recyclerView.addOnScrollListener(new LoadMoreListener(recyclerView) {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-                new ViewDataModel(HeaderViewHolder.class, "HEADER", "HEADER", true, true, null);
-                for (int i = 30; i > 0; i--) {
-                    new ViewDataModel(ItemViewHolder.class, Integer.toString(i), "ITEM", true, false, null);
+                for (int i = 0; i < 5; i++) {
+                    new ViewDataModel(ItemViewHolder.class, Integer.toString((page-1) * 5 + i), "LoadMore", false, false, null);
+                    baseAdapter.notifyItemInserted(BaseAdapter.getViewDataModels().size());
                 }
-                new ViewDataModel(FooterViewHolder.class, "FOOTER", "FOOTER", true, false, null);
-                baseAdapter.notifyDataSetChanged();
 
                 if (page == 4) {
                     stopLoading();
@@ -56,15 +54,12 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
         });
 
 
-        for (int j = 0; j < 20; j++) {
+        for (int j = 0; j < 5; j++) {
             new ViewDataModel(HeaderViewHolder.class, "Group"+j+" HEADER", "HEADER", true, true, "Group"+j);
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 2; i++) {
                 new ViewDataModel(ItemViewHolder.class, "Group"+j+" number " + i, "ITEM", true, false, "Group"+j);
             }
-            new ViewDataModel(FooterViewHolder.class, "Group"+j+" FOOTER", "FOOTER", true, false, "Group"+j);
         }
-        new ViewDataModel(FooterViewHolder.class, "Group"+0+" FOOTER", "FOOTER", true, false, "Group"+0);
-
         new Swipe(recyclerView, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
             @Override
             public void onUpdateSwiped(int position, ViewDataModel viewDataModel, List<ViewDataModel> group, int action) {
@@ -125,7 +120,6 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
         new Drag(recyclerView) {
             @Override
             public void onItemDropped(List<ViewDataModel> dataModels) {
-                System.out.println(dataModels.get(0).getGroupName());
             }
         };
 

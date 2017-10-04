@@ -58,24 +58,16 @@ public class ViewDataModel implements Cloneable {
         setTag(oldViewDataModel.getTag());
         setGroup(oldViewDataModel.isGroup());
         setParent(oldViewDataModel.isParent());
+        setViewTypes(oldViewDataModel.getViewTypes());
         setGroupName(oldViewDataModel.getGroupName());
     }
 
     public void addGroup(List<ArrayList<ViewDataModel>> groupList) {
         boolean hasGroup = false;
         if (groupName == null) {
-            for (int i = 0; i < groupList.size(); i++) {
-                if (groupList.get(i).get(0).getGroupName() == null) {
-                    groupList.get(i).add(this);
-                    hasGroup = true;
-                    break;
-                }
-            }
-            if (!hasGroup) {
                 ArrayList<ViewDataModel> newGroup = new ArrayList<>();
                 newGroup.add(this);
                 groupList.add(newGroup);
-            }
 
         } else {
             for (int i = 0; i < groupList.size(); i++) {

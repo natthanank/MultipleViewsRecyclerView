@@ -88,7 +88,10 @@ public abstract class Drag extends ItemTouchHelper.Callback {
             }
             ArrayList<ViewDataModel> group = BaseAdapter.getGroupList().get(i);
             if (fromPosition < group.size()) {
-                if (group.get(0).getGroupName().equals(group.get(fromPosition).getGroupName()) && group.get(fromPosition).isParent()) {
+                if (group.get(0).getGroupName() == null) {
+                    groupFromPosition = i;
+                    isGroupSwap = true;
+                } else if (group.get(0).getGroupName().equals(group.get(fromPosition).getGroupName()) && group.get(fromPosition).isParent()){
                     groupFromPosition = i;
                     isGroupSwap = true;
                 }
@@ -194,6 +197,7 @@ public abstract class Drag extends ItemTouchHelper.Callback {
         }
 
         dragFrom = dragTo = -1;
+        Swipe.isSwiped = true;
     }
 
     @Override
