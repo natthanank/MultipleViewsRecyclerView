@@ -43,7 +43,6 @@ public abstract class Swipe extends ItemTouchHelper.Callback{
 
         itemTouchHelper = new ItemTouchHelper(this);
         itemTouchHelper.attachToRecyclerView(recyclerView);
-
     }
 
 
@@ -69,7 +68,7 @@ public abstract class Swipe extends ItemTouchHelper.Callback{
         Drag.isDrag = false;
         isUndo = false;
         final int position = viewHolder.getAdapterPosition();
-        final BaseAdapter baseAdapter = (BaseAdapter) recyclerView.getAdapter();
+        BaseAdapter baseAdapter = (BaseAdapter) recyclerView.getAdapter();
         viewDataModel = (ViewDataModel) BaseAdapter.getViewDataModels().get(viewHolder.getAdapterPosition());
         try {
             setOldViewDataModel((ViewDataModel) viewDataModel.clone());

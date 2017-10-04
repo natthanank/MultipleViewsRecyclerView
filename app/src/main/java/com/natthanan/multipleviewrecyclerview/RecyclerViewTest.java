@@ -42,7 +42,7 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 for (int i = 0; i < 5; i++) {
-                    new ViewDataModel(ItemViewHolder.class, Integer.toString((page-1) * 5 + i), "LoadMore", false, false, null);
+                    new ViewDataModel(ItemViewHolder.class, "page " + page + " " +Integer.toString((page-1) * 5 + i), "LoadMore", false, null);
                     baseAdapter.notifyItemInserted(BaseAdapter.getViewDataModels().size());
                 }
 
@@ -55,9 +55,9 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
 
 
         for (int j = 0; j < 5; j++) {
-            new ViewDataModel(HeaderViewHolder.class, "Group"+j+" HEADER", "HEADER", true, true, "Group"+j);
+            new ViewDataModel(HeaderViewHolder.class, "Group"+j+" HEADER", "HEADER", true, "Group"+j);
             for (int i = 0; i < 2; i++) {
-                new ViewDataModel(ItemViewHolder.class, "Group"+j+" number " + i, "ITEM", true, false, "Group"+j);
+                new ViewDataModel(ItemViewHolder.class, "Group"+j+" number " + i, "ITEM", false, "Group"+j);
             }
         }
         new Swipe(recyclerView, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {

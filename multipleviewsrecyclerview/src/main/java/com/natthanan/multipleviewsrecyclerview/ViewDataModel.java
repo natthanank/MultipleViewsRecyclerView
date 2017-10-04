@@ -39,19 +39,27 @@ public class ViewDataModel implements Cloneable {
         setBaseViewHolderClass(createViewHolder(viewHolderClass, recyclerView));
         setModel(model);
         setTag(tag);
+        setParent(false);
+        setGroupName(null);
+        setGroup(false);
+        addGroup();
     }
 
-    public ViewDataModel(Class viewHolderClass, Object model, String tag, boolean isGroup, boolean isParent, String groupName) {
+    public ViewDataModel(Class viewHolderClass, Object model, String tag, boolean isParent, String groupName) {
         setBaseViewHolderClass(createViewHolder(viewHolderClass, recyclerView));
         setModel(model);
         setTag(tag);
-        setGroup(isGroup);
         setParent(isParent);
         setGroupName(groupName);
-        List<ArrayList<ViewDataModel>> groupList = BaseAdapter.getGroupList();
-        addGroup(groupList);
+        if (groupName == null) {
+            setGroup(false);
+        } else {
+            setGroup(true);
+        }
+        addGroup();
     }
 
+    // for cloning
     public ViewDataModel(ViewDataModel oldViewDataModel) {
         setBaseViewHolderClass(oldViewDataModel.getBaseViewHolderClass());
         setModel(oldViewDataModel.getModel());
@@ -62,17 +70,17 @@ public class ViewDataModel implements Cloneable {
         setGroupName(oldViewDataModel.getGroupName());
     }
 
-    public void addGroup(List<ArrayList<ViewDataModel>> groupList) {
+    public void addGroup() {
         boolean hasGroup = false;
         if (groupName == null) {
-                ArrayList<ViewDataModel> newGroup = new ArrayList<>();
-                newGroup.add(this);
-                groupList.add(newGroup);
+            ArrayList<ViewDataModel> newGroup = new ArrayList<>();
+            newGroup.add(this);
+            BaseAdapter.getGroupList().add(newGroup);
 
         } else {
-            for (int i = 0; i < groupList.size(); i++) {
-                if (groupName.equals(groupList.get(i).get(0).getGroupName())) {
-                    groupList.get(i).add(this);
+            for (int i = 0; i < BaseAdapter.getGroupList().size(); i++) {
+                if (groupName.equals(BaseAdapter.getGroupList().get(i).get(0).getGroupName())) {
+                    BaseAdapter.getGroupList().get(i).add(this);
                     hasGroup = true;
                     break;
                 }
@@ -80,11 +88,11 @@ public class ViewDataModel implements Cloneable {
             if (!hasGroup) {
                 ArrayList<ViewDataModel> newGroup = new ArrayList<>();
                 newGroup.add(this);
-                groupList.add(newGroup);
+                BaseAdapter.getGroupList().add(newGroup);
             }
         }
         List<ViewDataModel> list = new ArrayList<>();
-        for (ArrayList<ViewDataModel> array : groupList) {
+        for (ArrayList<ViewDataModel> array : BaseAdapter.getGroupList()) {
             list.addAll(array);
         }
         BaseAdapter.setViewDataModels(list);

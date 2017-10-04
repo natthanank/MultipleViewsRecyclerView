@@ -88,10 +88,7 @@ public abstract class Drag extends ItemTouchHelper.Callback {
             }
             ArrayList<ViewDataModel> group = BaseAdapter.getGroupList().get(i);
             if (fromPosition < group.size()) {
-                if (group.get(0).getGroupName() == null) {
-                    groupFromPosition = i;
-                    isGroupSwap = true;
-                } else if (group.get(0).getGroupName().equals(group.get(fromPosition).getGroupName()) && group.get(fromPosition).isParent()){
+                if (group.get(fromPosition).isParent()) {
                     groupFromPosition = i;
                     isGroupSwap = true;
                 }
@@ -144,6 +141,7 @@ public abstract class Drag extends ItemTouchHelper.Callback {
             adapter.setViewDataModels(list);
             adapter.notifyDataSetChanged();
         } else {
+            ((ViewDataModel) BaseAdapter.getViewDataModels().get(toPosition)).setGroupName(((ViewDataModel) BaseAdapter.getViewDataModels().get(toPosition - 1)).getGroupName());
             // check fromgroup position
             for (int i = 0; i < BaseAdapter.getGroupList().size(); i++) {
                 ArrayList<ViewDataModel> group = BaseAdapter.getGroupList().get(i);
@@ -165,10 +163,10 @@ public abstract class Drag extends ItemTouchHelper.Callback {
                 }
             }
 
-
-            if (isFromPositionGreaterThanToPosition) {
+            if (isFromPositionGreaterThanToPosition && groupFromPosition != groupToPosition) {
                 ViewDataModel temp = BaseAdapter.getGroupList().get(groupFromPosition).remove(fromPosition);
                 BaseAdapter.getGroupList().get(groupToPosition).add(toPosition, temp);
+
             } else if(groupFromPosition != groupToPosition) {
                 ViewDataModel temp = BaseAdapter.getGroupList().get(groupFromPosition).remove(fromPosition);
                 BaseAdapter.getGroupList().get(groupToPosition).add(toPosition + 1, temp);
@@ -184,6 +182,11 @@ public abstract class Drag extends ItemTouchHelper.Callback {
                 }
             }
 
+            List<ViewDataModel> list = new ArrayList<>();
+            for (ArrayList<ViewDataModel> array : BaseAdapter.getGroupList()) {
+                list.addAll(array);
+            }
+            adapter.setViewDataModels(list);
             adapter.notifyDataSetChanged();
         }
         onItemDropped(adapter.getViewDataModels());
