@@ -52,6 +52,15 @@ public class ViewDataModel implements Cloneable {
         addGroup(groupList);
     }
 
+    public ViewDataModel(ViewDataModel oldViewDataModel) {
+        setBaseViewHolderClass(oldViewDataModel.getBaseViewHolderClass());
+        setModel(oldViewDataModel.getModel());
+        setTag(oldViewDataModel.getTag());
+        setGroup(oldViewDataModel.isGroup());
+        setParent(oldViewDataModel.isParent());
+        setGroupName(oldViewDataModel.getGroupName());
+    }
+
     public void addGroup(List<ArrayList<ViewDataModel>> groupList) {
         boolean hasGroup = false;
         if (groupName == null) {
@@ -211,6 +220,5 @@ public class ViewDataModel implements Cloneable {
     public int getStableID() {
         return this.hashCode();
     }
-
 
 }

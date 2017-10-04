@@ -7,6 +7,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by DELL on 29/08/2560.
  */
@@ -24,8 +27,10 @@ public abstract class Swipe extends ItemTouchHelper.Callback{
     private int movementFlags;
     private ViewDataModel viewDataModel;
     private ViewDataModel oldViewDataModel;
+    private ArrayList<ViewDataModel> oldGroup;
     private boolean isUndo = false;
     private int action;
+    private int groupPosition;
     private int duration = 3500;
 
     public Swipe(RecyclerView recyclerView, int movementFlags) {
@@ -59,34 +64,35 @@ public abstract class Swipe extends ItemTouchHelper.Callback{
     }
 
     @Override
-    public int convertToAbsoluteDirection(int flags, int layoutDirection) {
-        return super.convertToAbsoluteDirection(flags, layoutDirection);
-    }
-
-    @Override
     public void onSwiped(final RecyclerView.ViewHolder viewHolder, final int direction) {
         Drag.isDrag = false;
         isUndo = false;
         final int position = viewHolder.getAdapterPosition();
         final BaseAdapter baseAdapter = (BaseAdapter) recyclerView.getAdapter();
-        viewDataModel = (ViewDataModel) baseAdapter.getViewDataModels().get(viewHolder.getAdapterPosition());
+        viewDataModel = (ViewDataModel) BaseAdapter.getViewDataModels().get(viewHolder.getAdapterPosition());
         try {
             setOldViewDataModel((ViewDataModel) viewDataModel.clone());
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
+        final ArrayList<ViewDataModel> group = BaseAdapter.getGroupList().get(getGroupByPosition(position));
+        try {
+            setOldGroup((ArrayList<ViewDataModel>) cloneGroup(group));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         switch (direction) {
             case ItemTouchHelper.LEFT:
-                onSwipedLeft(position, viewDataModel);
+                onSwipedLeft(position, viewDataModel, group);
                 break;
             case ItemTouchHelper.RIGHT:
-                onSwipedRight(position, viewDataModel);
+                onSwipedRight(position, viewDataModel, group);
                 break;
             case ItemTouchHelper.UP:
-                onSwipeUp(position, viewDataModel);
+                onSwipeUp(position, viewDataModel, group);
                 break;
             case ItemTouchHelper.DOWN:
-                onSwipeDown(position, viewDataModel);
+                onSwipeDown(position, viewDataModel, group);
                 break;
             default:
         }
@@ -99,11 +105,31 @@ public abstract class Swipe extends ItemTouchHelper.Callback{
             @Override
             public void onFinish() {
                 if (isUndo == false) {
-                    onUpdateSwiped(position, viewDataModel, action);
+                    onUpdateSwiped(position, viewDataModel, group, action);
                 }
             }
         }.start();
 
+    }
+
+    private List<ViewDataModel> cloneGroup(List<ViewDataModel> group) {
+        List<ViewDataModel> clonedList = new ArrayList<ViewDataModel>(group.size());
+        for (ViewDataModel viewDataModel : group) {
+            clonedList.add(new ViewDataModel(viewDataModel));
+        }
+        return clonedList;
+    }
+
+    private int getGroupByPosition(int position) {
+        for (int i = 0; i < BaseAdapter.getGroupList().size(); i++) {
+            ArrayList<ViewDataModel> group = BaseAdapter.getGroupList().get(i);
+            if (position >= group.size()) {
+                position -= group.size();
+            } else {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override
@@ -115,39 +141,74 @@ public abstract class Swipe extends ItemTouchHelper.Callback{
         }
     }
 
-    public void undoRemove(int position, ViewDataModel oldViewDataModel) {
-        getAdapter().getViewDataModels().add(position, oldViewDataModel);
-        getAdapter().notifyItemInserted(position);
-        getRecyclerView().scrollToPosition(position);
+    public void undoRemove(int position, ViewDataModel oldViewDataModel, ArrayList<ViewDataModel> oldGroup) {
+        if (oldViewDataModel.isParent()) {
+            BaseAdapter.getGroupList().add(groupPosition, getOldGroup());
+
+            for (int i = 0; i < oldGroup.size(); i++) {
+                BaseAdapter.getViewDataModels().add(position + i, oldGroup.get(i));
+                adapter.notifyItemInserted(position + i);
+            }
+//            BaseAdapter.getGroupList().add(groupPosition, oldGroup);
+//            List<ViewDataModel> list = new ArrayList<>();
+//            for (ArrayList<ViewDataModel> array : BaseAdapter.getGroupList()) {
+//                list.addAll(array);
+//            }
+//            BaseAdapter.setViewDataModels(list);
+//            adapter.notifyDataSetChanged();
+        } else {
+            BaseAdapter.getViewDataModels().add(position, oldViewDataModel);
+            getAdapter().notifyItemInserted(position);
+            getRecyclerView().scrollToPosition(position);
+        }
         viewDataModel=null;
         isUndo = true;
     }
 
-    public void undoUpdate(int position, ViewDataModel oldViewDataModel) {
-        getAdapter().getViewDataModels().set(position, oldViewDataModel);
+    public void dontDoAnything(int position) {
         getAdapter().notifyItemChanged(position);
-        getRecyclerView().scrollToPosition(position);
+    }
+    public void undoUpdate(int position, ViewDataModel oldViewDataModel, ArrayList<ViewDataModel> oldGroup) {
+        if (oldViewDataModel.isParent()) {
+
+        } else {
+            BaseAdapter.getViewDataModels().set(position, oldViewDataModel);
+            getAdapter().notifyItemChanged(position);
+            getRecyclerView().scrollToPosition(position);
+        }
+
         viewDataModel=null;
         isUndo = true;
     }
 
     public void removeItem(int position, ViewDataModel viewDataModel) {
         action = 0;
-        getAdapter().getViewDataModels().remove(viewDataModel);
-        getAdapter().notifyItemRemoved(position);
+        if (viewDataModel.isParent()) {
+            groupPosition = getGroupByPosition(position);
+            BaseAdapter.getGroupList().remove(groupPosition);
+            for (int i = 0; i < oldGroup.size(); i++) {
+                BaseAdapter.getViewDataModels().remove(position);
+                adapter.notifyItemRemoved(position);
+            }
+        } else {
+            BaseAdapter.getViewDataModels().remove(viewDataModel);
+            getAdapter().notifyItemRemoved(position);
+        }
+
+
     }
 
     public void updateItem(int position, ViewDataModel viewDataModel) {
         action = 1;
-        getAdapter().getViewDataModels().set(position, viewDataModel);
+        BaseAdapter.getViewDataModels().set(position, viewDataModel);
         getAdapter().notifyItemChanged(position);
     }
 
-    public abstract void onSwipedRight(int position, ViewDataModel viewDataModel);
-    public abstract void onSwipedLeft(int position, ViewDataModel viewDataModel);
-    public abstract void onSwipeUp(int position, ViewDataModel viewDataModel);
-    public abstract void onSwipeDown(int position, ViewDataModel viewDataModel);
-    public abstract void onUpdateSwiped(int position, ViewDataModel viewDataModel, int action);
+    public abstract void onSwipedRight(int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels);
+    public abstract void onSwipedLeft(int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels);
+    public abstract void onSwipeUp(int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels);
+    public abstract void onSwipeDown(int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels);
+    public abstract void onUpdateSwiped(int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels, int action);
 
     @Override
     public boolean isItemViewSwipeEnabled() {
@@ -194,5 +255,13 @@ public abstract class Swipe extends ItemTouchHelper.Callback{
 
     public void setDuration(int duration) {
         this.duration = duration;
+    }
+
+    public ArrayList<ViewDataModel> getOldGroup() {
+        return oldGroup;
+    }
+
+    public void setOldGroup(ArrayList<ViewDataModel> oldGroup) {
+        this.oldGroup = oldGroup;
     }
 }

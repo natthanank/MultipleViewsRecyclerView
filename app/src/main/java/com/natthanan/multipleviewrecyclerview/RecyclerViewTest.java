@@ -55,6 +55,7 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
             }
         });
 
+
         for (int j = 0; j < 20; j++) {
             new ViewDataModel(HeaderViewHolder.class, "Group"+j+" HEADER", "HEADER", true, true, "Group"+j);
             for (int i = 0; i < 3; i++) {
@@ -66,12 +67,12 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
 
         new Swipe(recyclerView, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
             @Override
-            public void onUpdateSwiped(int position, ViewDataModel viewDataModel, int action) {
+            public void onUpdateSwiped(int position, ViewDataModel viewDataModel, List<ViewDataModel> group, int action) {
 
             }
 
             @Override
-            public void onSwipedRight(final int position, final ViewDataModel viewDataModel) {
+            public void onSwipedRight(final int position, final ViewDataModel viewDataModel, List<ViewDataModel> group) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(RecyclerViewTest.this);
                 builder.setMessage("รับขนมจีบซาลาเปาเพิ่มมั้ยครับ?");
                 builder.setPositiveButton("รับ", new DialogInterface.OnClickListener() {
@@ -81,7 +82,7 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
                         Snackbar.make(getRecyclerView(), "คุณได้รับขนมจีบซาลาเปา", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                undoUpdate(position, getOldViewDataModel());
+                                undoUpdate(position, getOldViewDataModel(), getOldGroup());
                             }
                         }).show();
                     }
@@ -89,32 +90,32 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
                 builder.setNegativeButton("ไม่รับ", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //dialog.dismiss();
+                        dialog.dismiss();
+                        dontDoAnything(position);
                     }
                 });
                 builder.show();
 
-
             }
 
             @Override
-            public void onSwipedLeft(final int position, ViewDataModel viewDataModel) {
+            public void onSwipedLeft(final int position, ViewDataModel viewDataModel, List<ViewDataModel> group) {
                 removeItem(position, viewDataModel);
                 Snackbar.make(getRecyclerView(), "Remove!!!", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        undoRemove(position, getOldViewDataModel());
+                        undoRemove(position, getOldViewDataModel(), getOldGroup());
                     }
                 }).show();
             }
 
             @Override
-            public void onSwipeUp(int position, ViewDataModel viewDataModel) {
+            public void onSwipeUp(int position, ViewDataModel viewDataModel, List<ViewDataModel> group) {
 
             }
 
             @Override
-            public void onSwipeDown(int position, ViewDataModel viewDataModel) {
+            public void onSwipeDown(int position, ViewDataModel viewDataModel, List<ViewDataModel> group) {
 
             }
 

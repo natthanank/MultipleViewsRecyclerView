@@ -57,8 +57,14 @@ public class BaseAdapter extends RecyclerView.Adapter{
 //            }
 //            position -= group.size();
 //        }
+        try {
+            viewDataModels.get(position).getBaseViewHolderClass().getClass().cast(holder).bind(viewDataModels.get(position).getModel(), viewDataModels.get(position).getTag());
+        } catch (Exception e) {
+            holder = viewDataModels.get(position).getBaseViewHolderClass().getViewHolder();
+            System.out.println("new holder class = " + holder.getClass().getSimpleName());
+            viewDataModels.get(position).getBaseViewHolderClass().getClass().cast(holder).bind(viewDataModels.get(position).getModel(), viewDataModels.get(position).getTag());
 
-        viewDataModels.get(position).getBaseViewHolderClass().getClass().cast(holder).bind(viewDataModels.get(position).getModel(), viewDataModels.get(position).getTag());
+        }
     }
 
     @Override
@@ -74,7 +80,7 @@ public class BaseAdapter extends RecyclerView.Adapter{
 
     @Override
     public int getItemViewType(int position) {
-        return viewDataModels.get(position).getViewTypes();
+        return ((ViewDataModel) getViewDataModels().get(position)).getViewTypes();
 //        for (List<ViewDataModel> group : getGroupList()) {
 //            if (position < group.size()) {
 //                return group.get(position).getViewTypes();
