@@ -1,7 +1,6 @@
 package com.natthanan.multipleviewsrecyclerview;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -24,7 +23,7 @@ public class JSONToRecyclerView {
 
     public JSONToRecyclerView(final Activity activity, String json) {
         try {
-            // get json
+            // create json object
             JSONObject jsonObject = new JSONObject(json);
             // initialize recyclerview
             RecyclerView recyclerView = (RecyclerView) activity.findViewById(jsonObject.getInt("recyclerView"));
@@ -38,14 +37,14 @@ public class JSONToRecyclerView {
                         orientation = LinearLayoutManager.VERTICAL;
                     } else orientation = LinearLayoutManager.HORIZONTAL;
                     reverseLayout = layoutManagerJSON.getBoolean("reverseLayout");
-                    recyclerView.setLayoutManager(new LinearLayoutManager(activity, orientation, reverseLayout));
-                } else recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+                    recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext(), orientation, reverseLayout));
+                } else recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
             }
             // set baseadapter
             recyclerView.setAdapter(new BaseAdapter());
             // swipe
             JSONObject swipe = jsonObject.getJSONObject("swipe");
-            if (swipe.getBoolean("isSwipe") == true) {
+            if (swipe.getBoolean("isSwipe")) {
                 // get swipe flag and set to Swipe class constructor
                 int[] flag = {0, 0, 0, 0};
                 JSONObject swipeFlag = swipe.getJSONObject("swipeFlag");
@@ -67,7 +66,7 @@ public class JSONToRecyclerView {
 
                     @Override
                     public void onSwipedLeft(final int position, final ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getRecyclerView().getContext());
                         builder.setMessage("รับขนมจีบซาลาเปาเพิ่มมั้ยครับ?");
                         builder.setPositiveButton("รับ", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
@@ -109,7 +108,7 @@ public class JSONToRecyclerView {
             }
             // drag
             JSONObject drag = jsonObject.getJSONObject("drag");
-            if (drag.getBoolean("isDrag") == true) {
+            if (drag.getBoolean("isDrag")) {
                 new Drag(recyclerView) {
                     @Override
                     public void onItemDropped(List<ViewDataModel> dataModels) {

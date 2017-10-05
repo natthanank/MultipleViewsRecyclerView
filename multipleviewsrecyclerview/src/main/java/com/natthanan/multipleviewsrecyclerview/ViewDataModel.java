@@ -29,22 +29,6 @@ public class ViewDataModel implements Cloneable {
     private static RecyclerView recyclerView;
     private static SparseArray<Class<? extends BaseViewHolder>> baseViewHolderSparseArray = new SparseArray<>();
 
-    public ViewDataModel(Class viewHolderClass, Object model) {
-        setBaseViewHolderClass(createViewHolder(viewHolderClass, recyclerView));
-        setModel(model);
-    }
-
-    // add tag when notify
-    public ViewDataModel(Class viewHolderClass, Object model, String tag) {
-        setBaseViewHolderClass(createViewHolder(viewHolderClass, recyclerView));
-        setModel(model);
-        setTag(tag);
-        setParent(false);
-        setGroupName(null);
-        setGroup(false);
-        addGroup();
-    }
-
     public ViewDataModel(Class viewHolderClass, Object model, String tag, boolean isParent, String groupName) {
         setBaseViewHolderClass(createViewHolder(viewHolderClass, recyclerView));
         setModel(model);

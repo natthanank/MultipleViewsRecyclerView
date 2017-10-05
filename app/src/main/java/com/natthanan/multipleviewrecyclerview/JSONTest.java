@@ -1,32 +1,17 @@
 package com.natthanan.multipleviewrecyclerview;
 
-import android.content.DialogInterface;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.support.v7.widget.helper.ItemTouchHelper;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.natthanan.multipleviewsrecyclerview.BaseAdapter;
-import com.natthanan.multipleviewsrecyclerview.Drag;
+import com.natthanan.multipleviewsrecyclerview.BaseViewHolder;
 import com.natthanan.multipleviewsrecyclerview.JSONToRecyclerView;
-import com.natthanan.multipleviewsrecyclerview.Swipe;
-import com.natthanan.multipleviewsrecyclerview.ViewDataModel;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.natthanan.multipleviewsrecyclerview.intf.DataChangedCallback;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
-public class JSONTest extends AppCompatActivity {
+public class JSONTest extends AppCompatActivity implements DataChangedCallback{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +43,11 @@ public class JSONTest extends AppCompatActivity {
             return null;
         }
         return json;
+
+    }
+
+    @Override
+    public void onDatachange(String tag, BaseViewHolder viewHolder, View view, Object data) {
 
     }
 }
