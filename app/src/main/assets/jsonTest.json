@@ -13,13 +13,11 @@
       "right" : true,
       "up" : false,
       "down" : false
-    }
-    // ,
-    // "swipeRight" : "method1",
-    // "swipeLeft" : "method2",
-    // "swipeUp" : "method3",
-    // "swipdDown" : "method4",
-
+    },
+    "swipeRight" : "method1",
+    "swipeLeft" : "method2",
+    "swipeUp" : "method3",
+    "swipdDown" : "method4"
   },
   "drag" : {
     "isDrag" : true,
