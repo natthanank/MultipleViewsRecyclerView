@@ -169,6 +169,8 @@ public abstract class Swipe extends ItemTouchHelper.Callback{
     public void undoUpdate(int position, ViewDataModel oldViewDataModel, ArrayList<ViewDataModel> oldGroup) {
         BaseAdapter.getViewDataModels().set(position, oldViewDataModel);
         getAdapter().notifyItemChanged(position);
+        int ingroup = getPositionInGroup(position);
+        BaseAdapter.getGroupList().get(groupPosition).set(ingroup, oldViewDataModel);
         getRecyclerView().scrollToPosition(position);
         viewDataModel=null;
         isUndo = true;
@@ -191,6 +193,7 @@ public abstract class Swipe extends ItemTouchHelper.Callback{
 
     public void updateItem(int position, ViewDataModel viewDataModel) {
         action = 1;
+        groupPosition = getGroupByPosition(position);
         BaseAdapter.getViewDataModels().set(position, viewDataModel);
         getAdapter().notifyItemChanged(position);
     }
@@ -254,5 +257,16 @@ public abstract class Swipe extends ItemTouchHelper.Callback{
 
     public void setOldGroup(ArrayList<ViewDataModel> oldGroup) {
         this.oldGroup = oldGroup;
+    }
+
+    private int getPositionInGroup(int position) {
+        for (List<ViewDataModel> group : BaseAdapter.getGroupList()) {
+            if (position >= group.size()) {
+                position -= group.size();
+            } else {
+                return position;
+            }
+        }
+        return -1;
     }
 }

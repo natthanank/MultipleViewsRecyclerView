@@ -21,6 +21,8 @@ import com.natthanan.multipleviewsrecyclerview.Swipe;
 import com.natthanan.multipleviewsrecyclerview.ViewDataModel;
 import com.natthanan.multipleviewsrecyclerview.intf.DataChangedCallback;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +34,7 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler_view_test);
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        System.out.println(R.id.recyclerview);
         final BaseAdapter baseAdapter = new BaseAdapter();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
@@ -129,4 +132,6 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
     public void onDatachange(String tag, BaseViewHolder baseViewHolder, View view, Object data) {
         System.out.println(tag + " " + view.getClass().getSimpleName() + " at " + baseViewHolder.getAdapterPosition() + " position has changed to " + (String) data);
     }
+
+
 }

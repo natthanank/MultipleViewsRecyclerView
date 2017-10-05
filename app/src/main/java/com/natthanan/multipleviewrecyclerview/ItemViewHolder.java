@@ -49,14 +49,14 @@ public class ItemViewHolder extends BaseViewHolder {
 //                ((RecyclerViewTest)itemView.getContext()).onDatachange(tag, getRecyclerView().getChildViewHolder(getRecyclerView().getChildAt(getAdapterPosition())),item, s.toString());
             }
         });
-        aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    ((RecyclerViewTest)itemView.getContext()).onDatachange(tag, getViewHolder(), aSwitch, "check");
-                } else ((RecyclerViewTest)itemView.getContext()).onDatachange(tag, getViewHolder(), aSwitch, "dont check");
-            }
-        });
+//        aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if (isChecked) {
+//                    ((RecyclerViewTest)itemView.getContext()).onDatachange(tag, getViewHolder(), aSwitch, "check");
+//                } else ((RecyclerViewTest)itemView.getContext()).onDatachange(tag, getViewHolder(), aSwitch, "dont check");
+//            }
+//        });
     }
 
 }
