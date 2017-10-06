@@ -71,7 +71,6 @@ public class JSONToRecyclerView {
                     public void onSwipedRight(final int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels) {
                         try {
                             if (swipe.getString("swipeRight") != null) {
-                                System.out.println("swipeRight");
                                 if ("removeItem".equals(swipe.getString("swipeRight"))) {
                                     removeItem(position, viewDataModel);
                                     Snackbar.make(getRecyclerView(), "Remove!!!", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {

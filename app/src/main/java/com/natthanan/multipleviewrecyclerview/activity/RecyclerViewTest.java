@@ -13,6 +13,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import com.natthanan.multipleviewrecyclerview.R;
+import com.natthanan.multipleviewrecyclerview.viewholder.FooterViewHolder;
 import com.natthanan.multipleviewrecyclerview.viewholder.HeaderViewHolder;
 import com.natthanan.multipleviewrecyclerview.viewholder.ItemViewHolder;
 import com.natthanan.multipleviewsrecyclerview.BaseAdapter;
@@ -25,7 +26,7 @@ import com.natthanan.multipleviewsrecyclerview.intf.DataChangedCallback;
 import java.util.List;
 
 
-public class RecyclerViewTest extends AppCompatActivity implements DataChangedCallback {
+public class RecyclerViewTest extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,7 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
         for (int j = 0; j < 5; j++) {
             new ViewDataModel(HeaderViewHolder.class, "Group"+j+" HEADER", "HEADER", true, "Group"+j);
             for (int i = 0; i < 2; i++) {
-                new ViewDataModel(ItemViewHolder.class, "Group"+j+" number " + i, "ITEM", false, "Group"+j);
+                new ViewDataModel(FooterViewHolder.class, "Group"+j+" number " + i, "FOOTER", false, "Group"+j);
             }
         }
         new Swipe(recyclerView, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
@@ -125,10 +126,6 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
 
     }
 
-    @Override
-    public void onDatachange(String tag, BaseViewHolder baseViewHolder, View view, Object data) {
-        System.out.println(tag + " " + view.getClass().getSimpleName() + " at " + baseViewHolder.getAdapterPosition() + " position has changed to " + (String) data);
-    }
 
 
 }

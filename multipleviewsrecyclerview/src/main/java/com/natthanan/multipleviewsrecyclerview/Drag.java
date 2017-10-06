@@ -106,7 +106,6 @@ public abstract class Drag extends ItemTouchHelper.Callback {
 
     private void reallyMoved(int fromPosition, int toPosition) {
         boolean isFromPositionGreaterThanToPosition;
-        System.out.println("fromPosition = " + fromPosition + " toPosition = " + toPosition);
         if (fromPosition > toPosition) {
             isFromPositionGreaterThanToPosition = true;
         } else isFromPositionGreaterThanToPosition = false;
@@ -144,11 +143,13 @@ public abstract class Drag extends ItemTouchHelper.Callback {
             adapter.setViewDataModels(list);
             adapter.notifyDataSetChanged();
         } else {
-            System.out.println("group of toPosition = " + ((ViewDataModel) BaseAdapter.getViewDataModels().get(toPosition)).getGroupName());
-            System.out.println("group of fromPosition = " + ((ViewDataModel) BaseAdapter.getViewDataModels().get(fromPosition)).getGroupName());
             if (toPosition != 0) {
+                System.out.println("toPosition = " + toPosition);
                 ((ViewDataModel) BaseAdapter.getViewDataModels().get(toPosition)).setGroupName(((ViewDataModel) BaseAdapter.getViewDataModels().get(toPosition - 1)).getGroupName());
-            } else ((ViewDataModel) BaseAdapter.getViewDataModels().get(toPosition)).setGroupName(((ViewDataModel) BaseAdapter.getViewDataModels().get(0)).getGroupName());
+            } else {
+                ((ViewDataModel) BaseAdapter.getViewDataModels().get(toPosition)).setGroupName(((ViewDataModel) BaseAdapter.getViewDataModels().get(fromPosition)).getGroupName());
+                System.out.println("toPosition = " + toPosition + " fromPosition = " + fromPosition);
+            }
 
             List<ViewDataModel> toGroup = getMatchGroup((ViewDataModel) BaseAdapter.getViewDataModels().get(toPosition));
             ViewDataModel viewDataModelTemp = null;
@@ -166,25 +167,27 @@ public abstract class Drag extends ItemTouchHelper.Callback {
             fromPosition = getPositionInGroup(fromPosition);
             toPosition = getPositionInGroup(toPosition);
 
-            System.out.println("[" + groupFromPosition + "][" + fromPosition + "] -> [" + groupToPosition + "][" + toPosition + "]");
-            if (isFromPositionGreaterThanToPosition && groupFromPosition != groupToPosition) {
-                System.out.println("if");
+            if (isFromPositionGreaterThanToPosition && groupFromPosition != groupToPosition && toPosition != 0) {
+                System.out.println("inf");
                 ViewDataModel temp = BaseAdapter.getGroupList().get(groupFromPosition).remove(fromPosition + 1);
                 BaseAdapter.getGroupList().get(groupToPosition).add(toPosition, temp);
 
             } else if(groupFromPosition != groupToPosition) {
-                System.out.println("else if");
+                System.out.println("elseif");
                 ViewDataModel temp = BaseAdapter.getGroupList().get(groupFromPosition).remove(fromPosition);
                 BaseAdapter.getGroupList().get(groupToPosition).add(toPosition + 1, temp);
+                BaseAdapter.getGroupList().get(groupToPosition).get(toPosition + 1).setGroupName(BaseAdapter.getGroupList().get(groupToPosition).get(0).getGroupName());
             } else {
                 System.out.println("else");
-                if (fromPosition < toPosition) {
-                    for (int i = fromPosition; i < toPosition; i++) {
-                        Collections.swap(BaseAdapter.getGroupList().get(groupFromPosition), i, i + 1);
-                    }
-                } else {
-                    for (int i = fromPosition; i > toPosition; i--) {
-                        Collections.swap(BaseAdapter.getGroupList().get(groupFromPosition), i, i - 1);
+                if (groupToPosition != 0 && groupFromPosition != groupToPosition) {
+                    if (fromPosition < toPosition) {
+                        for (int i = fromPosition; i < toPosition; i++) {
+                            Collections.swap(BaseAdapter.getGroupList().get(groupFromPosition), i, i + 1);
+                        }
+                    } else {
+                        for (int i = fromPosition; i > toPosition; i--) {
+                            Collections.swap(BaseAdapter.getGroupList().get(groupFromPosition), i, i - 1);
+                        }
                     }
                 }
             }
