@@ -9,15 +9,18 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
-import com.google.common.reflect.Reflection;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.reflections.Reflections;
 
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Set;
@@ -28,7 +31,11 @@ import java.util.Set;
 
 public class JSONToRecyclerView {
 
+    List<Class<?>> basicClass = new ArrayList<>();
+
     public JSONToRecyclerView(final Activity activity, String json) {
+
+        addBasicClass();
         try {
             // create json object
             JSONObject jsonObject = new JSONObject(json);
@@ -134,22 +141,34 @@ public class JSONToRecyclerView {
                     }
                 };
             }
-            try {
-                System.out.println(activity.getComponentName().getPackageName());
-            } catch (Exception e) {
 
-            }
-            // traversal to viewdatamodel list and create viewdatamodel
+            // traversal to viewdatamodels list and create viewdatamodel
             JSONArray viewDataModels = jsonObject.getJSONArray("viewDataModels");
             for (int i = 0; i < viewDataModels.length(); i++) {
                 JSONObject viewDataModel = (JSONObject) viewDataModels.get(i);
                 String className = viewDataModel.getString("viewHolderType");
-                String model = viewDataModel.getString("model");
                 String tag = viewDataModel.getString("tag");
                 boolean isParent = viewDataModel.getBoolean("isParent");
                 String groupName = viewDataModel.getString("groupName");
-                Class<?> viewHolderClass = Class.forName(activity.getPackageName() + "." + className);
-                new ViewDataModel(viewHolderClass, model, tag, isParent, groupName);
+                Class<?> viewHolderClass = Class.forName(activity.getPackageName() + ".viewholder." + className);
+                JSONObject model = viewDataModel.getJSONObject("model");
+                // get Class of model
+                Object newModel;
+                if (basicClass.contains(getModelClass(activity, model.getString("class")))){
+                    newModel = model.get("data");
+                } else {
+                    Class<?> modelClass = getModelClass(activity, model.getString("class"));
+                    Method[] classMethod = modelClass.getDeclaredMethods();
+                    Constructor<?> constructor = modelClass.getConstructor();
+                    newModel = constructor.newInstance();
+                    for (Method m : classMethod) {
+                        if (m.getName().startsWith("set")) {
+                            JSONObject data = model.getJSONObject("data");
+                            m.invoke(newModel, data.get(decapitalize(m.getName().substring(3))));
+                        }
+                    }
+                }
+                new ViewDataModel(viewHolderClass, newModel, tag, isParent, groupName);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -157,6 +176,60 @@ public class JSONToRecyclerView {
             e.printStackTrace();
         } catch (RuntimeException e) {
             e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
         }
+    }
+
+    private Class<?> getModelClass(Activity activity, String className) {
+        Class<?> modelClass = null;
+        try {
+            switch (className){
+                case "String":
+                    modelClass = String.class;
+                    break;
+                case "int":
+                    modelClass = int.class;
+                    break;
+                case "long":
+                    modelClass = long.class;
+                    break;
+                case "double":
+                    modelClass = double.class;
+                    break;
+                case "boolean":
+                    modelClass = boolean.class;
+                    break;
+                default:
+                    modelClass = Class.forName(activity.getPackageName() + ".model." + className);
+
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return modelClass;
+    }
+
+    private void addBasicClass() {
+        basicClass.add(String.class);
+        basicClass.add(int.class);
+        basicClass.add(double.class);
+        basicClass.add(boolean.class);
+        basicClass.add(long.class);
+    }
+
+    private String decapitalize(String string) {
+        if (string == null || string.length() == 0) {
+            return string;
+        }
+        char c[] = string.toCharArray();
+        c[0] = Character.toLowerCase(c[0]);
+        return new String(c);
     }
 }

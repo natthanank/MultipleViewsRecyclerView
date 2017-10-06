@@ -1,10 +1,10 @@
-package com.natthanan.multipleviewsrecyclerview;
+package com.natthanan.multipleviewrecyclerview.model;
 
 /**
  * Created by natthanan on 9/22/2017.
  */
 
-public class DataModel {
+public class UserModel {
     private String name;
     private String surname;
     private int age;
