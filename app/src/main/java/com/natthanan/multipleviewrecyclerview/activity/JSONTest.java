@@ -1,9 +1,10 @@
-package com.natthanan.multipleviewrecyclerview;
+package com.natthanan.multipleviewrecyclerview.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.natthanan.multipleviewrecyclerview.R;
 import com.natthanan.multipleviewsrecyclerview.BaseViewHolder;
 import com.natthanan.multipleviewsrecyclerview.JSONToRecyclerView;
 import com.natthanan.multipleviewsrecyclerview.intf.DataChangedCallback;

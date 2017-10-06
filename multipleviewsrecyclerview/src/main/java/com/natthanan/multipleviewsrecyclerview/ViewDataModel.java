@@ -120,7 +120,6 @@ public class ViewDataModel implements Cloneable {
 
     public BaseViewHolder createViewHolder(Class<? extends BaseViewHolder> viewHolderClass, RecyclerView recyclerView) {
         try {
-            System.out.println(viewHolderClass.getName());
             Class<?> c = Class.forName(viewHolderClass.getName());
             Constructor<?> constructor = c.getConstructor(View.class);
 

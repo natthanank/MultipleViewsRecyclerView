@@ -1,8 +1,9 @@
-package com.natthanan.multipleviewrecyclerview;
+package com.natthanan.multipleviewrecyclerview.viewholder;
 
 import android.view.View;
 import android.widget.TextView;
 
+import com.natthanan.multipleviewrecyclerview.R;
 import com.natthanan.multipleviewsrecyclerview.BaseViewHolder;
 import com.natthanan.multipleviewsrecyclerview.annotation.LayoutID;
 import com.natthanan.multipleviewsrecyclerview.annotation.ViewID;

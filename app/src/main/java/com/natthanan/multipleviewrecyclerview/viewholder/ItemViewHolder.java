@@ -1,4 +1,4 @@
-package com.natthanan.multipleviewrecyclerview;
+package com.natthanan.multipleviewrecyclerview.viewholder;
 
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +10,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.natthanan.multipleviewrecyclerview.R;
 import com.natthanan.multipleviewsrecyclerview.BaseViewHolder;
 import com.natthanan.multipleviewsrecyclerview.annotation.LayoutID;
 import com.natthanan.multipleviewsrecyclerview.annotation.ViewID;

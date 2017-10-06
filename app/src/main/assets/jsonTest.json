@@ -14,116 +14,116 @@
       "up" : false,
       "down" : false
     },
-    "swipeRight" : "method1",
-    "swipeLeft" : "method2",
-    "swipeUp" : "method3",
-    "swipdDown" : "method4"
+    "swipeRight" : "removeItem",
+    "swipeLeft" : "updateItem",
+    "swipeUp" : null,
+    "swipdDown" : null
   },
   "drag" : {
     "isDrag" : true,
-    "onItemDrop" : "method5"
+    "onItemDrop" : null
   },
   "viewDataModels": [
     {
-      "viewHolderType": "com.natthanan.multipleviewrecyclerview.HeaderViewHolder",
+      "viewHolderType": "HeaderViewHolder",
       "model": "Header group0",
       "tag": "Header",
       "isParent": true,
       "groupName": "group0"
     },
     {
-      "viewHolderType": "com.natthanan.multipleviewrecyclerview.ItemViewHolder",
+      "viewHolderType": "ItemViewHolder",
       "model": "item0",
       "tag": "Item",
       "isParent": false,
       "groupName": "group0"
     },
     {
-      "viewHolderType": "com.natthanan.multipleviewrecyclerview.ItemViewHolder",
+      "viewHolderType": "ItemViewHolder",
       "model": "item1",
       "tag": "Item",
       "isParent": false,
       "groupName": "group0"
     },
     {
-      "viewHolderType": "com.natthanan.multipleviewrecyclerview.HeaderViewHolder",
+      "viewHolderType": "HeaderViewHolder",
       "model": "Header group1",
       "tag": "Header",
       "isParent": true,
       "groupName": "group1"
     },
     {
-      "viewHolderType": "com.natthanan.multipleviewrecyclerview.ItemViewHolder",
+      "viewHolderType": "ItemViewHolder",
       "model": "item0",
       "tag": "Item",
       "isParent": false,
       "groupName": "group1"
     },
     {
-      "viewHolderType": "com.natthanan.multipleviewrecyclerview.ItemViewHolder",
+      "viewHolderType": "ItemViewHolder",
       "model": "item1",
       "tag": "Item",
       "isParent": false,
       "groupName": "group1"
     },
     {
-      "viewHolderType": "com.natthanan.multipleviewrecyclerview.HeaderViewHolder",
+      "viewHolderType": "HeaderViewHolder",
       "model": "Header group2",
       "tag": "Header",
       "isParent": true,
       "groupName": "group2"
     },
     {
-      "viewHolderType": "com.natthanan.multipleviewrecyclerview.ItemViewHolder",
+      "viewHolderType": "ItemViewHolder",
       "model": "item0",
       "tag": "Item",
       "isParent": false,
       "groupName": "group2"
     },
     {
-      "viewHolderType": "com.natthanan.multipleviewrecyclerview.ItemViewHolder",
+      "viewHolderType": "ItemViewHolder",
       "model": "item1",
       "tag": "Item",
       "isParent": false,
       "groupName": "group2"
     },
     {
-      "viewHolderType": "com.natthanan.multipleviewrecyclerview.HeaderViewHolder",
+      "viewHolderType": "HeaderViewHolder",
       "model": "Header group3",
       "tag": "Header",
       "isParent": true,
       "groupName": "group3"
     },
     {
-      "viewHolderType": "com.natthanan.multipleviewrecyclerview.ItemViewHolder",
+      "viewHolderType": "ItemViewHolder",
       "model": "item0",
       "tag": "Item",
       "isParent": false,
       "groupName": "group3"
     },
     {
-      "viewHolderType": "com.natthanan.multipleviewrecyclerview.ItemViewHolder",
+      "viewHolderType": "ItemViewHolder",
       "model": "item1",
       "tag": "Item",
       "isParent": false,
       "groupName": "group3"
     },
     {
-      "viewHolderType": "com.natthanan.multipleviewrecyclerview.HeaderViewHolder",
+      "viewHolderType": "HeaderViewHolder",
       "model": "Header group4",
       "tag": "Header",
       "isParent": true,
       "groupName": "group4"
     },
     {
-      "viewHolderType": "com.natthanan.multipleviewrecyclerview.ItemViewHolder",
+      "viewHolderType": "ItemViewHolder",
       "model": "item0",
       "tag": "Item",
       "isParent": false,
       "groupName": "group4"
     },
     {
-      "viewHolderType": "com.natthanan.multipleviewrecyclerview.ItemViewHolder",
+      "viewHolderType": "ItemViewHolder",
       "model": "item1",
       "tag": "Item",
       "isParent": false,

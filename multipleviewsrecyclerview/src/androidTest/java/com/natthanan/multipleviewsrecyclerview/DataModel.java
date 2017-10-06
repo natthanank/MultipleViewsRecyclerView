@@ -1,4 +1,4 @@
-package com.natthanan.multipleviewrecyclerview;
+package com.natthanan.multipleviewsrecyclerview;
 
 /**
  * Created by natthanan on 9/22/2017.

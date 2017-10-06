@@ -9,11 +9,18 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
+import com.google.common.reflect.Reflection;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.reflections.Reflections;
 
+import java.io.File;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by natthanan on 10/5/2017.
@@ -43,7 +50,7 @@ public class JSONToRecyclerView {
             // set baseadapter
             recyclerView.setAdapter(new BaseAdapter());
             // swipe
-            JSONObject swipe = jsonObject.getJSONObject("swipe");
+            final JSONObject swipe = jsonObject.getJSONObject("swipe");
             if (swipe.getBoolean("isSwipe")) {
                 // get swipe flag and set to Swipe class constructor
                 int[] flag = {0, 0, 0, 0};
@@ -55,13 +62,24 @@ public class JSONToRecyclerView {
                 new Swipe(recyclerView, flag[0] | flag[1] | flag[2] | flag[3]) {
                     @Override
                     public void onSwipedRight(final int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels) {
-                        removeItem(position, viewDataModel);
-                        Snackbar.make(getRecyclerView(), "Remove!!!", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                undoRemove(position, getOldViewDataModel(), getOldGroup());
+                        try {
+                            if (swipe.getString("swipeRight") != null) {
+                                System.out.println("swipeRight");
+                                if ("removeItem".equals(swipe.getString("swipeRight"))) {
+                                    removeItem(position, viewDataModel);
+                                    Snackbar.make(getRecyclerView(), "Remove!!!", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            undoRemove(position, getOldViewDataModel(), getOldGroup());
+                                        }
+                                    }).show();
+                                }
                             }
-                        }).show();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                     }
 
                     @Override
@@ -116,16 +134,21 @@ public class JSONToRecyclerView {
                     }
                 };
             }
+            try {
+                System.out.println(activity.getComponentName().getPackageName());
+            } catch (Exception e) {
+
+            }
             // traversal to viewdatamodel list and create viewdatamodel
             JSONArray viewDataModels = jsonObject.getJSONArray("viewDataModels");
             for (int i = 0; i < viewDataModels.length(); i++) {
                 JSONObject viewDataModel = (JSONObject) viewDataModels.get(i);
-                String simpleClass = viewDataModel.getString("viewHolderType");
+                String className = viewDataModel.getString("viewHolderType");
                 String model = viewDataModel.getString("model");
                 String tag = viewDataModel.getString("tag");
                 boolean isParent = viewDataModel.getBoolean("isParent");
                 String groupName = viewDataModel.getString("groupName");
-                Class<?> viewHolderClass = Class.forName(simpleClass);
+                Class<?> viewHolderClass = Class.forName(activity.getPackageName() + "." + className);
                 new ViewDataModel(viewHolderClass, model, tag, isParent, groupName);
             }
         } catch (JSONException e) {

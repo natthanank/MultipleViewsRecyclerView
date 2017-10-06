@@ -1,4 +1,4 @@
-package com.natthanan.multipleviewrecyclerview;
+package com.natthanan.multipleviewrecyclerview.activity;
 
 import android.content.DialogInterface;
 import android.support.design.widget.Snackbar;
@@ -11,19 +11,17 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
-import android.widget.Toast;
 
+import com.natthanan.multipleviewrecyclerview.R;
+import com.natthanan.multipleviewrecyclerview.viewholder.HeaderViewHolder;
+import com.natthanan.multipleviewrecyclerview.viewholder.ItemViewHolder;
 import com.natthanan.multipleviewsrecyclerview.BaseAdapter;
 import com.natthanan.multipleviewsrecyclerview.BaseViewHolder;
 import com.natthanan.multipleviewsrecyclerview.Drag;
-import com.natthanan.multipleviewsrecyclerview.LoadMoreListener;
 import com.natthanan.multipleviewsrecyclerview.Swipe;
 import com.natthanan.multipleviewsrecyclerview.ViewDataModel;
 import com.natthanan.multipleviewsrecyclerview.intf.DataChangedCallback;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -34,7 +32,6 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler_view_test);
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        System.out.println(R.id.recyclerview);
         final BaseAdapter baseAdapter = new BaseAdapter();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
