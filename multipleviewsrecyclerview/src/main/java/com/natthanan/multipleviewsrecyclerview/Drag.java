@@ -18,6 +18,10 @@ import java.util.Objects;
  */
 
 public abstract class Drag extends ItemTouchHelper.Callback {
+    public static final String PARENT_AND_GROUP = "PARENT AND GROUP";
+    public static final String PARENT_ONLY = "PARENT ONLY";
+    public static String parentDragType = null;
+    public static boolean isMoving = false;
     private BaseAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private boolean isDragEnabled;
@@ -62,6 +66,7 @@ public abstract class Drag extends ItemTouchHelper.Callback {
         int fromPosition = viewHolder.getAdapterPosition();
         int toPosition = target.getAdapterPosition();
         isDrag = true;
+        isMoving = true;
         if(dragFrom == -1) {
             dragFrom =  fromPosition;
         }
@@ -179,7 +184,6 @@ public abstract class Drag extends ItemTouchHelper.Callback {
                 BaseAdapter.getGroupList().get(groupToPosition).get(toPosition + 1).setGroupName(BaseAdapter.getGroupList().get(groupToPosition).get(0).getGroupName());
             } else {
                 System.out.println("else");
-                if (groupToPosition != 0 && groupFromPosition != groupToPosition) {
                     if (fromPosition < toPosition) {
                         for (int i = fromPosition; i < toPosition; i++) {
                             Collections.swap(BaseAdapter.getGroupList().get(groupFromPosition), i, i + 1);
@@ -189,7 +193,7 @@ public abstract class Drag extends ItemTouchHelper.Callback {
                             Collections.swap(BaseAdapter.getGroupList().get(groupFromPosition), i, i - 1);
                         }
                     }
-                }
+
             }
             toGroup.remove(viewDataModelTemp);
             List<ViewDataModel> list = new ArrayList<>();
@@ -227,6 +231,8 @@ public abstract class Drag extends ItemTouchHelper.Callback {
 
         dragFrom = dragTo = -1;
         Swipe.isSwiped = true;
+        isDrag = false;
+        isMoving = false;
     }
 
     @Override
