@@ -1,6 +1,7 @@
 package com.natthanan.multipleviewsrecyclerview;
 
 import android.graphics.Canvas;
+import android.os.CountDownTimer;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,10 +19,6 @@ import java.util.Objects;
  */
 
 public abstract class Drag extends ItemTouchHelper.Callback {
-    public static final String PARENT_AND_GROUP = "PARENT AND GROUP";
-    public static final String PARENT_ONLY = "PARENT ONLY";
-    public static String parentDragType = null;
-    public static boolean isMoving = false;
     private BaseAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private boolean isDragEnabled;
@@ -32,6 +29,10 @@ public abstract class Drag extends ItemTouchHelper.Callback {
     private int groupFromPosition;
     private int groupToPosition;
     public static boolean isDrag = true;
+    public static final String PARENT_ONLY = "PARENT_ONLY";
+    public static final String PARENT_AND_GROUP = "PARENT_AND_GROUP";
+    public static String parentDragType = null;
+    public static boolean isMoving = false;
 
     public Drag(RecyclerView recyclerView) {
         layoutManager = recyclerView.getLayoutManager();
@@ -181,7 +182,7 @@ public abstract class Drag extends ItemTouchHelper.Callback {
                 System.out.println("elseif");
                 ViewDataModel temp = BaseAdapter.getGroupList().get(groupFromPosition).remove(fromPosition);
                 BaseAdapter.getGroupList().get(groupToPosition).add(toPosition + 1, temp);
-                BaseAdapter.getGroupList().get(groupToPosition).get(toPosition + 1).setGroupName(BaseAdapter.getGroupList().get(groupToPosition).get(0).getGroupName());
+//                BaseAdapter.getGroupList().get(groupToPosition).get(toPosition + 1).setGroupName(BaseAdapter.getGroupList().get(groupToPosition).get(0).getGroupName());
             } else {
                 System.out.println("else");
                     if (fromPosition < toPosition) {
@@ -193,7 +194,6 @@ public abstract class Drag extends ItemTouchHelper.Callback {
                             Collections.swap(BaseAdapter.getGroupList().get(groupFromPosition), i, i - 1);
                         }
                     }
-
             }
             toGroup.remove(viewDataModelTemp);
             List<ViewDataModel> list = new ArrayList<>();
@@ -253,6 +253,8 @@ public abstract class Drag extends ItemTouchHelper.Callback {
             viewHolder.itemView.setAlpha(1);
             viewHolder.itemView.setTranslationX(dX);
         }
+
+
     }
 
     public abstract void onItemDropped(List<ViewDataModel> dataModels);

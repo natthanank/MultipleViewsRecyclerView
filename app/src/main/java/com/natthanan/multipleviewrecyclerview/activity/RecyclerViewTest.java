@@ -19,6 +19,7 @@ import com.natthanan.multipleviewrecyclerview.viewholder.ItemViewHolder;
 import com.natthanan.multipleviewsrecyclerview.BaseAdapter;
 import com.natthanan.multipleviewsrecyclerview.BaseViewHolder;
 import com.natthanan.multipleviewsrecyclerview.Drag;
+import com.natthanan.multipleviewsrecyclerview.LoadMoreListener;
 import com.natthanan.multipleviewsrecyclerview.Swipe;
 import com.natthanan.multipleviewsrecyclerview.ViewDataModel;
 import com.natthanan.multipleviewsrecyclerview.intf.DataChangedCallback;
@@ -39,20 +40,20 @@ public class RecyclerViewTest extends AppCompatActivity {
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(baseAdapter);
-//        recyclerView.addOnScrollListener(new LoadMoreListener(recyclerView) {
-//            @Override
-//            public void onLoadMore(int page, int totalItemsCount) {
-//                for (int i = 0; i < 5; i++) {
-//                    new ViewDataModel(ItemViewHolder.class, "page " + page + " " +Integer.toString((page-1) * 5 + i), "LoadMore", false, null);
-//                    baseAdapter.notifyItemInserted(BaseAdapter.getViewDataModels().size());
-//                }
-//
-//                if (page == 4) {
-//                    stopLoading();
-//                }
-//
-//            }
-//        });
+        recyclerView.addOnScrollListener(new LoadMoreListener(recyclerView) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                for (int i = 0; i < 5; i++) {
+                    new ViewDataModel(FooterViewHolder.class, "page " + page + " " +Integer.toString((page-1) * 5 + i), "LoadMore", false, null);
+                    baseAdapter.notifyItemInserted(BaseAdapter.getViewDataModels().size());
+                }
+
+                if (page == 4) {
+                    stopLoading();
+                }
+
+            }
+        });
 
 
         for (int j = 0; j < 5; j++) {
