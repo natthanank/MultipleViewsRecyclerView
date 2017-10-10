@@ -98,55 +98,56 @@ public abstract class Drag extends ItemTouchHelper.Callback {
             createNewViewDataModels();
         } else if (toPosition == 0) {
 
-            ((ViewDataModel) BaseAdapter.getViewDataModels().get(toPosition)).setGroupName(Integer.toString(BaseAdapter.getViewDataModels().get(toPosition).hashCode()));
+            (BaseAdapter.getViewDataModels().get(toPosition)).setGroupName(Integer.toString(BaseAdapter.getViewDataModels().get(toPosition).hashCode()));
             createNewGroup(fromPosition, toPosition);
             createNewViewDataModels();
 
         } else {
+            List<ViewDataModel> fromGroup = getMatchGroup(BaseAdapter.getViewDataModels().get(toPosition));
+            List<ViewDataModel> toGroup = getMatchGroup(BaseAdapter.getViewDataModels().get(toPosition - 1));
             // set new groupName
             setNewGroupName(fromPosition, toPosition);
 
-            List<ViewDataModel> toGroup = getMatchGroup((ViewDataModel) BaseAdapter.getViewDataModels().get(toPosition));
             ViewDataModel viewDataModelTemp = null;
 
-            // check group position
-            groupFromPosition = getGroupByPosition(fromPosition);
-            groupToPosition = getGroupByPosition(toPosition);
-            // change position to position in group
-            fromPosition = getPositionInGroup(fromPosition);
-            toPosition = getPositionInGroup(toPosition);
+
 
             try {
-                if (groupFromPosition < groupToPosition) {
+
                     viewDataModelTemp = (ViewDataModel) toGroup.get(toGroup.size() - 1).clone();
                     toGroup.add(viewDataModelTemp);
-                }
+
             } catch (CloneNotSupportedException e) {
                 e.printStackTrace();
             }
 
+            // change position to position in group
+            fromPosition = getPositionInGroup(fromPosition);
+            toPosition = getPositionInGroup(toPosition);
 
-            if (isFromPositionGreaterThanToPosition && groupFromPosition != groupToPosition && toPosition != 0) {
-                System.out.println("inf");
-                ViewDataModel temp = BaseAdapter.getGroupList().get(groupFromPosition).remove(fromPosition + 1);
-                BaseAdapter.getGroupList().get(groupToPosition).add(toPosition, temp);
-            } else if (groupFromPosition != groupToPosition) {
-                System.out.println("elseif");
-                ViewDataModel temp = BaseAdapter.getGroupList().get(groupFromPosition).remove(fromPosition);
-                BaseAdapter.getGroupList().get(groupToPosition).add(toPosition + 1, temp);
-            } else {
-                System.out.println("else");
-                System.out.println(groupFromPosition + " " + fromPosition);
-                System.out.println(groupToPosition + " " + toPosition);
+            if (Objects.equals(fromGroup, toGroup)) {
+                // swap item in group
+                System.out.println("swap in group");
                 if (fromPosition < toPosition) {
                     for (int i = fromPosition; i < toPosition; i++) {
-                        Collections.swap(BaseAdapter.getGroupList().get(groupFromPosition), i, i + 1);
+                        Collections.swap(toGroup, i, i + 1);
                     }
                 } else {
                     for (int i = fromPosition; i > toPosition; i--) {
-                        Collections.swap(BaseAdapter.getGroupList().get(groupFromPosition), i, i - 1);
+                        Collections.swap(toGroup, i, i - 1);
                     }
                 }
+            } else if (isFromPositionGreaterThanToPosition && toPosition != 0){
+                // swap across group from bottom to top
+                System.out.println("swap from bottom to top");
+                ViewDataModel temp = fromGroup.remove(fromPosition + 1);
+                toGroup.add(toPosition, temp);
+            } else {
+                // swap across group from top to bottom
+                System.out.println("swap from top to bottom");
+                ViewDataModel temp = fromGroup.remove(fromPosition);
+                System.out.println("fromGroup.size = " + fromGroup.size());
+                toGroup.add(toPosition + 1, temp);
 
             }
             toGroup.remove(viewDataModelTemp);
@@ -154,12 +155,12 @@ public abstract class Drag extends ItemTouchHelper.Callback {
 
         }
         removeGroup(groupFromPosition);
-//        for (List<ViewDataModel> group : BaseAdapter.getGroupList()) {
-//            for (int i = 0; i < group.size(); i++) {
-//                System.out.println(group.get(i).getModel() + " | " + group.get(i).getGroupName());
-//            }
-//            System.out.println("=================");
-//        }
+        for (List<ViewDataModel> group : BaseAdapter.getGroupList()) {
+            for (int i = 0; i < group.size(); i++) {
+                System.out.println(group.get(i).getModel() + " | " + group.get(i).getGroupName());
+            }
+            System.out.println("=================");
+        }
         onItemDropped(BaseAdapter.getViewDataModels());
     }
 
@@ -198,6 +199,17 @@ public abstract class Drag extends ItemTouchHelper.Callback {
         }
     }
 
+    private ViewDataModel getMatchViewDataModel(int position) {
+        ViewDataModel viewDataModel = BaseAdapter.getViewDataModels().get(position);
+        for (List<ViewDataModel> group : BaseAdapter.getGroupList()) {
+            if (group.contains(viewDataModel)) {
+                System.out.println("contain " + viewDataModel);
+                return viewDataModel;
+            }
+        }
+        return null;
+    }
+
     private void createNewGroup(int fromPosition, int toPosition) {
         groupFromPosition = getGroupByPosition(fromPosition);
         fromPosition = getPositionInGroup(fromPosition);
@@ -208,9 +220,9 @@ public abstract class Drag extends ItemTouchHelper.Callback {
 
     private void setNewGroupName(int fromPosition, int toPosition) {
         if (toPosition != 0) {
-            ((ViewDataModel) BaseAdapter.getViewDataModels().get(toPosition)).setGroupName(((ViewDataModel) BaseAdapter.getViewDataModels().get(toPosition - 1)).getGroupName());
+            (BaseAdapter.getViewDataModels().get(toPosition)).setGroupName(BaseAdapter.getViewDataModels().get(toPosition - 1).getGroupName());
         } else {
-            ((ViewDataModel) BaseAdapter.getViewDataModels().get(toPosition)).setGroupName(((ViewDataModel) BaseAdapter.getViewDataModels().get(fromPosition)).getGroupName());
+            (BaseAdapter.getViewDataModels().get(toPosition)).setGroupName(BaseAdapter.getViewDataModels().get(fromPosition).getGroupName());
         }
         System.out.println("toPosition = " + toPosition + " fromPosition = " + fromPosition);
     }
@@ -238,7 +250,7 @@ public abstract class Drag extends ItemTouchHelper.Callback {
 
     private List<ViewDataModel> getMatchGroup(ViewDataModel v) {
         for (List<ViewDataModel> group : BaseAdapter.getGroupList()) {
-            if (v.getGroupName().equals(group.get(0).getGroupName())) {
+            if (Objects.equals(v.getGroupName(), group.get(0).getGroupName())) {
                 return group;
             }
         }
