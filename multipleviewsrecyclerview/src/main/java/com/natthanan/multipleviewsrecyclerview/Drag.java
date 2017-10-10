@@ -141,20 +141,19 @@ public abstract class Drag extends ItemTouchHelper.Callback {
                 // swap across group from bottom to top
                 System.out.println("swap from bottom to top");
                 ViewDataModel temp = fromGroup.remove(fromPosition + 1);
+                System.out.println("fromPosition = " + fromPosition + " toPosition = " + toPosition);
                 toGroup.add(toPosition, temp);
             } else {
                 // swap across group from top to bottom
                 System.out.println("swap from top to bottom");
                 ViewDataModel temp = fromGroup.remove(fromPosition);
-                System.out.println("fromGroup.size = " + fromGroup.size());
                 toGroup.add(toPosition + 1, temp);
 
             }
             toGroup.remove(viewDataModelTemp);
             createNewViewDataModels();
-
         }
-        removeGroup(groupFromPosition);
+
         for (List<ViewDataModel> group : BaseAdapter.getGroupList()) {
             for (int i = 0; i < group.size(); i++) {
                 System.out.println(group.get(i).getModel() + " | " + group.get(i).getGroupName());

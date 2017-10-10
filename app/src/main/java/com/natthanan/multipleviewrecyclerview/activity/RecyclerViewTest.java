@@ -40,21 +40,22 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(baseAdapter);
-//        recyclerView.addOnScrollListener(new LoadMoreListener(recyclerView) {
-//            @Override
-//            public void onLoadMore(int page, int totalItemsCount) {
-//                for (int i = 0; i < 5; i++) {
-//                    new ViewDataModel(FooterViewHolder.class, "page " + page + " " + Integer.toString((page - 1) * 5 + i), "LoadMore");
-//                    baseAdapter.notifyItemInserted(BaseAdapter.getViewDataModels().size());
-//                }
-//
-//                if (page == 4) {
-//                    stopLoading();
-//
-//                }
-//
-//            }
-//        });
+        recyclerView.addOnScrollListener(new LoadMoreListener(recyclerView) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                new ViewDataModel(FooterViewHolder.class, "LoadMore", "LoadMore", true, "OnLoadMore");
+                for (int i = 0; i < 5; i++) {
+                    new ViewDataModel(FooterViewHolder.class, "page " + page + " " + Integer.toString((page - 1) * 5 + i), "LoadMore", false, "OnLoadMore");
+                    baseAdapter.notifyItemInserted(BaseAdapter.getViewDataModels().size());
+                }
+
+                if (page == 4) {
+                    stopLoading();
+
+                }
+
+            }
+        });
 
         for (int j = 0; j < 5; j++) {
             new ViewDataModel(HeaderViewHolder.class, "Group" + j + " HEADER", "HEADER", true, "Group" + j);
@@ -132,11 +133,16 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
                     @Override
                     public void onItemDropped(List<ViewDataModel> dataModels) {
                     }
-                }
-
-        ;
+                };
 
         System.out.println(com.natthanan.multipleviewsrecyclerview.R.id.name);
+        System.out.println(com.natthanan.multipleviewsrecyclerview.R.id.button);
+        System.out.println(com.natthanan.multipleviewsrecyclerview.R.id.checkbox);
+        System.out.println(com.natthanan.multipleviewsrecyclerview.R.id.description);
+        System.out.println(com.natthanan.multipleviewsrecyclerview.R.id.icon);
+        System.out.println(com.natthanan.multipleviewsrecyclerview.R.id.aSwitch);
+
+
     }
 
 
