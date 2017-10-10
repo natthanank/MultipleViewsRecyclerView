@@ -1,5 +1,7 @@
 package com.natthanan.multipleviewrecyclerview.viewholder;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -31,7 +33,22 @@ public class ItemViewHolder extends BaseViewHolder {
     public void bind(Object data, final String tag) {
         name.setText(((UserModel) data).getName());
         surname.setText(((UserModel) data).getSurname());
+        name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
 }

@@ -27,7 +27,7 @@ import com.natthanan.multipleviewsrecyclerview.intf.DataChangedCallback;
 import java.util.List;
 
 
-public class RecyclerViewTest extends AppCompatActivity {
+public class RecyclerViewTest extends AppCompatActivity implements DataChangedCallback {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,5 +128,8 @@ public class RecyclerViewTest extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onDatachange(String tag, BaseViewHolder viewHolder, View view, Object data) {
 
+    }
 }
