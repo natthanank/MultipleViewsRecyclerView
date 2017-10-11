@@ -1,7 +1,6 @@
 package com.natthanan.multipleviewsrecyclerview;
 
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.os.CountDownTimer;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -68,8 +67,7 @@ public abstract class Swipe extends ItemTouchHelper.Callback{
         Drag.isDrag = false;
         isUndo = false;
         final int position = viewHolder.getAdapterPosition();
-        BaseAdapter baseAdapter = (BaseAdapter) recyclerView.getAdapter();
-        viewDataModel = (ViewDataModel) BaseAdapter.getViewDataModels().get(viewHolder.getAdapterPosition());
+        viewDataModel = BaseAdapter.getViewDataModels().get(viewHolder.getAdapterPosition());
         try {
             setOldViewDataModel((ViewDataModel) viewDataModel.clone());
         } catch (CloneNotSupportedException e) {

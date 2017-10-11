@@ -1,6 +1,5 @@
 package com.natthanan.multipleviewsrecyclerview;
 
-import android.support.design.internal.NavigationMenuPresenter;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -138,15 +137,7 @@ public class ViewDataModel implements Cloneable {
 
             return  ((BaseViewHolder) instance);
 
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (ClassNotFoundException | InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
             e.printStackTrace();
         }
         return null;

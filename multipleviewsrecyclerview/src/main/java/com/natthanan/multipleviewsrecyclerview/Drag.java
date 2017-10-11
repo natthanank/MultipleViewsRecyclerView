@@ -1,13 +1,11 @@
 package com.natthanan.multipleviewsrecyclerview;
 
 import android.graphics.Canvas;
-import android.os.CountDownTimer;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,9 +27,6 @@ public abstract class Drag extends ItemTouchHelper.Callback {
     private int groupFromPosition;
     private int groupToPosition;
     public static boolean isDrag = true;
-    public static final String PARENT_ONLY = "PARENT_ONLY";
-    public static final String PARENT_AND_GROUP = "PARENT_AND_GROUP";
-    public static String parentDragType = null;
     public static boolean isMoving = false;
 
     public Drag(RecyclerView recyclerView) {

@@ -1,11 +1,7 @@
 package com.natthanan.multipleviewsrecyclerview;
 
-import android.os.CountDownTimer;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -50,29 +46,9 @@ public class BaseAdapter extends RecyclerView.Adapter{
                 public boolean onLongClick(View v) {
                     Drag.isDrag = true;
                     Swipe.isSwiped = false;
-
-                    if (((ViewDataModel) getViewDataModels().get(position)).isParent() == true) {
-                        Drag.parentDragType = Drag.PARENT_AND_GROUP;
-                        Snackbar.make(recyclerView, Drag.parentDragType, Snackbar.LENGTH_SHORT).show();
-
-                        new CountDownTimer(2500, 2500) {
-                            @Override
-                            public void onTick(long millisUntilFinished) {
-                            }
-
-                            @Override
-                            public void onFinish() {
-                                if (!Drag.isMoving && Drag.isDrag) {
-                                    Drag.parentDragType = Drag.PARENT_ONLY;
-                                    Snackbar.make(recyclerView, Drag.parentDragType, Snackbar.LENGTH_SHORT).show();
-                                }
-                            }
-                        }.start();
-                    }
                     return true;
                 }
             });
-
         }
         viewDataModels.get(position).getBaseViewHolderClass().getClass().cast(holder).bind(viewDataModels.get(position).getModel(), viewDataModels.get(position).getTag());
 
@@ -86,7 +62,7 @@ public class BaseAdapter extends RecyclerView.Adapter{
 
     @Override
     public int getItemViewType(int position) {
-        return ((ViewDataModel) getViewDataModels().get(position)).getViewTypes();
+        return (getViewDataModels().get(position)).getViewTypes();
     }
 
     public static void setViewDataModels(List mViewDataModels) {
