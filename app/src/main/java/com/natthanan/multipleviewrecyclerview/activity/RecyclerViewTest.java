@@ -43,9 +43,9 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
         recyclerView.addOnScrollListener(new LoadMoreListener(recyclerView) {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-                new ViewDataModel(FooterViewHolder.class, "LoadMore", "LoadMore", true, "OnLoadMore");
+                new ViewDataModel(HeaderViewHolder.class, "LoadMore"+ page, "LoadMore" , true, "OnLoadMore" + page);
                 for (int i = 0; i < 5; i++) {
-                    new ViewDataModel(FooterViewHolder.class, "page " + page + " " + Integer.toString((page - 1) * 5 + i), "LoadMore", false, "OnLoadMore");
+                    new ViewDataModel(FooterViewHolder.class, "page " + page + " " + Integer.toString((page - 1) * 5 + i), "LoadMore", false, "OnLoadMore" + page);
                     baseAdapter.notifyItemInserted(BaseAdapter.getViewDataModels().size());
                 }
 
@@ -60,7 +60,7 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
         for (int j = 0; j < 5; j++) {
             new ViewDataModel(HeaderViewHolder.class, "Group" + j + " HEADER", "HEADER", true, "Group" + j);
             for (int i = 0; i < 2; i++) {
-                new ViewDataModel(NameViewHolder.class, "Group" + j + " number " + i, "FOOTER", false, "Group" + j);
+                new ViewDataModel(FooterViewHolder.class, "Group" + j + " number " + i, "FOOTER", false, "Group" + j);
             }
         }
         new Swipe(recyclerView, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
@@ -135,12 +135,7 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
                     }
                 };
 
-        System.out.println(com.natthanan.multipleviewsrecyclerview.R.id.name);
-        System.out.println(com.natthanan.multipleviewsrecyclerview.R.id.button);
-        System.out.println(com.natthanan.multipleviewsrecyclerview.R.id.checkbox);
-        System.out.println(com.natthanan.multipleviewsrecyclerview.R.id.description);
-        System.out.println(com.natthanan.multipleviewsrecyclerview.R.id.icon);
-        System.out.println(com.natthanan.multipleviewsrecyclerview.R.id.aSwitch);
+
 
 
     }

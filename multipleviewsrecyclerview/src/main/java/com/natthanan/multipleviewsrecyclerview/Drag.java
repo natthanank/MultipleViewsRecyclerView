@@ -122,7 +122,9 @@ public abstract class Drag extends ItemTouchHelper.Callback {
             }
 
             // change position to position in group
-            fromPosition = getPositionInGroup(fromPosition);
+            if (fromGroup.size() == 1) {
+                fromPosition = getPositionInGroup(fromPosition + 1);
+            } else fromPosition = getPositionInGroup(fromPosition);
             toPosition = getPositionInGroup(toPosition);
 
             if (Objects.equals(fromGroup, toGroup)) {
@@ -140,7 +142,10 @@ public abstract class Drag extends ItemTouchHelper.Callback {
             } else if (isFromPositionGreaterThanToPosition && toPosition != 0){
                 // swap across group from bottom to top
                 System.out.println("swap from bottom to top");
-                ViewDataModel temp = fromGroup.remove(fromPosition + 1);
+                ViewDataModel temp;
+                if (fromGroup.size() != 1) {
+                    temp = fromGroup.remove(fromPosition + 1);
+                } else temp = fromGroup.remove(fromPosition);
                 System.out.println("fromPosition = " + fromPosition + " toPosition = " + toPosition);
                 toGroup.add(toPosition, temp);
             } else {
@@ -153,6 +158,10 @@ public abstract class Drag extends ItemTouchHelper.Callback {
             toGroup.remove(viewDataModelTemp);
             createNewViewDataModels();
         }
+
+        // remove blank group
+        removeBlankGroup();
+
 
         for (List<ViewDataModel> group : BaseAdapter.getGroupList()) {
             for (int i = 0; i < group.size(); i++) {
@@ -192,10 +201,16 @@ public abstract class Drag extends ItemTouchHelper.Callback {
         return false;
     }
 
-    private void removeGroup(int groupFromPosition) {
-        if (BaseAdapter.getGroupList().get(groupFromPosition).size() == 0) {
-            BaseAdapter.getGroupList().remove(groupFromPosition);
+    private void removeBlankGroup() {
+        int groupPosition = 0;
+        boolean isRemove = false;
+        for (List<ViewDataModel> group : BaseAdapter.getGroupList()) {
+            if (group.size() == 0) {
+                isRemove = true;
+                groupPosition = BaseAdapter.getGroupList().indexOf(group);
+            }
         }
+        if (isRemove) BaseAdapter.getGroupList().remove(groupPosition);
     }
 
     private ViewDataModel getMatchViewDataModel(int position) {
