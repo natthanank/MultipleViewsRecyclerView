@@ -8,6 +8,7 @@ public class UserModel {
     private String name;
     private String surname;
     private int age;
+    private UsernamePassword usernamePassword;
 
     public String getName() {
         return name;
@@ -31,5 +32,35 @@ public class UserModel {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public UsernamePassword getUsernamePassword() {
+        return usernamePassword;
+    }
+
+    public void setUsernamePassword(UsernamePassword usernamePassword) {
+        this.usernamePassword = usernamePassword;
+    }
+
+    public static class UsernamePassword {
+
+        private String username;
+        private String password;
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
     }
 }

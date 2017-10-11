@@ -1,12 +1,103 @@
-[
-  {
-    "name" : "Natthanan",
-    "lastname" : "Kunchokwanit",
-    "age" : 22
+{
+  "id": 2131558522,
+  "layoutManager": {
+    "type": "LinearLayoutManager",
+    "orientation": "Vertical",
+    "reverseLayout": false
   },
-  {
-  "name" : "Kittinan",
-  "lastname" : "Kunchokwanit",
-  "age" : 20
+  "swipe" : {
+    "isSwipe" : true,
+    "swipeFlag" : {
+      "left" : true, 
+      "right" : true,
+      "up" : false,
+      "down" : false
+    },
+    "swipeRight" : "removeItem",
+    "swipeLeft" : "updateItem",
+    "swipeUp" : null,
+    "swipdDown" : null
+  },
+  "drag" : {
+    "isDrag" : true,
+    "onItemDrop" : null
+  },
+  "viewDataModels": [
+    {
+      "viewHolderType": "HeaderViewHolder",
+      "model": {
+        "className" : "String",
+        "data" : "header 0"
+      },
+      "tag": "Header",
+      "isParent": true,
+      "groupName": "group0"
+    },
+    {
+      "viewHolderType": "ItemViewHolder",
+      "model": {
+        "className" : "UserModel",
+        "data" : {
+          "name" : "natthanan",
+          "surname" : "kunchokwanit",
+          "age" : 22
+        }
+      },
+      "tag": "Item",
+      "isParent": false,
+      "groupName": "group0"
+    },
+    {
+      "viewHolderType": "ItemViewHolder",
+      "model": {
+        "className" : "UserModel",
+        "data" : {
+          "name" : "natthanan",
+          "surname" : "kunchokwanit",
+          "age" : 22
+        }
+      },
+      "tag": "Item",
+      "isParent": false,
+      "groupName": "group0"
+    }, 
+    {
+      "viewHolderType": "HeaderViewHolder",
+      "model": {
+        "className" : "String",
+        "data" : "header 1"
+      },
+      "tag": "Header",
+      "isParent": true,
+      "groupName": "group1"
+    },
+    {
+      "viewHolderType": "ItemViewHolder",
+      "model": {
+        "className" : "UserModel",
+        "data" : {
+          "name" : "natthanan",
+          "surname" : "kunchokwanit",
+          "age" : 22
+        }
+      },
+      "tag": "Item",
+      "isParent": false,
+      "groupName": "group1"
+    },
+    {
+      "viewHolderType": "ItemViewHolder",
+      "model": {
+        "className" : "UserModel",
+        "data" : {
+          "name" : "natthanan",
+          "surname" : "kunchokwanit",
+          "age" : 22
+        }
+      },
+      "tag": "Item",
+      "isParent": false,
+      "groupName": "group1"
+    }
+  ]
 }
-]

@@ -1,21 +1,14 @@
 package com.natthanan.multipleviewsrecyclerview;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.Gson;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,143 +21,96 @@ public class JSONToRecyclerView {
     List<Class<?>> basicClass = new ArrayList<>();
 
     public JSONToRecyclerView(final Activity activity, String json) {
-
         addBasicClass();
-        try {
-            // create json object
-            JSONObject jsonObject = new JSONObject(json);
-            // initialize recyclerview
-            RecyclerView recyclerView = (RecyclerView) activity.findViewById(jsonObject.getInt("recyclerView"));
-            // check layoutmanager type and set layoutmanager to recyclerview
-            JSONObject layoutManagerJSON = jsonObject.getJSONObject("layoutManager");
-            if ("LinearLayoutManager".equals(layoutManagerJSON.getString("type"))) {
-                int orientation;
-                boolean reverseLayout;
-                if (layoutManagerJSON.getString("orientation") != null) {
-                    if ("Vertical".equals(layoutManagerJSON.getString("orientation"))) {
+        Gson gson = new Gson();
+        RecyclerViewGSONModel recyclerViewGSONModel = gson.fromJson(json, RecyclerViewGSONModel.class);
+        RecyclerView recyclerView = (RecyclerView) activity.findViewById(recyclerViewGSONModel.getId());
+        RecyclerView.LayoutManager layoutManager = null;
+        switch (recyclerViewGSONModel.getLayoutManager().getType()) {
+            case "LinearLayoutManager":
+                int orientation = 0;
+                boolean reverseLayout = recyclerViewGSONModel.getLayoutManager().isReverseLayout();
+                switch (recyclerViewGSONModel.getLayoutManager().getOrientation()) {
+                    case "Vertical":
                         orientation = LinearLayoutManager.VERTICAL;
-                    } else orientation = LinearLayoutManager.HORIZONTAL;
-                    reverseLayout = layoutManagerJSON.getBoolean("reverseLayout");
-                    recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext(), orientation, reverseLayout));
-                } else recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-            }
-            // set baseadapter
-            recyclerView.setAdapter(new BaseAdapter());
-            // swipe
-            final JSONObject swipe = jsonObject.getJSONObject("swipe");
-            if (swipe.getBoolean("isSwipe")) {
-                // get swipe flag and set to Swipe class constructor
-                int[] flag = {0, 0, 0, 0};
-                JSONObject swipeFlag = swipe.getJSONObject("swipeFlag");
-                if (swipeFlag.getBoolean("right")) flag[0] = ItemTouchHelper.RIGHT;
-                if (swipeFlag.getBoolean("left")) flag[1] = ItemTouchHelper.LEFT;
-                if (swipeFlag.getBoolean("up")) flag[2] = ItemTouchHelper.UP;
-                if (swipeFlag.getBoolean("down")) flag[3] = ItemTouchHelper.DOWN;
-                new Swipe(recyclerView, flag[0] | flag[1] | flag[2] | flag[3]) {
-                    @Override
-                    public void onSwipedRight(final int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels) {
-                        try {
-                            if (swipe.getString("swipeRight") != null) {
-                                if ("removeItem".equals(swipe.getString("swipeRight"))) {
-                                    removeItem(position, viewDataModel);
-                                    Snackbar.make(getRecyclerView(), "Remove!!!", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            undoRemove(position, getOldViewDataModel(), getOldGroup());
-                                        }
-                                    }).show();
-                                }
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-
-                    @Override
-                    public void onSwipedLeft(final int position, final ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getRecyclerView().getContext());
-                        builder.setMessage("รับขนมจีบซาลาเปาเพิ่มมั้ยครับ?");
-                        builder.setPositiveButton("รับ", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                viewDataModel.setModel("รับขนมจีบซาลาเปา");
-                                updateItem(position, viewDataModel);
-                                Snackbar.make(getRecyclerView(), "คุณได้รับขนมจีบซาลาเปา", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        undoUpdate(position, getOldViewDataModel(), getOldGroup());
-                                    }
-                                }).show();
-                            }
-                        });
-                        builder.setNegativeButton("ไม่รับ", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                dontDoAnything(position);
-                            }
-                        });
-                        builder.show();
-                    }
-
-                    @Override
-                    public void onSwipeUp(int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels) {
-
-                    }
-
-                    @Override
-                    public void onSwipeDown(int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels) {
-
-                    }
-
-                    @Override
-                    public void onUpdateSwiped(int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels, int action) {
-
-                    }
-                };
-            }
-            // drag
-            JSONObject drag = jsonObject.getJSONObject("drag");
-            if (drag.getBoolean("isDrag")) {
-                new Drag(recyclerView) {
-                    @Override
-                    public void onItemDropped(List<ViewDataModel> dataModels) {
-
-                    }
-                };
-            }
-
-            // traversal to viewdatamodels list and create viewdatamodel
-            JSONArray viewDataModels = jsonObject.getJSONArray("viewDataModels");
-            for (int i = 0; i < viewDataModels.length(); i++) {
-                JSONObject viewDataModel = (JSONObject) viewDataModels.get(i);
-                String className = viewDataModel.getString("viewHolderType");
-                String tag = viewDataModel.getString("tag");
-                boolean isParent = viewDataModel.getBoolean("isParent");
-                String groupName = viewDataModel.getString("groupName");
-                Class<?> viewHolderClass = Class.forName(activity.getPackageName() + ".viewholder." + className);
-                JSONObject model = viewDataModel.getJSONObject("model");
-                // get Class of model
-                Object newModel;
-                if (basicClass.contains(getModelClass(activity, model.getString("class")))){
-                    newModel = model.get("data");
-                } else {
-                    Class<?> modelClass = getModelClass(activity, model.getString("class"));
-                    Method[] classMethod = modelClass.getDeclaredMethods();
-                    Constructor<?> constructor = modelClass.getConstructor();
-                    newModel = constructor.newInstance();
-                    for (Method m : classMethod) {
-                        if (m.getName().startsWith("set")) {
-                            JSONObject data = model.getJSONObject("data");
-                            m.invoke(newModel, data.get(decapitalize(m.getName().substring(3))));
-                        }
-                    }
+                        break;
+                    case "Horizontal":
+                        orientation = LinearLayoutManager.HORIZONTAL;
+                        break;
                 }
-                new ViewDataModel(viewHolderClass, newModel, tag, isParent, groupName);
+                layoutManager = new LinearLayoutManager(activity, orientation, reverseLayout);
+        }
+        recyclerView.setLayoutManager(layoutManager);
+        BaseAdapter baseAdapter = new BaseAdapter();
+        recyclerView.setAdapter(baseAdapter);
+        if (recyclerViewGSONModel.getSwipe().isSwipe()) {
+            int[] flag = {0, 0, 0, 0};
+            if (recyclerViewGSONModel.getSwipe().getSwipeFlag().isRight()) flag[0] = ItemTouchHelper.RIGHT;
+            if (recyclerViewGSONModel.getSwipe().getSwipeFlag().isLeft()) flag[1] = ItemTouchHelper.LEFT;
+            if (recyclerViewGSONModel.getSwipe().getSwipeFlag().isUp()) flag[2] = ItemTouchHelper.UP;
+            if (recyclerViewGSONModel.getSwipe().getSwipeFlag().isDown()) flag[3] = ItemTouchHelper.DOWN;
+
+            new Swipe(recyclerView, flag[0] | flag[1] | flag[2] | flag[3]) {
+                @Override
+                public void onSwipedRight(final int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels) {
+                    removeItem(position, viewDataModel);
+                    Snackbar.make(getRecyclerView(), "Remove!!!", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            undoRemove(position, getOldViewDataModel(), getOldGroup());
+                        }
+                    }).show();
+                }
+
+                @Override
+                public void onSwipedLeft(int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels) {
+
+                }
+
+                @Override
+                public void onSwipeUp(int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels) {
+
+                }
+
+                @Override
+                public void onSwipeDown(int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels) {
+
+                }
+
+                @Override
+                public void onUpdateSwiped(int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels, int action) {
+
+                }
+            };
+        }
+        if (recyclerViewGSONModel.getDrag().isDrag()) {
+            new Drag(recyclerView) {
+                @Override
+                public void onItemDropped(List<ViewDataModel> dataModels) {
+
+                }
+            };
+        }
+
+        ArrayList<RecyclerViewGSONModel.ViewDataModel> viewDataModels = recyclerViewGSONModel.getViewDataModels();
+        for (RecyclerViewGSONModel.ViewDataModel viewDataModel : viewDataModels) {
+            Class<?> viewHolderClass = null;
+            Class<?> modelClass = null;
+            Object model = null;
+            try {
+                viewHolderClass = Class.forName(activity.getPackageName() + ".viewholder." + viewDataModel.getViewHolderType());
+                modelClass = getModelClass(activity, viewDataModel.getModel().getClassName());
+                if (basicClass.contains(modelClass)) {
+                   model = modelClass.cast(viewDataModel.getModel().getData());
+                } else {
+                    model = new String("test");
+                }
+                new ViewDataModel(viewHolderClass, model, viewDataModel.getTag(), viewDataModel.isParent(), viewDataModel.getGroupName());
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
             }
-        } catch (JSONException | InvocationTargetException | IllegalAccessException | NoSuchMethodException | InstantiationException | ClassNotFoundException | RuntimeException e) {
-            e.printStackTrace();
+
+
         }
     }
 
@@ -175,21 +121,56 @@ public class JSONToRecyclerView {
                 case "String":
                     modelClass = String.class;
                     break;
+                case "Integer":
+                    modelClass = Integer.class;
+                    break;
                 case "int":
                     modelClass = int.class;
+                    break;
+                case "Long":
+                    modelClass = Long.class;
                     break;
                 case "long":
                     modelClass = long.class;
                     break;
+                case "Double":
+                    modelClass = Double.class;
+                    break;
                 case "double":
                     modelClass = double.class;
+                    break;
+                case "Boolean":
+                    modelClass = Boolean.class;
                     break;
                 case "boolean":
                     modelClass = boolean.class;
                     break;
+                case "Byte":
+                    modelClass = Byte.class;
+                    break;
+                case "byte":
+                    modelClass = byte.class;
+                    break;
+                case "Short":
+                    modelClass = Short.class;
+                    break;
+                case "short":
+                    modelClass = short.class;
+                    break;
+                case "Float":
+                    modelClass = Float.class;
+                    break;
+                case "float":
+                    modelClass = float.class;
+                    break;
+                case "Character":
+                    modelClass = Character.class;
+                    break;
+                case "char":
+                    modelClass = char.class;
+                    break;
                 default:
                     modelClass = Class.forName(activity.getPackageName() + ".model." + className);
-
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -199,10 +180,22 @@ public class JSONToRecyclerView {
 
     private void addBasicClass() {
         basicClass.add(String.class);
+        basicClass.add(Integer.class);
         basicClass.add(int.class);
+        basicClass.add(Double.class);
         basicClass.add(double.class);
+        basicClass.add(Boolean.class);
         basicClass.add(boolean.class);
+        basicClass.add(Long.class);
         basicClass.add(long.class);
+        basicClass.add(Byte.class);
+        basicClass.add(byte.class);
+        basicClass.add(Short.class);
+        basicClass.add(short.class);
+        basicClass.add(Float.class);
+        basicClass.add(float.class);
+        basicClass.add(Character.class);
+        basicClass.add(char.class);
     }
 
     private String decapitalize(String string) {

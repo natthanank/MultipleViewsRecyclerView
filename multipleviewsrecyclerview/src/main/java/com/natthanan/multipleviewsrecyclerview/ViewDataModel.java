@@ -30,13 +30,7 @@ public class ViewDataModel implements Cloneable {
     private static SparseArray<Class<? extends BaseViewHolder>> baseViewHolderSparseArray = new SparseArray<>();
 
     public ViewDataModel(Class viewHolderClass, Object model, String tag) {
-        setBaseViewHolderClass(createViewHolder(viewHolderClass, recyclerView));
-        setModel(model);
-        setTag(tag);
-        setParent(false);
-        setGroupName(null);
-        setGroup(true);
-        addGroup();
+        this(viewHolderClass, model, tag, false, null);
     }
 
     public ViewDataModel(Class viewHolderClass, Object model, String tag, boolean isParent, String groupName) {
@@ -80,30 +74,6 @@ public class ViewDataModel implements Cloneable {
         }
         BaseAdapter.setViewDataModels(list);
         recyclerView.getAdapter().notifyDataSetChanged();
-    }
-
-    public int getViewTypes() {
-        return viewTypes;
-    }
-
-    public void setViewTypes(int viewTypes) {
-        this.viewTypes = viewTypes;
-    }
-
-    public Object getModel() {
-        return model;
-    }
-
-    public void setModel(Object model) {
-        this.model = model;
-    }
-
-    public BaseViewHolder getBaseViewHolderClass() {
-        return baseViewHolderClass;
-    }
-
-    public void setBaseViewHolderClass(BaseViewHolder baseViewHolderClass) {
-        this.baseViewHolderClass = baseViewHolderClass;
     }
 
     private Integer getLayoutId(Class myClass) {
@@ -194,6 +164,30 @@ public class ViewDataModel implements Cloneable {
 
     public int getStableID() {
         return this.hashCode();
+    }
+
+    public int getViewTypes() {
+        return viewTypes;
+    }
+
+    public void setViewTypes(int viewTypes) {
+        this.viewTypes = viewTypes;
+    }
+
+    public Object getModel() {
+        return model;
+    }
+
+    public void setModel(Object model) {
+        this.model = model;
+    }
+
+    public BaseViewHolder getBaseViewHolderClass() {
+        return baseViewHolderClass;
+    }
+
+    public void setBaseViewHolderClass(BaseViewHolder baseViewHolderClass) {
+        this.baseViewHolderClass = baseViewHolderClass;
     }
 
 }

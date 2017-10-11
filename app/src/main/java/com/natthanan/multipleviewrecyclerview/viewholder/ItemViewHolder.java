@@ -31,24 +31,8 @@ public class ItemViewHolder extends BaseViewHolder {
 
     @Override
     public void bind(Object data, final String tag) {
-        name.setText(((UserModel) data).getName());
-        surname.setText(((UserModel) data).getSurname());
-        name.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+        name.setText(((String) data));
+        surname.setText("surname");
     }
 
 }
