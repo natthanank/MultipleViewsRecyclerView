@@ -38,7 +38,7 @@ public class FooterViewHolder extends BaseViewHolder {
         dragHandler.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                ((BaseAdapter) getRecyclerView().getAdapter()).getItemTouchHelper().startDrag(FooterViewHolder.this);
+                startDrag();
                 return true;
             }
         });

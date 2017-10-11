@@ -58,8 +58,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.3.1'
 
     testCompile 'junit:junit:4.12'
-    compile 'com.google.guava:guava:20.0'
-    compile 'org.javassist:javassist:3.21.0-GA'
+    compile 'com.google.code.gson:gson:2.8.2'
     compile 'org.reflections:reflections:0.9.11'
 }
 

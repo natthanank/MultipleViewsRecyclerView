@@ -85,7 +85,9 @@ public abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder{
         }
     }
 
-
+    public void startDrag() {
+        ((BaseAdapter) getRecyclerView().getAdapter()).getItemTouchHelper().startDrag(BaseViewHolder.this);
+    }
 
     public RecyclerView getRecyclerView() {
         return recyclerView;

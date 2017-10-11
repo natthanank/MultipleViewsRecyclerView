@@ -26,7 +26,7 @@ public class JSONTest extends AppCompatActivity implements DataChangedCallback{
         String json = null;
         try {
 
-            InputStream is = getAssets().open("jsonTest.json");
+            InputStream is = getAssets().open("oldJsonTest.json");
 
             int size = is.available();
 
