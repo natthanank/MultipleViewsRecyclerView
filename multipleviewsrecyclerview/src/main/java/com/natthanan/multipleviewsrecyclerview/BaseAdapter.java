@@ -18,7 +18,8 @@ public class BaseAdapter extends RecyclerView.Adapter{
     private static List<ArrayList<ViewDataModel>> groupList;
 
     public BaseAdapter() {
-
+        viewDataModels = new ArrayList<>();
+        groupList = new ArrayList<>();
     }
 
     @Override
