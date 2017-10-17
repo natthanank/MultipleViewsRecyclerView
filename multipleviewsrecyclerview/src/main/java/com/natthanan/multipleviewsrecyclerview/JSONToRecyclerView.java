@@ -2,15 +2,26 @@ package com.natthanan.multipleviewsrecyclerview;
 
 import android.app.Activity;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.internal.LinkedTreeMap;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.R.attr.type;
 
 /**
  * Created by natthanan on 10/5/2017.
@@ -21,15 +32,22 @@ public class JSONToRecyclerView {
     List<Class<?>> basicClass = new ArrayList<>();
 
     public JSONToRecyclerView(final Activity activity, String json) {
+        // add standard class of object to list
         addBasicClass();
+        // create gson instance
         Gson gson = new Gson();
+        // create recyclerviewgsonmodel instance from json file
         RecyclerViewGSONModel recyclerViewGSONModel = gson.fromJson(json, RecyclerViewGSONModel.class);
+        // create recyclerview
         RecyclerView recyclerView = (RecyclerView) activity.findViewById(recyclerViewGSONModel.getId());
+        // create layoutmanager
         RecyclerView.LayoutManager layoutManager = null;
+        int orientation = 2;
+        int spanCount = 0;
+        boolean reverseLayout = false;
         switch (recyclerViewGSONModel.getLayoutManager().getType()) {
             case "LinearLayoutManager":
-                int orientation = 0;
-                boolean reverseLayout = recyclerViewGSONModel.getLayoutManager().isReverseLayout();
+                reverseLayout = recyclerViewGSONModel.getLayoutManager().isReverseLayout();
                 switch (recyclerViewGSONModel.getLayoutManager().getOrientation()) {
                     case "Vertical":
                         orientation = LinearLayoutManager.VERTICAL;
@@ -39,10 +57,44 @@ public class JSONToRecyclerView {
                         break;
                 }
                 layoutManager = new LinearLayoutManager(activity, orientation, reverseLayout);
+                break;
+            case "GridLayoutManager":
+                switch (recyclerViewGSONModel.getLayoutManager().getOrientation()) {
+                    case "Vertical":
+                        orientation = LinearLayoutManager.VERTICAL;
+                        break;
+                    case "Horizontal":
+                        orientation = LinearLayoutManager.HORIZONTAL;
+                        break;
+                }
+                spanCount = recyclerViewGSONModel.getLayoutManager().getSpanCount();
+                if (orientation != 2) {
+                    reverseLayout = recyclerViewGSONModel.getLayoutManager().isReverseLayout();
+                    layoutManager = new GridLayoutManager(activity, spanCount, orientation, reverseLayout);
+                } else {
+                    layoutManager = new GridLayoutManager(activity, spanCount);
+                }
+                break;
+            case "StaggeredGridLayoutManager":
+                switch (recyclerViewGSONModel.getLayoutManager().getOrientation()) {
+                    case "Vertical":
+                        orientation = LinearLayoutManager.VERTICAL;
+                        break;
+                    case "Horizontal":
+                        orientation = LinearLayoutManager.HORIZONTAL;
+                        break;
+                }
+                spanCount = recyclerViewGSONModel.getLayoutManager().getSpanCount();
+                layoutManager = new StaggeredGridLayoutManager(spanCount, orientation);
         }
+        // set layoutmanager to recyclerview
         recyclerView.setLayoutManager(layoutManager);
+
+        // create baseadapter instance
         BaseAdapter baseAdapter = new BaseAdapter();
+        // set adapter to recyclerview
         recyclerView.setAdapter(baseAdapter);
+        // swipe
         if (recyclerViewGSONModel.getSwipe().isSwipe()) {
             int[] flag = {0, 0, 0, 0};
             if (recyclerViewGSONModel.getSwipe().getSwipeFlag().isRight()) flag[0] = ItemTouchHelper.RIGHT;
@@ -83,6 +135,8 @@ public class JSONToRecyclerView {
                 }
             };
         }
+
+        // drag
         if (recyclerViewGSONModel.getDrag().isDrag()) {
             new Drag(recyclerView) {
                 @Override
@@ -92,18 +146,19 @@ public class JSONToRecyclerView {
             };
         }
 
+        // traverse to viewdatamodels and create instance of viewdatamodel
         ArrayList<RecyclerViewGSONModel.ViewDataModel> viewDataModels = recyclerViewGSONModel.getViewDataModels();
         for (RecyclerViewGSONModel.ViewDataModel viewDataModel : viewDataModels) {
-            Class<?> viewHolderClass = null;
-            Class<?> modelClass = null;
-            Object model = null;
+            Class<?> viewHolderClass;
+            Class<?> modelClass;
+            Object model;
             try {
                 viewHolderClass = Class.forName(activity.getPackageName() + ".viewholder." + viewDataModel.getViewHolderType());
                 modelClass = getModelClass(activity, viewDataModel.getModel().getClassName());
                 if (basicClass.contains(modelClass)) {
                    model = modelClass.cast(viewDataModel.getModel().getData());
                 } else {
-                    model = new String("test");
+                    model = modelClass.cast(gson.fromJson(viewDataModel.getModel().getData(), modelClass));
                 }
                 new ViewDataModel(viewHolderClass, model, viewDataModel.getTag(), viewDataModel.isParent(), viewDataModel.getGroupName());
             } catch (ClassNotFoundException e) {
@@ -205,5 +260,34 @@ public class JSONToRecyclerView {
         char c[] = string.toCharArray();
         c[0] = Character.toLowerCase(c[0]);
         return new String(c);
+    }
+
+    private Object createInstance(Class<?> klass) {
+        Class<?> c = null;
+        try {
+            c = Class.forName(klass.getName());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        Constructor<?> constructor = null;
+        try {
+            constructor = c.getConstructor();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+
+        Object instance = null;
+        try {
+            instance = constructor.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
+
+        return instance;
     }
 }

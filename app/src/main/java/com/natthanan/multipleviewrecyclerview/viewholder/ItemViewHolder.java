@@ -1,5 +1,6 @@
 package com.natthanan.multipleviewrecyclerview.viewholder;
 
+import android.renderscript.Double2;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -15,14 +16,17 @@ import com.natthanan.multipleviewsrecyclerview.annotation.ViewID;
 public class ItemViewHolder extends BaseViewHolder {
 
 
-    @ViewID(R.id.name)
+    @ViewID(R.id.firstname)
     private TextView name;
 
     @ViewID(R.id.surname)
     private TextView surname;
 
-    @ViewID(R.id.aSwitch)
-    Switch aSwitch;
+    @ViewID(R.id.username)
+    private TextView username;
+
+    @ViewID(R.id.age)
+    private TextView age;
 
 
     public ItemViewHolder(View itemView) {
@@ -31,8 +35,10 @@ public class ItemViewHolder extends BaseViewHolder {
 
     @Override
     public void bind(Object data, final String tag) {
-        name.setText(((String) data));
-        surname.setText("surname");
+        name.setText(((UserModel) data).getName());
+        surname.setText(((UserModel) data).getSurname());
+        age.setText("age : " + Double.valueOf(((UserModel) data).getAge()).intValue());
+        username.setText(((UserModel) data).getUsername());
     }
 
 }

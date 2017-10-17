@@ -37,13 +37,9 @@
       "viewHolderType": "ItemViewHolder",
       "model": {
         "className" : "UserModel",
-        "data" : {
-          "name" : "natthanan",
-          "surname" : "kunchokwanit",
-          "age" : 22
-        }
+        "data" : "{\"name\": \"Natthanan\",\"surname\":\"Kunchokwanit\",\"age\":22.3,\"username\":\"samkira\",\"password\":\"stupid\"}"
       },
-      "tag": "Item",
+      "tag": "Header",
       "isParent": false,
       "groupName": "group0"
     },
@@ -51,16 +47,12 @@
       "viewHolderType": "ItemViewHolder",
       "model": {
         "className" : "UserModel",
-        "data" : {
-          "name" : "natthanan",
-          "surname" : "kunchokwanit",
-          "age" : 22
-        }
+        "data" : "{\"name\": \"Kittinan\",\"surname\":\"Kunchokwanit\",\"age\":20,\"username\":\"safe\",\"password\":\"stupid\"}"
       },
-      "tag": "Item",
+      "tag": "Header",
       "isParent": false,
       "groupName": "group0"
-    }, 
+    },
     {
       "viewHolderType": "HeaderViewHolder",
       "model": {
@@ -75,13 +67,9 @@
       "viewHolderType": "ItemViewHolder",
       "model": {
         "className" : "UserModel",
-        "data" : {
-          "name" : "natthanan",
-          "surname" : "kunchokwanit",
-          "age" : 22
-        }
+        "data" : "{\"name\": \"Natthanan\",\"surname\":\"Kunchokwanit\",\"age\":22,\"username\":\"samkira\",\"password\":\"stupid\"}"
       },
-      "tag": "Item",
+      "tag": "Header",
       "isParent": false,
       "groupName": "group1"
     },
@@ -89,13 +77,9 @@
       "viewHolderType": "ItemViewHolder",
       "model": {
         "className" : "UserModel",
-        "data" : {
-          "name" : "natthanan",
-          "surname" : "kunchokwanit",
-          "age" : 22
-        }
+        "data" : "{\"name\": \"Kittinan\",\"surname\":\"Kunchokwanit\",\"age\":20,\"username\":\"safe\",\"password\":\"stupid\"}"
       },
-      "tag": "Item",
+      "tag": "Header",
       "isParent": false,
       "groupName": "group1"
     }

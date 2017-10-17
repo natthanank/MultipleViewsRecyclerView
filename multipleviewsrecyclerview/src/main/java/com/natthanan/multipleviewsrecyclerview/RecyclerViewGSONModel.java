@@ -1,17 +1,25 @@
 package com.natthanan.multipleviewsrecyclerview;
 
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Created by natthanan on 9/22/2017.
  */
 
 public class RecyclerViewGSONModel {
+    @SerializedName("id")
     private int id;
+    @SerializedName("layoutManager")
     private LayoutManager layoutManager;
+    @SerializedName("swipe")
     private Swipe swipe;
+    @SerializedName("drag")
     private Drag drag;
+    @SerializedName("viewDataModels")
     private ArrayList<ViewDataModel> viewDataModels;
 
     public int getId() {
@@ -54,18 +62,23 @@ public class RecyclerViewGSONModel {
         this.viewDataModels = viewDataModels;
     }
 
-    public static class LayoutManager {
+    public class LayoutManager {
 
+        @SerializedName("type")
         private String type;
+        @SerializedName("orientation")
         private String orientation;
+        @SerializedName("reverseLayout")
         private boolean reverseLayout;
+        @SerializedName("spanCount")
+        private int spanCount;
 
-        public boolean isReverseLayout() {
-            return reverseLayout;
+        public String getType() {
+            return type;
         }
 
-        public void setReverseLayout(boolean reverseLayout) {
-            this.reverseLayout = reverseLayout;
+        public void setType(String type) {
+            this.type = type;
         }
 
         public String getOrientation() {
@@ -76,24 +89,37 @@ public class RecyclerViewGSONModel {
             this.orientation = orientation;
         }
 
-
-        public String getType() {
-            return type;
+        public boolean isReverseLayout() {
+            return reverseLayout;
         }
 
-        public void setType(String type) {
-            this.type = type;
+        public void setReverseLayout(boolean reverseLayout) {
+            this.reverseLayout = reverseLayout;
+        }
+
+        public int getSpanCount() {
+            return spanCount;
+        }
+
+        public void setSpanCount(int spanCount) {
+            this.spanCount = spanCount;
         }
     }
 
-    public static class Swipe {
+    public class Swipe {
 
+        @SerializedName("isSwipe")
         private boolean isSwipe;
-        private String swipeRight;
-        private String swipeLeft;
-        private String swipeUp;
-        private String swipeDown;
+        @SerializedName("swipeFlag")
         private SwipeFlag swipeFlag;
+        @SerializedName("swipeRight")
+        private String swipeRight;
+        @SerializedName("swipeLeft")
+        private String swipeLeft;
+        @SerializedName("swipeUp")
+        private String swipeUp;
+        @SerializedName("swipeDown")
+        private String swipeDown;
 
         public boolean isSwipe() {
             return isSwipe;
@@ -101,6 +127,14 @@ public class RecyclerViewGSONModel {
 
         public void setSwipe(boolean swipe) {
             isSwipe = swipe;
+        }
+
+        public SwipeFlag getSwipeFlag() {
+            return swipeFlag;
+        }
+
+        public void setSwipeFlag(SwipeFlag swipeFlag) {
+            this.swipeFlag = swipeFlag;
         }
 
         public String getSwipeRight() {
@@ -135,19 +169,16 @@ public class RecyclerViewGSONModel {
             this.swipeDown = swipeDown;
         }
 
-        public SwipeFlag getSwipeFlag() {
-            return swipeFlag;
-        }
 
-        public void setSwipeFlag(SwipeFlag swipeFlag) {
-            this.swipeFlag = swipeFlag;
-        }
+        public class SwipeFlag {
 
-        public static class SwipeFlag {
-
+            @SerializedName("left")
             private boolean left;
+            @SerializedName("right")
             private boolean right;
+            @SerializedName("up")
             private boolean up;
+            @SerializedName("down")
             private boolean down;
 
             public boolean isLeft() {
@@ -184,9 +215,11 @@ public class RecyclerViewGSONModel {
         }
     }
 
-    public static class Drag {
+    public class Drag {
 
+        @SerializedName("isDrag")
         private boolean isDrag;
+        @SerializedName("onItemDrop")
         private String onItemDrop;
 
         public boolean isDrag() {
@@ -206,13 +239,18 @@ public class RecyclerViewGSONModel {
         }
     }
 
-    public static class ViewDataModel {
+    public class ViewDataModel {
 
+        @SerializedName("viewHolderType")
         private String viewHolderType;
-        private String tag;
-        private boolean isParent;
-        private String groupName;
+        @SerializedName("model")
         private Model model;
+        @SerializedName("tag")
+        private String tag;
+        @SerializedName("isParent")
+        private boolean isParent;
+        @SerializedName("groupName")
+        private String groupName;
 
         public String getViewHolderType() {
             return viewHolderType;
@@ -220,6 +258,14 @@ public class RecyclerViewGSONModel {
 
         public void setViewHolderType(String viewHolderType) {
             this.viewHolderType = viewHolderType;
+        }
+
+        public Model getModel() {
+            return model;
+        }
+
+        public void setModel(Model model) {
+            this.model = model;
         }
 
         public String getTag() {
@@ -246,17 +292,16 @@ public class RecyclerViewGSONModel {
             this.groupName = groupName;
         }
 
-        public Model getModel() {
-            return model;
-        }
 
-        public void setModel(Model model) {
-            this.model = model;
-        }
-
-        public static class Model {
+        public class Model {
+            @SerializedName("className")
             private String className;
-            private Object data;
+            @SerializedName("data")
+            private String data;
+
+            public Model(){
+
+            }
 
             public String getClassName() {
                 return className;
@@ -266,11 +311,11 @@ public class RecyclerViewGSONModel {
                 this.className = className;
             }
 
-            public Object getData() {
+            public String getData() {
                 return data;
             }
 
-            public void setData(Object data) {
+            public void setData(String data) {
                 this.data = data;
             }
         }
