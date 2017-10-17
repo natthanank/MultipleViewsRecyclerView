@@ -13,8 +13,11 @@
       "up" : false,
       "down" : false
     },
-    "swipeRight" : "removeItem",
-    "swipeLeft" : "updateItem",
+    "swipeRight" : {
+      "action" : "removeItem",
+      "undo" : true
+    },
+    "swipeLeft" : null,
     "swipeUp" : null,
     "swipdDown" : null
   },

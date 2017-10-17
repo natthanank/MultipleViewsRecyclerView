@@ -37,9 +37,9 @@ public class JSONToRecyclerView {
         // create gson instance
         Gson gson = new Gson();
         // create recyclerviewgsonmodel instance from json file
-        RecyclerViewGSONModel recyclerViewGSONModel = gson.fromJson(json, RecyclerViewGSONModel.class);
+        final RecyclerViewGSONModel recyclerViewGSONModel = gson.fromJson(json, RecyclerViewGSONModel.class);
         // create recyclerview
-        RecyclerView recyclerView = (RecyclerView) activity.findViewById(recyclerViewGSONModel.getId());
+        final RecyclerView recyclerView = (RecyclerView) activity.findViewById(recyclerViewGSONModel.getId());
         // create layoutmanager
         RecyclerView.LayoutManager layoutManager = null;
         int orientation = 2;
@@ -59,13 +59,15 @@ public class JSONToRecyclerView {
                 layoutManager = new LinearLayoutManager(activity, orientation, reverseLayout);
                 break;
             case "GridLayoutManager":
-                switch (recyclerViewGSONModel.getLayoutManager().getOrientation()) {
-                    case "Vertical":
-                        orientation = LinearLayoutManager.VERTICAL;
-                        break;
-                    case "Horizontal":
-                        orientation = LinearLayoutManager.HORIZONTAL;
-                        break;
+                if (recyclerViewGSONModel.getLayoutManager().getOrientation() != null) {
+                    switch (recyclerViewGSONModel.getLayoutManager().getOrientation()) {
+                        case "Vertical":
+                            orientation = LinearLayoutManager.VERTICAL;
+                            break;
+                        case "Horizontal":
+                            orientation = LinearLayoutManager.HORIZONTAL;
+                            break;
+                    }
                 }
                 spanCount = recyclerViewGSONModel.getLayoutManager().getSpanCount();
                 if (orientation != 2) {
@@ -96,42 +98,111 @@ public class JSONToRecyclerView {
         recyclerView.setAdapter(baseAdapter);
         // swipe
         if (recyclerViewGSONModel.getSwipe().isSwipe()) {
+            // get swipe flag from json
             int[] flag = {0, 0, 0, 0};
             if (recyclerViewGSONModel.getSwipe().getSwipeFlag().isRight()) flag[0] = ItemTouchHelper.RIGHT;
             if (recyclerViewGSONModel.getSwipe().getSwipeFlag().isLeft()) flag[1] = ItemTouchHelper.LEFT;
             if (recyclerViewGSONModel.getSwipe().getSwipeFlag().isUp()) flag[2] = ItemTouchHelper.UP;
             if (recyclerViewGSONModel.getSwipe().getSwipeFlag().isDown()) flag[3] = ItemTouchHelper.DOWN;
 
+            // create instance of swipe
             new Swipe(recyclerView, flag[0] | flag[1] | flag[2] | flag[3]) {
                 @Override
                 public void onSwipedRight(final int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels) {
-                    removeItem(position, viewDataModel);
-                    Snackbar.make(getRecyclerView(), "Remove!!!", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            undoRemove(position, getOldViewDataModel(), getOldGroup());
+                    if (recyclerViewGSONModel.getSwipe().getSwipeRight() != null) {
+                        switch (recyclerViewGSONModel.getSwipe().getSwipeRight().getAction()) {
+                            case Swipe.ACTION_REMOVE:
+                                removeItem(position, viewDataModel);
+                                if (recyclerViewGSONModel.getSwipe().getSwipeRight().isUndo()) {
+                                    Snackbar.make(getRecyclerView(), "Remove!!!", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            undoRemove(position, getOldViewDataModel(), getOldGroup());
+                                        }
+                                    }).show();
+                                }
+                                break;
+//                            case Swipe.ACTION_UPDATE:
+
                         }
-                    }).show();
-                }
+                    } else {
+                        dontDoAnything(position);
+                    }
 
-                @Override
-                public void onSwipedLeft(int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels) {
-
-                }
-
-                @Override
-                public void onSwipeUp(int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels) {
 
                 }
 
                 @Override
-                public void onSwipeDown(int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels) {
+                public void onSwipedLeft(final int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels) {
+                    if (recyclerViewGSONModel.getSwipe().getSwipeLeft() != null) {
+                        switch (recyclerViewGSONModel.getSwipe().getSwipeLeft().getAction()) {
+                            case Swipe.ACTION_REMOVE:
+                                removeItem(position, viewDataModel);
+                                if (recyclerViewGSONModel.getSwipe().getSwipeLeft().isUndo()) {
+                                    Snackbar.make(getRecyclerView(), "Remove!!!", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            undoRemove(position, getOldViewDataModel(), getOldGroup());
+                                        }
+                                    }).show();
+                                }
+                                break;
+//                            case Swipe.ACTION_UPDATE:
 
+                        }
+                    } else {
+                        dontDoAnything(position);
+                    }
                 }
 
                 @Override
-                public void onUpdateSwiped(int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels, int action) {
+                public void onSwipeUp(final int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels) {
+                    if (recyclerViewGSONModel.getSwipe().getSwipeUp() != null) {
+                        switch (recyclerViewGSONModel.getSwipe().getSwipeUp().getAction()) {
+                            case Swipe.ACTION_REMOVE:
+                                removeItem(position, viewDataModel);
+                                if (recyclerViewGSONModel.getSwipe().getSwipeUp().isUndo()) {
+                                    Snackbar.make(getRecyclerView(), "Remove!!!", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            undoRemove(position, getOldViewDataModel(), getOldGroup());
+                                        }
+                                    }).show();
+                                }
+                                break;
+//                            case Swipe.ACTION_UPDATE:
 
+                        }
+                    } else {
+                        dontDoAnything(position);
+                    }
+                }
+
+                @Override
+                public void onSwipeDown(final int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels) {
+                    if (recyclerViewGSONModel.getSwipe().getSwipeDown() != null) {
+                        switch (recyclerViewGSONModel.getSwipe().getSwipeDown().getAction()) {
+                            case Swipe.ACTION_REMOVE:
+                                removeItem(position, viewDataModel);
+                                if (recyclerViewGSONModel.getSwipe().getSwipeDown().isUndo()) {
+                                    Snackbar.make(getRecyclerView(), "Remove!!!", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            undoRemove(position, getOldViewDataModel(), getOldGroup());
+                                        }
+                                    }).show();
+                                }
+                                break;
+//                            case Swipe.ACTION_UPDATE:
+
+                        }
+                    } else {
+                        dontDoAnything(position);
+                    }
+                }
+
+                @Override
+                public void onUpdateSwiped(int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels, String action) {
                 }
             };
         }

@@ -66,7 +66,7 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
         new Swipe(recyclerView, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
             @Override
             public void onUpdateSwiped(int position, ViewDataModel
-                    viewDataModel, List<ViewDataModel> group, int action) {
+                    viewDataModel, List<ViewDataModel> group, String action) {
 
             }
 

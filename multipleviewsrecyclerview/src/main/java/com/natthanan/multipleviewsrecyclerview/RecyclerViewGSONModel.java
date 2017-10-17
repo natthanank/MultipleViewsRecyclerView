@@ -113,13 +113,13 @@ public class RecyclerViewGSONModel {
         @SerializedName("swipeFlag")
         private SwipeFlag swipeFlag;
         @SerializedName("swipeRight")
-        private String swipeRight;
+        private SwipeAction swipeRight;
         @SerializedName("swipeLeft")
-        private String swipeLeft;
+        private SwipeAction swipeLeft;
         @SerializedName("swipeUp")
-        private String swipeUp;
+        private SwipeAction swipeUp;
         @SerializedName("swipeDown")
-        private String swipeDown;
+        private SwipeAction swipeDown;
 
         public boolean isSwipe() {
             return isSwipe;
@@ -137,39 +137,60 @@ public class RecyclerViewGSONModel {
             this.swipeFlag = swipeFlag;
         }
 
-        public String getSwipeRight() {
+        public SwipeAction getSwipeRight() {
             return swipeRight;
         }
 
-        public void setSwipeRight(String swipeRight) {
+        public void setSwipeRight(SwipeAction swipeRight) {
             this.swipeRight = swipeRight;
         }
 
-        public String getSwipeLeft() {
+        public SwipeAction getSwipeLeft() {
             return swipeLeft;
         }
 
-        public void setSwipeLeft(String swipeLeft) {
+        public void setSwipeLeft(SwipeAction swipeLeft) {
             this.swipeLeft = swipeLeft;
         }
 
-        public String getSwipeUp() {
+        public SwipeAction getSwipeUp() {
             return swipeUp;
         }
 
-        public void setSwipeUp(String swipeUp) {
+        public void setSwipeUp(SwipeAction swipeUp) {
             this.swipeUp = swipeUp;
         }
 
-        public String getSwipeDown() {
+        public SwipeAction getSwipeDown() {
             return swipeDown;
         }
 
-        public void setSwipeDown(String swipeDown) {
+        public void setSwipeDown(SwipeAction swipeDown) {
             this.swipeDown = swipeDown;
         }
 
+        public class SwipeAction {
+            @SerializedName("action")
+            private String action;
+            @SerializedName("undo")
+            private boolean undo;
 
+            public String getAction() {
+                return action;
+            }
+
+            public void setAction(String action) {
+                this.action = action;
+            }
+
+            public boolean isUndo() {
+                return undo;
+            }
+
+            public void setUndo(boolean undo) {
+                this.undo = undo;
+            }
+        }
         public class SwipeFlag {
 
             @SerializedName("left")

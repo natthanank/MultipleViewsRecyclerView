@@ -14,8 +14,8 @@ import java.util.List;
  */
 
 public abstract class Swipe extends ItemTouchHelper.Callback{
-    public static final int ACTION_REMOVE = 0;
-    public static final int ACTION_UPDATE = 1;
+    public static final String ACTION_REMOVE = "removeItem";
+    public static final String ACTION_UPDATE = "updateItem";
 
     private final BaseAdapter adapter;
     private RecyclerView recyclerView;
@@ -28,7 +28,7 @@ public abstract class Swipe extends ItemTouchHelper.Callback{
     private ViewDataModel oldViewDataModel;
     private ArrayList<ViewDataModel> oldGroup;
     private boolean isUndo = false;
-    private int action;
+    private String action;
     private int groupPosition;
     private int duration = 3500;
     public static boolean isSwiped = true;
@@ -175,7 +175,7 @@ public abstract class Swipe extends ItemTouchHelper.Callback{
     }
 
     public void removeItem(int position, ViewDataModel viewDataModel) {
-        action = 0;
+        action = ACTION_REMOVE;
         if (viewDataModel.isParent()) {
             groupPosition = getGroupByPosition(position);
             BaseAdapter.getGroupList().remove(groupPosition);
@@ -190,7 +190,7 @@ public abstract class Swipe extends ItemTouchHelper.Callback{
     }
 
     public void updateItem(int position, ViewDataModel viewDataModel) {
-        action = 1;
+        action = ACTION_UPDATE;
         groupPosition = getGroupByPosition(position);
         BaseAdapter.getViewDataModels().set(position, viewDataModel);
         getAdapter().notifyItemChanged(position);
@@ -200,7 +200,7 @@ public abstract class Swipe extends ItemTouchHelper.Callback{
     public abstract void onSwipedLeft(int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels);
     public abstract void onSwipeUp(int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels);
     public abstract void onSwipeDown(int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels);
-    public abstract void onUpdateSwiped(int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels, int action);
+    public abstract void onUpdateSwiped(int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels, String action);
 
     @Override
     public boolean isItemViewSwipeEnabled() {
