@@ -18,9 +18,7 @@ import com.natthanan.multipleviewrecyclerview.viewholder.HeaderViewHolder;
 import com.natthanan.multipleviewsrecyclerview.BaseAdapter;
 import com.natthanan.multipleviewsrecyclerview.BaseViewHolder;
 import com.natthanan.multipleviewsrecyclerview.Drag;
-import com.natthanan.multipleviewsrecyclerview.LoadMoreListener;
 import com.natthanan.multipleviewsrecyclerview.Swipe;
-import com.natthanan.multipleviewsrecyclerview.basic_viewholder.NameViewHolder;
 import com.natthanan.multipleviewsrecyclerview.ViewDataModel;
 import com.natthanan.multipleviewsrecyclerview.intf.DataChangedCallback;
 
@@ -128,13 +126,13 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
 
         ;
 
-//        new
-//
-//                Drag(recyclerView) {
-//                    @Override
-//                    public void onItemDropped(List<ViewDataModel> dataModels) {
-//                    }
-//                };
+        new
+
+                Drag(recyclerView) {
+                    @Override
+                    public void onItemDropped(List<ViewDataModel> dataModels) {
+                    }
+                }.setOnLongPressedDragEnabled(false);
 
 
 

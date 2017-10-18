@@ -22,7 +22,7 @@ import java.util.Objects;
 public abstract class Drag extends ItemTouchHelper.Callback {
     private BaseAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-    private boolean isDragEnabled;
+    private boolean isOnLongPressedDragEnabled;
     private int dragFlags;
     private ItemTouchHelper itemTouchHelper;
     private int dragFrom = -1;
@@ -46,7 +46,7 @@ public abstract class Drag extends ItemTouchHelper.Callback {
         } catch (NullPointerException e) {
             throw new NullBaseAdapterException();
         }
-        isDragEnabled = true;
+        isOnLongPressedDragEnabled = true;
         adapter.setItemTouchHelper(itemTouchHelper);
 
     }
@@ -103,7 +103,7 @@ public abstract class Drag extends ItemTouchHelper.Callback {
         } else if (toPosition == 0) {
 
             (BaseAdapter.getViewDataModels().get(toPosition)).setGroupName(Integer.toString(BaseAdapter.getViewDataModels().get(toPosition).hashCode()));
-            createNewGroup(fromPosition, toPosition);
+            createNewGroup(fromPosition);
             createNewViewDataModels();
 
         } else {
@@ -216,7 +216,7 @@ public abstract class Drag extends ItemTouchHelper.Callback {
         return null;
     }
 
-    private void createNewGroup(int fromPosition, int toPosition) {
+    private void createNewGroup(int fromPosition) {
         groupFromPosition = getGroupByPosition(fromPosition);
         fromPosition = getPositionInGroup(fromPosition);
         BaseAdapter.getGroupList().add(0, new ArrayList<ViewDataModel>());
@@ -299,7 +299,7 @@ public abstract class Drag extends ItemTouchHelper.Callback {
 
     @Override
     public boolean isLongPressDragEnabled() {
-        return isDragEnabled();
+        return isOnLongPressedDragEnabled();
     }
 
     @Override
@@ -325,12 +325,12 @@ public abstract class Drag extends ItemTouchHelper.Callback {
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
     }
 
-    public boolean isDragEnabled() {
-        return isDragEnabled;
+    public boolean isOnLongPressedDragEnabled() {
+        return isOnLongPressedDragEnabled;
     }
 
-    public void setDragEnabled(boolean dragEnabled) {
-        isDragEnabled = dragEnabled;
+    public void setOnLongPressedDragEnabled(boolean dragEnabled) {
+        isOnLongPressedDragEnabled = dragEnabled;
     }
 
     public ItemTouchHelper getItemTouchHelper() {
