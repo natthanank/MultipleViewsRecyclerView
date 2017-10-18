@@ -60,7 +60,6 @@ public class BaseAdapter extends RecyclerView.Adapter{
             });
         }
         viewDataModels.get(position).getBaseViewHolderClass().getClass().cast(holder).bind(viewDataModels.get(position).getModel(), viewDataModels.get(position).getTag());
-
     }
 
     @Override

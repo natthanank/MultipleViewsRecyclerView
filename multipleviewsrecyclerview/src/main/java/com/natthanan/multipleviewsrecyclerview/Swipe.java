@@ -274,4 +274,9 @@ public abstract class Swipe extends ItemTouchHelper.Callback{
         }
         return -1;
     }
+
+    @Override
+    public boolean isLongPressDragEnabled() {
+        return false;
+    }
 }
