@@ -42,7 +42,7 @@ public abstract class Drag extends ItemTouchHelper.Callback {
             throw new NullRecyclerViewException();
         }
         try {
-            adapter.setDrag(true);
+            adapter.setDrag(isLongPressDragEnabled());
         } catch (NullPointerException e) {
             throw new NullBaseAdapterException();
         }
@@ -331,6 +331,7 @@ public abstract class Drag extends ItemTouchHelper.Callback {
 
     public void setOnLongPressedDragEnabled(boolean dragEnabled) {
         isOnLongPressedDragEnabled = dragEnabled;
+        isDrag = dragEnabled;
     }
 
     public ItemTouchHelper getItemTouchHelper() {
