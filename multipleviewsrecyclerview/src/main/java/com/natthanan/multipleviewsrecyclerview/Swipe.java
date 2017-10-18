@@ -6,6 +6,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
+import com.natthanan.multipleviewsrecyclerview.exception.NullRecyclerViewException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +37,12 @@ public abstract class Swipe extends ItemTouchHelper.Callback{
 
     public Swipe(RecyclerView recyclerView, int movementFlags) {
         this.recyclerView = recyclerView;
-        adapter = (BaseAdapter) recyclerView.getAdapter();
+        try {
+            adapter = (BaseAdapter) recyclerView.getAdapter();
+        } catch (NullPointerException e) {
+            throw new NullRecyclerViewException();
+        }
+
         layoutManager = recyclerView.getLayoutManager();
         isSwipeEnabled = true;
         this.movementFlags = movementFlags;
@@ -147,7 +154,7 @@ public abstract class Swipe extends ItemTouchHelper.Callback{
             getRecyclerView().scrollToPosition(position);
         } else {
             BaseAdapter.getViewDataModels().add(position, oldViewDataModel);
-            getAdapter().notifyItemInserted(position);
+            adapter.notifyItemInserted(position);
             getRecyclerView().scrollToPosition(position);
         }
         viewDataModel=null;
@@ -162,11 +169,11 @@ public abstract class Swipe extends ItemTouchHelper.Callback{
     }
 
     public void dontDoAnything(int position) {
-        getAdapter().notifyItemChanged(position);
+        adapter.notifyItemChanged(position);
     }
     public void undoUpdate(int position, ViewDataModel oldViewDataModel, ArrayList<ViewDataModel> oldGroup) {
         BaseAdapter.getViewDataModels().set(position, oldViewDataModel);
-        getAdapter().notifyItemChanged(position);
+        adapter.notifyItemChanged(position);
         int ingroup = getPositionInGroup(position);
         BaseAdapter.getGroupList().get(groupPosition).set(ingroup, oldViewDataModel);
         getRecyclerView().scrollToPosition(position);
@@ -185,7 +192,7 @@ public abstract class Swipe extends ItemTouchHelper.Callback{
             }
         } else {
             BaseAdapter.getViewDataModels().remove(viewDataModel);
-            getAdapter().notifyItemRemoved(position);
+            adapter.notifyItemRemoved(position);
         }
     }
 
@@ -193,7 +200,7 @@ public abstract class Swipe extends ItemTouchHelper.Callback{
         action = ACTION_UPDATE;
         groupPosition = getGroupByPosition(position);
         BaseAdapter.getViewDataModels().set(position, viewDataModel);
-        getAdapter().notifyItemChanged(position);
+        adapter.notifyItemChanged(position);
     }
 
     public abstract void onSwipedRight(int position, ViewDataModel viewDataModel, List<ViewDataModel> viewDataModels);

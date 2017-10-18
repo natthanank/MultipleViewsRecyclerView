@@ -6,6 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.natthanan.multipleviewsrecyclerview.annotation.LayoutID;
+import com.natthanan.multipleviewsrecyclerview.exception.NotBaseViewHolderClassException;
+import com.natthanan.multipleviewsrecyclerview.exception.NullBaseAdapterException;
+import com.natthanan.multipleviewsrecyclerview.exception.NullRecyclerViewException;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -89,8 +92,7 @@ public class ViewDataModel implements Cloneable {
 
     public BaseViewHolder createViewHolder(Class<? extends BaseViewHolder> viewHolderClass, RecyclerView recyclerView) {
         try {
-            Class<?> c = Class.forName(viewHolderClass.getName());
-            Constructor<?> constructor = c.getConstructor(View.class);
+            Constructor<?> constructor = viewHolderClass.getConstructor(View.class);
 
             if (baseViewHolderSparseArray.indexOfValue(viewHolderClass) == -1) {
                 baseViewHolderSparseArray.put(baseViewHolderSparseArray.size(), viewHolderClass);
@@ -107,14 +109,18 @@ public class ViewDataModel implements Cloneable {
 
             return  ((BaseViewHolder) instance);
 
-        } catch (ClassNotFoundException | InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
-            e.printStackTrace();
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+            throw new NotBaseViewHolderClassException(viewHolderClass.getSimpleName() + " is not BaseViewHolder subclass.");
         }
-        return null;
     }
 
     public View inflateView(int layout) {
-        return LayoutInflater.from(this.getRecyclerView().getContext()).inflate(layout, this.getRecyclerView(), false);
+        if (BaseAdapter.isInitialize == false) throw new NullBaseAdapterException();
+        try {
+            return LayoutInflater.from(this.getRecyclerView().getContext()).inflate(layout, this.getRecyclerView(), false);
+        } catch (NullPointerException e) {
+            throw new NullRecyclerViewException();
+        }
     }
 
     public RecyclerView getRecyclerView() {

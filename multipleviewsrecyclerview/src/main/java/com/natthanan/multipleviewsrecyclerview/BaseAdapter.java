@@ -5,6 +5,8 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.natthanan.multipleviewsrecyclerview.exception.NullViewDataModelException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +18,7 @@ public class BaseAdapter extends RecyclerView.Adapter{
     private boolean isDrag=false;
     private ItemTouchHelper itemTouchHelper;
     private static List<ArrayList<ViewDataModel>> groupList;
+    public static boolean isInitialize = false;
 
     public BaseAdapter() {
         viewDataModels = new ArrayList<>();
@@ -27,14 +30,19 @@ public class BaseAdapter extends RecyclerView.Adapter{
         super.onAttachedToRecyclerView(recyclerView);
         this.recyclerView = recyclerView;
         ViewDataModel.setRecyclerView(recyclerView);
+        isInitialize = true;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        for (int i = 0; i < viewDataModels.size(); i++) {
-            if (viewDataModels.get(i).getViewTypes() == viewType) {
-                return viewDataModels.get(i).getBaseViewHolderClass().createViewHolder(viewDataModels.get(i), viewDataModels.get(i).getBaseViewHolderClass().getLayout(), recyclerView);
+        try {
+            for (int i = 0; i < viewDataModels.size(); i++) {
+                if (viewDataModels.get(i).getViewTypes() == viewType) {
+                    return viewDataModels.get(i).getBaseViewHolderClass().createViewHolder(viewDataModels.get(i), viewDataModels.get(i).getBaseViewHolderClass().getLayout(), recyclerView);
+                }
             }
+        } catch (NullPointerException e) {
+            throw new NullViewDataModelException("ViewDataModel is null. Check parameter you pass to the ViewDataModel constructor.");
         }
         return null;
     }

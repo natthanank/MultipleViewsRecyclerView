@@ -33,29 +33,30 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler_view_test);
-        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        final BaseAdapter baseAdapter = new BaseAdapter();
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+
+        BaseAdapter baseAdapter = new BaseAdapter();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(baseAdapter);
-        recyclerView.addOnScrollListener(new LoadMoreListener(recyclerView) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount) {
-                new ViewDataModel(HeaderViewHolder.class, "LoadMore"+ page, "LoadMore" , true, "OnLoadMore" + page);
-                for (int i = 0; i < 5; i++) {
-                    new ViewDataModel(FooterViewHolder.class, "page " + page + " " + Integer.toString((page - 1) * 5 + i), "LoadMore", false, "OnLoadMore" + page);
-                    baseAdapter.notifyItemInserted(BaseAdapter.getViewDataModels().size());
-                }
-
-                if (page == 4) {
-                    stopLoading();
-
-                }
-
-            }
-        });
+//        recyclerView.addOnScrollListener(new LoadMoreListener(recyclerView) {
+//            @Override
+//            public void onLoadMore(int page, int totalItemsCount) {
+//                new ViewDataModel(HeaderViewHolder.class, "LoadMore"+ page, "LoadMore" , true, "OnLoadMore" + page);
+//                for (int i = 0; i < 5; i++) {
+//                    new ViewDataModel(FooterViewHolder.class, "page " + page + " " + Integer.toString((page - 1) * 5 + i), "LoadMore", false, "OnLoadMore" + page);
+//                    baseAdapter.notifyItemInserted(BaseAdapter.getViewDataModels().size());
+//                }
+//
+//                if (page == 4) {
+//                    stopLoading();
+//
+//                }
+//
+//            }
+//        });
 
         for (int j = 0; j < 5; j++) {
             new ViewDataModel(HeaderViewHolder.class, "Group" + j + " HEADER", "HEADER", true, "Group" + j);
@@ -127,13 +128,13 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
 
         ;
 
-        new
-
-                Drag(recyclerView) {
-                    @Override
-                    public void onItemDropped(List<ViewDataModel> dataModels) {
-                    }
-                };
+//        new
+//
+//                Drag(recyclerView) {
+//                    @Override
+//                    public void onItemDropped(List<ViewDataModel> dataModels) {
+//                    }
+//                };
 
 
 

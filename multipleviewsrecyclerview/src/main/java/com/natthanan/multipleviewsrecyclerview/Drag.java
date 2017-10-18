@@ -7,6 +7,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
+import com.natthanan.multipleviewsrecyclerview.exception.NullBaseAdapterException;
+import com.natthanan.multipleviewsrecyclerview.exception.NullRecyclerViewException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,13 +34,19 @@ public abstract class Drag extends ItemTouchHelper.Callback {
 
     public Drag(RecyclerView recyclerView) {
         layoutManager = recyclerView.getLayoutManager();
-        adapter = (BaseAdapter) recyclerView.getAdapter();
-        adapter.setDrag(true);
+        try {
+            adapter = (BaseAdapter) recyclerView.getAdapter();
+            itemTouchHelper = new ItemTouchHelper(this);
+            itemTouchHelper.attachToRecyclerView(recyclerView);
+        } catch (NullPointerException e) {
+            throw new NullRecyclerViewException();
+        }
+        try {
+            adapter.setDrag(true);
+        } catch (NullPointerException e) {
+            throw new NullBaseAdapterException();
+        }
         isDragEnabled = true;
-
-        itemTouchHelper = new ItemTouchHelper(this);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
-
         adapter.setItemTouchHelper(itemTouchHelper);
 
     }
@@ -124,7 +133,6 @@ public abstract class Drag extends ItemTouchHelper.Callback {
 
             if (Objects.equals(fromGroup, toGroup)) {
                 // swap item in group
-                System.out.println("swap in group");
                 if (fromPosition < toPosition) {
                     for (int i = fromPosition; i < toPosition; i++) {
                         Collections.swap(toGroup, i, i + 1);
@@ -136,16 +144,13 @@ public abstract class Drag extends ItemTouchHelper.Callback {
                 }
             } else if (isFromPositionGreaterThanToPosition && toPosition != 0){
                 // swap across group from bottom to top
-                System.out.println("swap from bottom to top");
                 ViewDataModel temp;
                 if (fromGroup.size() != 1) {
                     temp = fromGroup.remove(fromPosition + 1);
                 } else temp = fromGroup.remove(fromPosition);
-                System.out.println("fromPosition = " + fromPosition + " toPosition = " + toPosition);
                 toGroup.add(toPosition, temp);
             } else {
                 // swap across group from top to bottom
-                System.out.println("swap from top to bottom");
                 ViewDataModel temp = fromGroup.remove(fromPosition);
                 toGroup.add(toPosition + 1, temp);
 
@@ -157,13 +162,6 @@ public abstract class Drag extends ItemTouchHelper.Callback {
         // remove blank group
         removeBlankGroup();
 
-
-        for (List<ViewDataModel> group : BaseAdapter.getGroupList()) {
-            for (int i = 0; i < group.size(); i++) {
-                System.out.println(group.get(i).getModel() + " | " + group.get(i).getGroupName());
-            }
-            System.out.println("=================");
-        }
         onItemDropped(BaseAdapter.getViewDataModels());
     }
 
@@ -212,7 +210,6 @@ public abstract class Drag extends ItemTouchHelper.Callback {
         ViewDataModel viewDataModel = BaseAdapter.getViewDataModels().get(position);
         for (List<ViewDataModel> group : BaseAdapter.getGroupList()) {
             if (group.contains(viewDataModel)) {
-                System.out.println("contain " + viewDataModel);
                 return viewDataModel;
             }
         }
@@ -233,7 +230,6 @@ public abstract class Drag extends ItemTouchHelper.Callback {
         } else {
             (BaseAdapter.getViewDataModels().get(toPosition)).setGroupName(BaseAdapter.getViewDataModels().get(fromPosition).getGroupName());
         }
-        System.out.println("toPosition = " + toPosition + " fromPosition = " + fromPosition);
     }
 
     private void createNewViewDataModels() {

@@ -320,10 +320,6 @@ public class RecyclerViewGSONModel {
             @SerializedName("data")
             private String data;
 
-            public Model(){
-
-            }
-
             public String getClassName() {
                 return className;
             }
