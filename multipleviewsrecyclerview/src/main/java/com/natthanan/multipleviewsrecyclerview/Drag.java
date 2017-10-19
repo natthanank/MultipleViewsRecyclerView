@@ -30,7 +30,6 @@ public abstract class Drag extends ItemTouchHelper.Callback {
     private int groupFromPosition;
     private int groupToPosition;
     public static boolean isDrag = true;
-    public static boolean isMoving = false;
 
     public Drag(RecyclerView recyclerView) {
         layoutManager = recyclerView.getLayoutManager();
@@ -71,7 +70,6 @@ public abstract class Drag extends ItemTouchHelper.Callback {
         int fromPosition = viewHolder.getAdapterPosition();
         int toPosition = target.getAdapterPosition();
         isDrag = true;
-        isMoving = true;
         if (dragFrom == -1) {
             dragFrom = fromPosition;
         }
@@ -206,16 +204,6 @@ public abstract class Drag extends ItemTouchHelper.Callback {
         if (isRemove) BaseAdapter.getGroupList().remove(groupPosition);
     }
 
-    private ViewDataModel getMatchViewDataModel(int position) {
-        ViewDataModel viewDataModel = BaseAdapter.getViewDataModels().get(position);
-        for (List<ViewDataModel> group : BaseAdapter.getGroupList()) {
-            if (group.contains(viewDataModel)) {
-                return viewDataModel;
-            }
-        }
-        return null;
-    }
-
     private void createNewGroup(int fromPosition) {
         groupFromPosition = getGroupByPosition(fromPosition);
         fromPosition = getPositionInGroup(fromPosition);
@@ -293,8 +281,7 @@ public abstract class Drag extends ItemTouchHelper.Callback {
 
         dragFrom = dragTo = -1;
         Swipe.isSwiped = true;
-        isDrag = false;
-        isMoving = false;
+        isDrag = true;
     }
 
     @Override
