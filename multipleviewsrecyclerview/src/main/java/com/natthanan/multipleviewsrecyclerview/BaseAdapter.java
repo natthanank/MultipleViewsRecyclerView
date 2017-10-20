@@ -76,6 +76,7 @@ public class BaseAdapter extends RecyclerView.Adapter{
     public static void setViewDataModels(List mViewDataModels) {
         viewDataModels = mViewDataModels;
     }
+
     public static List<ViewDataModel> getViewDataModels() {
         return viewDataModels;
     }

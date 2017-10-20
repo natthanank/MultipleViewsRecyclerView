@@ -55,7 +55,7 @@ public class ResponseModel {
         @SerializedName("allow_service")
         private List<String> allowService;
         @SerializedName("webapi")
-        private WebApi webApi;
+        private List<WebApi> webApi;
 
         public String getId() {
             return id;
@@ -105,11 +105,11 @@ public class ResponseModel {
             this.allowService = allowService;
         }
 
-        public WebApi getWebApi() {
+        public List<WebApi> getWebApi() {
             return webApi;
         }
 
-        public void setWebApi(WebApi webApi) {
+        public void setWebApi(List<WebApi> webApi) {
             this.webApi = webApi;
         }
 

@@ -79,7 +79,7 @@ public class ViewDataModel implements Cloneable {
         recyclerView.getAdapter().notifyDataSetChanged();
     }
 
-    private Integer getLayoutId(Class myClass) {
+    private int getLayoutId(Class myClass) {
         Annotation annotation = myClass.getAnnotation(LayoutID.class);
 
         if (annotation instanceof LayoutID) {
@@ -87,7 +87,7 @@ public class ViewDataModel implements Cloneable {
             return layoutIdAnnotation.value();
         }
 
-        return null;
+        return -1;
     }
 
     public BaseViewHolder createViewHolder(Class<? extends BaseViewHolder> viewHolderClass, RecyclerView recyclerView) {

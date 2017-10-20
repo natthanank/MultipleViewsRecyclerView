@@ -5,11 +5,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
 
 import com.natthanan.multipleviewrecyclerview.R;
@@ -23,6 +22,7 @@ import com.natthanan.multipleviewsrecyclerview.Swipe;
 import com.natthanan.multipleviewsrecyclerview.ViewDataModel;
 import com.natthanan.multipleviewsrecyclerview.intf.DataChangedCallback;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -49,7 +49,6 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
 
                 if (page == 4) {
                     stopLoading();
-
                 }
 
             }
@@ -63,65 +62,101 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
         }
         new Swipe(recyclerView, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
             @Override
-            public void onUpdateSwiped(int position, ViewDataModel viewDataModel, List<ViewDataModel> group, String action) {
+            public void onChildSwiped(final int position, final ViewDataModel viewDataModel, int direction) {
+                if (direction == ItemTouchHelper.RIGHT) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(RecyclerViewTest.this);
+                    builder.setMessage("รับขนมจีบซาลาเปาเพิ่มมั้ยครับ?");
+                    builder.setPositiveButton("รับ", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            viewDataModel.setModel("รับขนมจีบซาลาเปา");
+                            update(position);
+                            ((FooterViewHolder) getViewHolder(position)).item.setText(((String) viewDataModel.getModel()));
+                            Snackbar.make(getRecyclerView(), "คุณได้รับขนมจีบซาลาเปา", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    undoUpdate(position);
+                                }
+                            }).show();
+                        }
+                    });
+                    builder.setNegativeButton("ไม่รับ", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            dontDoAnything(position);
+                        }
+                    });
+                    builder.show();
+
+                }
+
+                if (direction == ItemTouchHelper.LEFT) {
+                    remove(position, viewDataModel);
+                    Snackbar.make(getRecyclerView(), "Remove!!!", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            undoRemove(position);
+                        }
+                    }).show();
+                }
+            }
+
+            @Override
+            public void onParentSwiped(final int position, final ArrayList<ViewDataModel> group, int direction) {
+                if (direction == ItemTouchHelper.LEFT) {
+                    remove(position, group);
+                    Snackbar.make(getRecyclerView(), "Remove!!!", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            undoRemove(position);
+                        }
+                    }).show();
+                }
+
+                if (direction == ItemTouchHelper.RIGHT) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(RecyclerViewTest.this);
+                    builder.setMessage("รับขนมจีบซาลาเปาเพิ่มมั้ยครับ?");
+                    builder.setPositiveButton("รับ", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            group.get(0).setModel("รับขนมจีบซาลาเปา");
+                            update(position);
+                            Snackbar.make(getRecyclerView(), "คุณได้รับขนมจีบซาลาเปา", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    undoUpdate(position);
+                                }
+                            }).show();
+                        }
+                    });
+                    builder.setNegativeButton("ไม่รับ", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            dontDoAnything(position);
+                        }
+                    });
+                    builder.show();
+
+                }
+            }
+
+            @Override
+            protected void afterParentSwiped(int position, ArrayList<ViewDataModel> group, int direction) {
 
             }
 
             @Override
-            public void onSwipedRight(final int position, final ViewDataModel viewDataModel, List<ViewDataModel> group) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(RecyclerViewTest.this);
-                builder.setMessage("รับขนมจีบซาลาเปาเพิ่มมั้ยครับ?");
-                builder.setPositiveButton("รับ", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        viewDataModel.setModel("รับขนมจีบซาลาเปา");
-                        updateItem(position, viewDataModel);
-                        Snackbar.make(getRecyclerView(), "คุณได้รับขนมจีบซาลาเปา", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                undoUpdate(position, getOldViewDataModel(), getOldGroup());
-                            }
-                        }).show();
-                    }
-                });
-                builder.setNegativeButton("ไม่รับ", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        dontDoAnything(position);
-                    }
-                });
-                builder.show();
-
-            }
-
-            @Override
-            public void onSwipedLeft(final int position, ViewDataModel viewDataModel, List<ViewDataModel> group) {
-                removeItem(position, viewDataModel);
-                Snackbar.make(getRecyclerView(), "Remove!!!", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        undoRemove(position, getOldViewDataModel(), getOldGroup());
-                    }
-                }).show();
-            }
-
-            @Override
-            public void onSwipeUp(int position, ViewDataModel viewDataModel, List<ViewDataModel> group) {
-
-            }
-
-            @Override
-            public void onSwipeDown(int position, ViewDataModel viewDataModel, List<ViewDataModel> group) {
-
+            protected void afterChildSwiped(int position, ViewDataModel viewDataModel, int direction) {
+                System.out.println(viewDataModel.getModel());
             }
         };
 
         new Drag(recyclerView) {
             @Override
-            public void onItemDropped(List<ViewDataModel> dataModels) {
+            public void onItemDropped(List<ViewDataModel> viewDataModels) {
 
             }
-        }.setOnLongPressedDragEnabled(false);
+        };
 
 
     }
@@ -129,6 +164,6 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
 
     @Override
     public void onDatachange(String tag, BaseViewHolder viewHolder, View view, Object data) {
-
+        Log.i(tag, view + " at position " + viewHolder.getAdapterPosition() + " data change to " + data.toString());
     }
 }

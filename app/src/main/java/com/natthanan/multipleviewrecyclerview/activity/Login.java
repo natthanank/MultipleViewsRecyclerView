@@ -128,13 +128,11 @@ public class Login extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             System.out.println(s);
-            try {
-                Gson gson = new Gson();
-                ResponseModel responseModel = gson.fromJson(s, ResponseModel.class);
-                System.out.println(responseModel.getStatus());
-            } catch (Exception e) {
 
-            }
+            Gson gson = new Gson();
+            ResponseModel responseModel = gson.fromJson(s, ResponseModel.class);
+            System.out.println(responseModel.getEntries().getToken());
+
 
         }
     }

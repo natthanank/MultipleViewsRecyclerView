@@ -9,6 +9,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 
 import com.natthanan.multipleviewsrecyclerview.exception.NullBaseAdapterException;
 import com.natthanan.multipleviewsrecyclerview.exception.NullRecyclerViewException;
+import com.natthanan.multipleviewsrecyclerview.util.GroupUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,15 +21,15 @@ import java.util.Objects;
  */
 
 public abstract class Drag extends ItemTouchHelper.Callback {
+
     private BaseAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-    private boolean isOnLongPressedDragEnabled;
+    private boolean isLongPressedDragEnabled;
     private int dragFlags;
     private ItemTouchHelper itemTouchHelper;
     private int dragFrom = -1;
     private int dragTo = -1;
-    private int groupFromPosition;
-    private int groupToPosition;
+
     public static boolean isDrag = true;
 
     public Drag(RecyclerView recyclerView) {
@@ -45,7 +46,7 @@ public abstract class Drag extends ItemTouchHelper.Callback {
         } catch (NullPointerException e) {
             throw new NullBaseAdapterException();
         }
-        isOnLongPressedDragEnabled = true;
+        isLongPressedDragEnabled = true;
         adapter.setItemTouchHelper(itemTouchHelper);
 
     }
@@ -89,26 +90,27 @@ public abstract class Drag extends ItemTouchHelper.Callback {
     }
 
     private void reallyMoved(int fromPosition, int toPosition) {
-        boolean isFromPositionGreaterThanToPosition = isFromPositionGreater(fromPosition, toPosition);
-
-        if (isGroupSwapped(fromPosition)) {
+        boolean isFromPositionGreaterThanToPosition = GroupUtil.isFromPositionGreater(fromPosition, toPosition);
+        // remove blank group
+        GroupUtil.removeBlankGroup();
+        if (GroupUtil.isGroupSwapped(fromPosition)) {
             // check togroup position
-            groupToPosition = getGroupByPosition(toPosition);
+            GroupUtil.groupToPosition = GroupUtil.getGroupByPosition(toPosition);
             // swap group
-            swapGroup(groupFromPosition, groupToPosition);
+            GroupUtil.swapGroup(GroupUtil.groupFromPosition, GroupUtil.groupToPosition);
             // create new dataset and set to adapter
             createNewViewDataModels();
         } else if (toPosition == 0) {
 
             (BaseAdapter.getViewDataModels().get(toPosition)).setGroupName(Integer.toString(BaseAdapter.getViewDataModels().get(toPosition).hashCode()));
-            createNewGroup(fromPosition);
+            GroupUtil.createNewGroup(fromPosition);
             createNewViewDataModels();
 
         } else {
-            List<ViewDataModel> fromGroup = getMatchGroup(BaseAdapter.getViewDataModels().get(toPosition));
-            List<ViewDataModel> toGroup = getMatchGroup(BaseAdapter.getViewDataModels().get(toPosition - 1));
+            List<ViewDataModel> fromGroup = GroupUtil.getMatchGroup(BaseAdapter.getViewDataModels().get(toPosition));
+            List<ViewDataModel> toGroup = GroupUtil.getMatchGroup(BaseAdapter.getViewDataModels().get(toPosition - 1));
             // set new groupName
-            setNewGroupName(fromPosition, toPosition);
+            GroupUtil.setNewGroupName(fromPosition, toPosition);
 
             ViewDataModel viewDataModelTemp = null;
 
@@ -125,9 +127,9 @@ public abstract class Drag extends ItemTouchHelper.Callback {
 
             // change position to position in group
             if (fromGroup.size() == 1) {
-                fromPosition = getPositionInGroup(fromPosition + 1);
-            } else fromPosition = getPositionInGroup(fromPosition);
-            toPosition = getPositionInGroup(toPosition);
+                fromPosition = GroupUtil.getPositionInGroup(fromPosition + 1);
+            } else fromPosition = GroupUtil.getPositionInGroup(fromPosition);
+            toPosition = GroupUtil.getPositionInGroup(toPosition);
 
             if (Objects.equals(fromGroup, toGroup)) {
                 // swap item in group
@@ -158,67 +160,11 @@ public abstract class Drag extends ItemTouchHelper.Callback {
         }
 
         // remove blank group
-        removeBlankGroup();
+        GroupUtil.removeBlankGroup();
 
         onItemDropped(BaseAdapter.getViewDataModels());
     }
 
-    private boolean isGroupSwapped(int fromPosition) {
-        groupFromPosition = -1;
-        groupToPosition = -1;
-        boolean isGroupSwap = false;
-        for (int i = 0; i < BaseAdapter.getGroupList().size(); i++) {
-            if (isGroupSwap) {
-                break;
-            }
-            ArrayList<ViewDataModel> group = BaseAdapter.getGroupList().get(i);
-            if (fromPosition < group.size()) {
-                if (group.get(fromPosition).isParent()) {
-                    groupFromPosition = i;
-                    isGroupSwap = true;
-                }
-                break;
-            } else {
-                fromPosition -= group.size();
-            }
-        }
-        return isGroupSwap;
-    }
-
-    private boolean isFromPositionGreater(int fromPosition, int toPosition) {
-        if (fromPosition > toPosition) {
-            return true;
-        }
-        return false;
-    }
-
-    private void removeBlankGroup() {
-        int groupPosition = 0;
-        boolean isRemove = false;
-        for (List<ViewDataModel> group : BaseAdapter.getGroupList()) {
-            if (group.size() == 0) {
-                isRemove = true;
-                groupPosition = BaseAdapter.getGroupList().indexOf(group);
-            }
-        }
-        if (isRemove) BaseAdapter.getGroupList().remove(groupPosition);
-    }
-
-    private void createNewGroup(int fromPosition) {
-        groupFromPosition = getGroupByPosition(fromPosition);
-        fromPosition = getPositionInGroup(fromPosition);
-        BaseAdapter.getGroupList().add(0, new ArrayList<ViewDataModel>());
-        ViewDataModel v = BaseAdapter.getGroupList().get(groupFromPosition + 1).remove(fromPosition);
-        BaseAdapter.getGroupList().get(0).add(v);
-    }
-
-    private void setNewGroupName(int fromPosition, int toPosition) {
-        if (toPosition != 0) {
-            (BaseAdapter.getViewDataModels().get(toPosition)).setGroupName(BaseAdapter.getViewDataModels().get(toPosition - 1).getGroupName());
-        } else {
-            (BaseAdapter.getViewDataModels().get(toPosition)).setGroupName(BaseAdapter.getViewDataModels().get(fromPosition).getGroupName());
-        }
-    }
 
     private void createNewViewDataModels() {
         List<ViewDataModel> list = new ArrayList<>();
@@ -229,48 +175,6 @@ public abstract class Drag extends ItemTouchHelper.Callback {
         adapter.notifyDataSetChanged();
     }
 
-    private void swapGroup(int groupFromPosition, int groupToPosition) {
-        if (groupFromPosition < groupToPosition) {
-            for (int i = groupFromPosition; i < groupToPosition; i++) {
-                Collections.swap(BaseAdapter.getGroupList(), i, i + 1);
-            }
-        } else {
-            for (int i = groupFromPosition; i > groupToPosition; i--) {
-                Collections.swap(BaseAdapter.getGroupList(), i, i - 1);
-            }
-        }
-    }
-
-    private List<ViewDataModel> getMatchGroup(ViewDataModel v) {
-        for (List<ViewDataModel> group : BaseAdapter.getGroupList()) {
-            if (Objects.equals(v.getGroupName(), group.get(0).getGroupName())) {
-                return group;
-            }
-        }
-        return null;
-    }
-
-    private int getGroupByPosition(int position) {
-        for (List<ViewDataModel> group : BaseAdapter.getGroupList()) {
-            if (position >= group.size()) {
-                position -= group.size();
-            } else {
-                return BaseAdapter.getGroupList().indexOf(group);
-            }
-        }
-        return -1;
-    }
-
-    private int getPositionInGroup(int position) {
-        for (List<ViewDataModel> group : BaseAdapter.getGroupList()) {
-            if (position >= group.size()) {
-                position -= group.size();
-            } else {
-                return position;
-            }
-        }
-        return -1;
-    }
 
     @Override
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
@@ -286,7 +190,7 @@ public abstract class Drag extends ItemTouchHelper.Callback {
 
     @Override
     public boolean isLongPressDragEnabled() {
-        return isOnLongPressedDragEnabled();
+        return isLongPressedDragEnabled();
     }
 
     @Override
@@ -306,18 +210,18 @@ public abstract class Drag extends ItemTouchHelper.Callback {
 
     }
 
-    public abstract void onItemDropped(List<ViewDataModel> dataModels);
+    public abstract void onItemDropped(List<ViewDataModel> viewDataModels);
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
     }
 
-    public boolean isOnLongPressedDragEnabled() {
-        return isOnLongPressedDragEnabled;
+    public boolean isLongPressedDragEnabled() {
+        return isLongPressedDragEnabled;
     }
 
-    public void setOnLongPressedDragEnabled(boolean dragEnabled) {
-        isOnLongPressedDragEnabled = dragEnabled;
+    public void setLongPressedDragEnabled(boolean dragEnabled) {
+        isLongPressedDragEnabled = dragEnabled;
         isDrag = dragEnabled;
     }
 

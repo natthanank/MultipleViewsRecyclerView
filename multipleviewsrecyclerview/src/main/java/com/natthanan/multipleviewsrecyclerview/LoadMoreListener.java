@@ -5,6 +5,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 
+import com.natthanan.multipleviewsrecyclerview.exception.NullRecyclerViewException;
+
 /**
  * Created by natthanan on 9/25/2017.
  */
@@ -25,12 +27,13 @@ public abstract class LoadMoreListener extends RecyclerView.OnScrollListener {
     // Use to check if user want to download more
     private boolean loadMore = true;
 
-    RecyclerView recyclerView;
-    RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
 
 
     public LoadMoreListener(RecyclerView recyclerView) {
         this.recyclerView = recyclerView;
+        if (recyclerView == null) throw new NullRecyclerViewException();
         this.mLayoutManager = recyclerView.getLayoutManager();
         if (mLayoutManager instanceof GridLayoutManager) {
             visibleThreshold = visibleThreshold * ((GridLayoutManager) mLayoutManager).getSpanCount();
