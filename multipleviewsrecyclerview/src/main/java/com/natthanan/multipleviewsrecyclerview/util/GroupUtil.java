@@ -120,7 +120,7 @@ public class GroupUtil {
         return null;
     }
 
-    public static List<ViewDataModel> cloneGroup(List<ViewDataModel> group) {
+    public static final List<ViewDataModel> cloneGroup(List<ViewDataModel> group) {
         List<ViewDataModel> clonedList = new ArrayList<>(group.size());
         for (ViewDataModel viewDataModel : group) {
             clonedList.add(new ViewDataModel(viewDataModel));
