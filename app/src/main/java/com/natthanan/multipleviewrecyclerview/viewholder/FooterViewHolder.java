@@ -29,7 +29,7 @@ import com.natthanan.multipleviewsrecyclerview.annotation.ViewID;
 @LayoutID(R.layout.footer)
 public class FooterViewHolder extends BaseViewHolder {
 
-    @ViewID(R.id.item)
+    @ViewID(0)
     public TextView item;
 
     @ViewID(R.id.drag_handler)

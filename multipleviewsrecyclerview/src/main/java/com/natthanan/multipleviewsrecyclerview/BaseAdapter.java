@@ -10,6 +10,9 @@ import com.natthanan.multipleviewsrecyclerview.exception.NullViewDataModelExcept
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by DELL on 29/08/2560.
+ */
 
 public class BaseAdapter extends RecyclerView.Adapter{
 
@@ -59,6 +62,7 @@ public class BaseAdapter extends RecyclerView.Adapter{
                 }
             });
         }
+
         viewDataModels.get(position).getBaseViewHolderClass().getClass().cast(holder).bind(viewDataModels.get(position).getModel(), viewDataModels.get(position).getTag());
     }
 

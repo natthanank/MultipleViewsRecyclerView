@@ -12,6 +12,10 @@ import com.natthanan.multipleviewrecyclerview.model.UserModel;
 import com.natthanan.multipleviewsrecyclerview.BaseViewHolder;
 import com.natthanan.multipleviewsrecyclerview.annotation.LayoutID;
 import com.natthanan.multipleviewsrecyclerview.annotation.ViewID;
+
+/**
+ * Created by DELL on 29/08/2560.
+ */
 @LayoutID(R.layout.item)
 public class ItemViewHolder extends BaseViewHolder {
 

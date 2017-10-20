@@ -1,11 +1,13 @@
 package com.natthanan.multipleviewsrecyclerview;
 
+import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import com.natthanan.multipleviewsrecyclerview.annotation.LayoutID;
+import com.natthanan.multipleviewsrecyclerview.exception.LayoutNotFoundException;
 import com.natthanan.multipleviewsrecyclerview.exception.NotBaseViewHolderClassException;
 import com.natthanan.multipleviewsrecyclerview.exception.NullBaseAdapterException;
 import com.natthanan.multipleviewsrecyclerview.exception.NullRecyclerViewException;
@@ -101,7 +103,7 @@ public class ViewDataModel implements Cloneable {
             int layout = getLayoutId(viewHolderClass);
             int type = baseViewHolderSparseArray.indexOfValue(viewHolderClass);
 
-            Object instance = constructor.newInstance(inflateView(layout));
+            Object instance = constructor.newInstance(inflateView(layout, viewHolderClass));
 
             ((BaseViewHolder) instance).setType(type);
             ((BaseViewHolder) instance).setLayout(layout);
@@ -114,12 +116,14 @@ public class ViewDataModel implements Cloneable {
         }
     }
 
-    public View inflateView(int layout) {
+    public View inflateView(int layout, Class<? extends BaseViewHolder> baseViewHolderClass) {
         if (BaseAdapter.isInitialize == false) throw new NullBaseAdapterException();
         try {
             return LayoutInflater.from(this.getRecyclerView().getContext()).inflate(layout, this.getRecyclerView(), false);
         } catch (NullPointerException e) {
             throw new NullRecyclerViewException();
+        } catch (Resources.NotFoundException e) {
+            throw new LayoutNotFoundException(baseViewHolderClass);
         }
     }
 
