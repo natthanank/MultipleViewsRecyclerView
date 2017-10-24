@@ -11,6 +11,7 @@ import com.natthanan.multipleviewsrecyclerview.util.GroupUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by DELL on 29/08/2560.
@@ -34,6 +35,7 @@ public abstract class Swipe extends ItemTouchHelper.Callback {
     private boolean isUndo = false;
     private int groupPosition;
     private int undoDelay = 3500;
+    private boolean isGroupRemove;
 
     public Swipe(RecyclerView recyclerView, int movementFlags) {
         this.recyclerView = recyclerView;
@@ -105,6 +107,13 @@ public abstract class Swipe extends ItemTouchHelper.Callback {
             @Override
             public void onFinish() {
                 if (isUndo == false) {
+                    if (Objects.equals(action, ACTION_REMOVE)) {
+                        if (isGroupRemove) {
+                            BaseAdapter.getGroupList().remove(group);
+                        } else {
+                            group.remove(viewDataModel);
+                        }
+                    }
                     if (viewDataModel.isParent()) {
                         afterParentSwiped(position, group, direction);
                     } else {
@@ -152,7 +161,6 @@ public abstract class Swipe extends ItemTouchHelper.Callback {
 
     protected void undoRemove(int position) {
         if (oldViewDataModel.isParent()) {
-            BaseAdapter.getGroupList().add(groupPosition, getOldGroup());
             for (int i = 0; i < oldGroup.size(); i++) {
                 BaseAdapter.getViewDataModels().add(position + i, oldGroup.get(i));
                 adapter.notifyItemInserted(position + i);
@@ -162,7 +170,6 @@ public abstract class Swipe extends ItemTouchHelper.Callback {
             BaseAdapter.getViewDataModels().add(position, oldViewDataModel);
             adapter.notifyItemInserted(position);
             getRecyclerView().scrollToPosition(position);
-            BaseAdapter.getGroupList().get(GroupUtil.getGroupByPosition(position)).add(GroupUtil.getPositionInGroup(position), oldViewDataModel);
         }
         viewDataModel = null;
         isUndo = true;
@@ -170,16 +177,15 @@ public abstract class Swipe extends ItemTouchHelper.Callback {
 
     protected void remove(int position, ViewDataModel viewDataModel) {
         action = ACTION_REMOVE;
+        isGroupRemove = false;
         BaseAdapter.getViewDataModels().remove(viewDataModel);
         adapter.notifyItemRemoved(position);
-        BaseAdapter.getGroupList().get(GroupUtil.getGroupByPosition(position)).remove(GroupUtil.getPositionInGroup(position));
-
     }
 
     protected void remove(int parentPosition, List<ViewDataModel> group) {
         action = ACTION_REMOVE;
-        BaseAdapter.getGroupList().remove(group);
-        for (int i = 0; i < oldGroup.size(); i++) {
+        isGroupRemove = true;
+        for (int i = 0; i < group.size(); i++) {
             BaseAdapter.getViewDataModels().remove(parentPosition);
             adapter.notifyItemRemoved(parentPosition);
         }
