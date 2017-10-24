@@ -4,14 +4,14 @@ MultipleViewsRecyclerView is library to help you create recyclerview that have m
 ### Setup
 1. Gradle
 ```
-compile 'com.mo0on:multipleviewsrecyclerview:0.9'
+compile 'com.mo0on:multipleviewsrecyclerview:1.0'
 ```
 2. Maven
 ```
 <dependency>
   <groupId>com.mo0on</groupId>
   <artifactId>multipleviewsrecyclerview</artifactId>
-  <version>0.9</version>
+  <version>1.0</version>
   <type>pom</type>
 </dependency>
 ```
