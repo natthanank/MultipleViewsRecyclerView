@@ -10,5 +10,5 @@ import com.natthanan.multipleviewsrecyclerview.BaseViewHolder;
  */
 
 public interface DataChangedCallback {
-    void onDatachange(String tag, BaseViewHolder viewHolder, View view, Object data);
+    void onDataChanged(String tag, BaseViewHolder viewHolder, View view, Object data);
 }

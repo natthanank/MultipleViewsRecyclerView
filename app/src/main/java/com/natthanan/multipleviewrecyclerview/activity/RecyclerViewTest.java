@@ -163,7 +163,7 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
 
 
     @Override
-    public void onDatachange(String tag, BaseViewHolder viewHolder, View view, Object data) {
+    public void onDataChanged(String tag, BaseViewHolder viewHolder, View view, Object data) {
         Log.i(tag, view + " at position " + viewHolder.getAdapterPosition() + " data change to " + data.toString());
     }
 }

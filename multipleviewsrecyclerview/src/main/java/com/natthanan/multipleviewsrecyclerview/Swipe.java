@@ -69,9 +69,9 @@ public abstract class Swipe extends ItemTouchHelper.Callback {
         return false;
     }
 
-    public abstract void onChildSwiped(int position, ViewDataModel viewDataModel, int direction);
+    protected abstract void onChildSwiped(int position, ViewDataModel viewDataModel, int direction);
 
-    public abstract void onParentSwiped(int position, ArrayList<ViewDataModel> group, int direction);
+    protected abstract void onParentSwiped(int position, ArrayList<ViewDataModel> group, int direction);
 
     @Override
     public void onSwiped(final RecyclerView.ViewHolder viewHolder, final int direction) {
@@ -116,10 +116,9 @@ public abstract class Swipe extends ItemTouchHelper.Callback {
 
     }
 
-    protected abstract void afterParentSwiped(int position, ArrayList<ViewDataModel> group, int direction);
-
     protected abstract void afterChildSwiped(int position, ViewDataModel viewDataModel, int direction);
 
+    protected abstract void afterParentSwiped(int position, ArrayList<ViewDataModel> group, int direction);
 
 
 
