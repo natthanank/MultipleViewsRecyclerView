@@ -38,26 +38,26 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(baseAdapter);
-        recyclerView.addOnScrollListener(new LoadMoreListener(recyclerView) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount) {
-                new ViewDataModel(HeaderViewHolder.class, "LoadMore"+ page, "LoadMore" , true, "OnLoadMore" + page);
-                for (int i = 0; i < 5; i++) {
-                    new ViewDataModel(FooterViewHolder.class, "page " + page + " " + Integer.toString((page - 1) * 5 + i), "LoadMore", false, "OnLoadMore" + page);
-                    baseAdapter.notifyItemInserted(BaseAdapter.getViewDataModels().size());
-                }
+//        recyclerView.addOnScrollListener(new LoadMoreListener(recyclerView) {
+//            @Override
+//            public void onLoadMore(int page, int totalItemsCount) {
+//                new ViewDataModel(HeaderViewHolder.class, "LoadMore"+ page, "LoadMore" , true, "OnLoadMore" + page);
+//                for (int i = 0; i < 5; i++) {
+//                    new ViewDataModel(FooterViewHolder.class, "page " + page + " " + Integer.toString((page - 1) * 5 + i), "LoadMore", false, "OnLoadMore" + page);
+//                    baseAdapter.notifyItemInserted(BaseAdapter.getViewDataModels().size());
+//                }
+//
+//                if (page == 4) {
+//                    stopLoading();
+//                }
+//
+//            }
+//        });
 
-                if (page == 4) {
-                    stopLoading();
-                }
-
-            }
-        });
-
-        for (int j = 0; j < 5; j++) {
-            new ViewDataModel(HeaderViewHolder.class, "Group" + j + " HEADER", "HEADER", true, "Group" + j);
+        for (int j = 0; j < 2; j++) {
+            new ViewDataModel(HeaderViewHolder.class, "Group" + j + " HEADER", "HEADER");
             for (int i = 0; i < 2; i++) {
-                new ViewDataModel(FooterViewHolder.class, "Group" + j + " number " + i, "FOOTER", false, "Group" + j);
+                new ViewDataModel(FooterViewHolder.class, "Group" + j + " number " + i, "FOOTER");
             }
         }
         new Swipe(recyclerView, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {

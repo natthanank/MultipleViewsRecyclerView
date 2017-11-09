@@ -36,6 +36,7 @@ public abstract class Swipe extends ItemTouchHelper.Callback {
     private int groupPosition;
     private int undoDelay = 3500;
     private boolean isGroupRemove;
+    private ArrayList<ViewDataModel> group;
 
     public Swipe(RecyclerView recyclerView, int movementFlags) {
         this.recyclerView = recyclerView;
@@ -86,7 +87,7 @@ public abstract class Swipe extends ItemTouchHelper.Callback {
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
-        final ArrayList<ViewDataModel> group = BaseAdapter.getGroupList().get(GroupUtil.getGroupByPosition(position));
+        group = BaseAdapter.getGroupList().get(GroupUtil.getGroupByPosition(position));
         try {
             setOldGroup((ArrayList<ViewDataModel>) GroupUtil.cloneGroup(group));
         } catch (Exception e) {
