@@ -5,6 +5,7 @@ import android.os.CountDownTimer;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 
 import com.natthanan.multipleviewsrecyclerview.exception.NullRecyclerViewException;
 import com.natthanan.multipleviewsrecyclerview.util.GroupUtil;
@@ -37,6 +38,7 @@ public abstract class Swipe extends ItemTouchHelper.Callback {
     private int undoDelay = 3500;
     private boolean isGroupRemove;
     private ArrayList<ViewDataModel> group;
+    private boolean isParentSwiped = true;
 
     public Swipe(RecyclerView recyclerView, int movementFlags) {
         this.recyclerView = recyclerView;
@@ -63,6 +65,11 @@ public abstract class Swipe extends ItemTouchHelper.Callback {
             } else {
                 swipeFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
             }
+        }
+        viewDataModel = BaseAdapter.getViewDataModels().get(viewHolder.getAdapterPosition());
+        if (viewDataModel.isParent() && !isParentSwiped) {
+            Log.d("isParent", Boolean.toString(viewDataModel.isParent()));
+            return makeMovementFlags(0, 0);
         }
         return makeMovementFlags(0, movementFlags & swipeFlags);
     }
@@ -254,6 +261,10 @@ public abstract class Swipe extends ItemTouchHelper.Callback {
 
     public BaseViewHolder getViewHolder(int position) {
         return ((BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(position));
+    }
+
+    public void dontSwipeParent() {
+        isParentSwiped = false;
     }
 
     @Override

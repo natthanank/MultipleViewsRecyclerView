@@ -50,14 +50,13 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
 //                if (page == 4) {
 //                    stopLoading();
 //                }
-//
 //            }
 //        });
 
         for (int j = 0; j < 2; j++) {
-            new ViewDataModel(HeaderViewHolder.class, "Group" + j + " HEADER", "HEADER");
+            new ViewDataModel(HeaderViewHolder.class, "Group" + j + " HEADER", "HEADER", true, "Group"+j);
             for (int i = 0; i < 2; i++) {
-                new ViewDataModel(FooterViewHolder.class, "Group" + j + " number " + i, "FOOTER");
+                new ViewDataModel(FooterViewHolder.class, "Group" + j + " number " + i, "FOOTER", false, "Group"+j);
             }
         }
         new Swipe(recyclerView, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
@@ -149,7 +148,7 @@ public class RecyclerViewTest extends AppCompatActivity implements DataChangedCa
             protected void afterChildSwiped(int position, ViewDataModel viewDataModel, int direction) {
                 System.out.println(viewDataModel.getModel());
             }
-        };
+        }.dontSwipeParent();
 
         new Drag(recyclerView) {
             @Override
