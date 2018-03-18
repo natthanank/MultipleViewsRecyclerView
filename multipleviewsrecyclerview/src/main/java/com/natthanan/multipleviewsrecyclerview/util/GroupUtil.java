@@ -1,5 +1,8 @@
 package com.natthanan.multipleviewsrecyclerview.util;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+
 import com.natthanan.multipleviewsrecyclerview.BaseAdapter;
 import com.natthanan.multipleviewsrecyclerview.ViewDataModel;
 
@@ -109,6 +112,7 @@ public class GroupUtil {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static final List<ViewDataModel> getMatchGroup(ViewDataModel viewDataModel) {
         for (List<ViewDataModel> group : BaseAdapter.getGroupList()) {
             if (Objects.equals(viewDataModel.getGroupName(), group.get(0).getGroupName())) {

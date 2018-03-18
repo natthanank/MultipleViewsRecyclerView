@@ -1,7 +1,9 @@
 package com.natthanan.multipleviewsrecyclerview;
 
 import android.graphics.Canvas;
+import android.os.Build;
 import android.os.CountDownTimer;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -112,6 +114,7 @@ public abstract class Swipe extends ItemTouchHelper.Callback {
 
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onFinish() {
                 if (isUndo == false) {

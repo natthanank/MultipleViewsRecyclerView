@@ -1,6 +1,8 @@
 package com.natthanan.multipleviewsrecyclerview;
 
 import android.graphics.Canvas;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -89,6 +91,7 @@ public abstract class Drag extends ItemTouchHelper.Callback {
         return true;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void reallyMoved(int fromPosition, int toPosition) {
         boolean isFromPositionGreaterThanToPosition = GroupUtil.isFromPositionGreater(fromPosition, toPosition);
         // remove blank group
@@ -176,6 +179,7 @@ public abstract class Drag extends ItemTouchHelper.Callback {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);

@@ -1,6 +1,8 @@
 package com.natthanan.multipleviewsrecyclerview;
 
 import android.content.res.Resources;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -34,10 +36,11 @@ public class ViewDataModel implements Cloneable {
     private static RecyclerView recyclerView;
     private static SparseArray<Class<? extends BaseViewHolder>> baseViewHolderSparseArray = new SparseArray<>();
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public ViewDataModel(Class viewHolderClass, Object model, String tag) {
         this(viewHolderClass, model, tag, false, null);
     }
-
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public ViewDataModel(Class viewHolderClass, Object model, String tag, boolean isParent, String groupName) {
         setBaseViewHolderClass(createViewHolder(viewHolderClass, recyclerView));
         setModel(model);
@@ -58,7 +61,7 @@ public class ViewDataModel implements Cloneable {
         setViewTypes(oldViewDataModel.getViewTypes());
         setGroupName(oldViewDataModel.getGroupName());
     }
-
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void addGroup() {
         boolean hasGroup = false;
             for (int i = 0; i < BaseAdapter.getGroupList().size(); i++) {
@@ -111,7 +114,13 @@ public class ViewDataModel implements Cloneable {
 
             return  ((BaseViewHolder) instance);
 
-        } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+        } catch (InvocationTargetException e) {
+            throw new NotBaseViewHolderClassException(viewHolderClass.getSimpleName() + " is not BaseViewHolder subclass.");
+        } catch (NoSuchMethodException e) {
+            throw new NotBaseViewHolderClassException(viewHolderClass.getSimpleName() + " is not BaseViewHolder subclass.");
+        } catch (IllegalAccessException e) {
+            throw new NotBaseViewHolderClassException(viewHolderClass.getSimpleName() + " is not BaseViewHolder subclass.");
+        } catch (InstantiationException e) {
             throw new NotBaseViewHolderClassException(viewHolderClass.getSimpleName() + " is not BaseViewHolder subclass.");
         }
     }
